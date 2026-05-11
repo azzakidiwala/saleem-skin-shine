@@ -9,11 +9,17 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TreatmentsRouteImport } from './routes/treatments'
 import { Route as TeamRouteImport } from './routes/team'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TreatmentsIndexRouteImport } from './routes/treatments.index'
 import { Route as TreatmentsSlugRouteImport } from './routes/treatments.$slug'
 
+const TreatmentsRoute = TreatmentsRouteImport.update({
+  id: '/treatments',
+  path: '/treatments',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TeamRoute = TeamRouteImport.update({
   id: '/team',
   path: '/team',
@@ -25,19 +31,20 @@ const IndexRoute = IndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const TreatmentsIndexRoute = TreatmentsIndexRouteImport.update({
-  id: '/treatments/',
-  path: '/treatments/',
-  getParentRoute: () => rootRouteImport,
+  id: '/',
+  path: '/',
+  getParentRoute: () => TreatmentsRoute,
 } as any)
 const TreatmentsSlugRoute = TreatmentsSlugRouteImport.update({
-  id: '/treatments/$slug',
-  path: '/treatments/$slug',
-  getParentRoute: () => rootRouteImport,
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => TreatmentsRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/team': typeof TeamRoute
+  '/treatments': typeof TreatmentsRouteWithChildren
   '/treatments/$slug': typeof TreatmentsSlugRoute
   '/treatments/': typeof TreatmentsIndexRoute
 }
@@ -51,26 +58,44 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/team': typeof TeamRoute
+  '/treatments': typeof TreatmentsRouteWithChildren
   '/treatments/$slug': typeof TreatmentsSlugRoute
   '/treatments/': typeof TreatmentsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/team' | '/treatments/$slug' | '/treatments/'
+  fullPaths:
+    | '/'
+    | '/team'
+    | '/treatments'
+    | '/treatments/$slug'
+    | '/treatments/'
   fileRoutesByTo: FileRoutesByTo
   to: '/' | '/team' | '/treatments/$slug' | '/treatments'
-  id: '__root__' | '/' | '/team' | '/treatments/$slug' | '/treatments/'
+  id:
+    | '__root__'
+    | '/'
+    | '/team'
+    | '/treatments'
+    | '/treatments/$slug'
+    | '/treatments/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   TeamRoute: typeof TeamRoute
-  TreatmentsSlugRoute: typeof TreatmentsSlugRoute
-  TreatmentsIndexRoute: typeof TreatmentsIndexRoute
+  TreatmentsRoute: typeof TreatmentsRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/treatments': {
+      id: '/treatments'
+      path: '/treatments'
+      fullPath: '/treatments'
+      preLoaderRoute: typeof TreatmentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/team': {
       id: '/team'
       path: '/team'
@@ -87,26 +112,39 @@ declare module '@tanstack/react-router' {
     }
     '/treatments/': {
       id: '/treatments/'
-      path: '/treatments'
+      path: '/'
       fullPath: '/treatments/'
       preLoaderRoute: typeof TreatmentsIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof TreatmentsRoute
     }
     '/treatments/$slug': {
       id: '/treatments/$slug'
-      path: '/treatments/$slug'
+      path: '/$slug'
       fullPath: '/treatments/$slug'
       preLoaderRoute: typeof TreatmentsSlugRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof TreatmentsRoute
     }
   }
 }
 
+interface TreatmentsRouteChildren {
+  TreatmentsSlugRoute: typeof TreatmentsSlugRoute
+  TreatmentsIndexRoute: typeof TreatmentsIndexRoute
+}
+
+const TreatmentsRouteChildren: TreatmentsRouteChildren = {
+  TreatmentsSlugRoute: TreatmentsSlugRoute,
+  TreatmentsIndexRoute: TreatmentsIndexRoute,
+}
+
+const TreatmentsRouteWithChildren = TreatmentsRoute._addFileChildren(
+  TreatmentsRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   TeamRoute: TeamRoute,
-  TreatmentsSlugRoute: TreatmentsSlugRoute,
-  TreatmentsIndexRoute: TreatmentsIndexRoute,
+  TreatmentsRoute: TreatmentsRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
