@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TreatmentsRouteImport } from './routes/treatments'
 import { Route as TeamRouteImport } from './routes/team'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TreatmentsIndexRouteImport } from './routes/treatments.index'
 import { Route as TreatmentsSlugRouteImport } from './routes/treatments.$slug'
 
 const TreatmentsRoute = TreatmentsRouteImport.update({
@@ -29,6 +30,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TreatmentsIndexRoute = TreatmentsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => TreatmentsRoute,
+} as any)
 const TreatmentsSlugRoute = TreatmentsSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -40,12 +46,13 @@ export interface FileRoutesByFullPath {
   '/team': typeof TeamRoute
   '/treatments': typeof TreatmentsRouteWithChildren
   '/treatments/$slug': typeof TreatmentsSlugRoute
+  '/treatments/': typeof TreatmentsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/team': typeof TeamRoute
-  '/treatments': typeof TreatmentsRouteWithChildren
   '/treatments/$slug': typeof TreatmentsSlugRoute
+  '/treatments': typeof TreatmentsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +60,25 @@ export interface FileRoutesById {
   '/team': typeof TeamRoute
   '/treatments': typeof TreatmentsRouteWithChildren
   '/treatments/$slug': typeof TreatmentsSlugRoute
+  '/treatments/': typeof TreatmentsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/team' | '/treatments' | '/treatments/$slug'
+  fullPaths:
+    | '/'
+    | '/team'
+    | '/treatments'
+    | '/treatments/$slug'
+    | '/treatments/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/team' | '/treatments' | '/treatments/$slug'
-  id: '__root__' | '/' | '/team' | '/treatments' | '/treatments/$slug'
+  to: '/' | '/team' | '/treatments/$slug' | '/treatments'
+  id:
+    | '__root__'
+    | '/'
+    | '/team'
+    | '/treatments'
+    | '/treatments/$slug'
+    | '/treatments/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -91,6 +110,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/treatments/': {
+      id: '/treatments/'
+      path: '/'
+      fullPath: '/treatments/'
+      preLoaderRoute: typeof TreatmentsIndexRouteImport
+      parentRoute: typeof TreatmentsRoute
+    }
     '/treatments/$slug': {
       id: '/treatments/$slug'
       path: '/$slug'
@@ -103,10 +129,12 @@ declare module '@tanstack/react-router' {
 
 interface TreatmentsRouteChildren {
   TreatmentsSlugRoute: typeof TreatmentsSlugRoute
+  TreatmentsIndexRoute: typeof TreatmentsIndexRoute
 }
 
 const TreatmentsRouteChildren: TreatmentsRouteChildren = {
   TreatmentsSlugRoute: TreatmentsSlugRoute,
+  TreatmentsIndexRoute: TreatmentsIndexRoute,
 }
 
 const TreatmentsRouteWithChildren = TreatmentsRoute._addFileChildren(
