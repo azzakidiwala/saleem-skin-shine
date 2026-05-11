@@ -11,9 +11,11 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TreatmentsRouteImport } from './routes/treatments'
 import { Route as TeamRouteImport } from './routes/team'
+import { Route as BookConfirmedRouteImport } from './routes/book-confirmed'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TreatmentsIndexRouteImport } from './routes/treatments.index'
 import { Route as TreatmentsSlugRouteImport } from './routes/treatments.$slug'
+import { Route as BookSlugRouteImport } from './routes/book.$slug'
 
 const TreatmentsRoute = TreatmentsRouteImport.update({
   id: '/treatments',
@@ -23,6 +25,11 @@ const TreatmentsRoute = TreatmentsRouteImport.update({
 const TeamRoute = TeamRouteImport.update({
   id: '/team',
   path: '/team',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookConfirmedRoute = BookConfirmedRouteImport.update({
+  id: '/book-confirmed',
+  path: '/book-confirmed',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -40,25 +47,36 @@ const TreatmentsSlugRoute = TreatmentsSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => TreatmentsRoute,
 } as any)
+const BookSlugRoute = BookSlugRouteImport.update({
+  id: '/book/$slug',
+  path: '/book/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/book-confirmed': typeof BookConfirmedRoute
   '/team': typeof TeamRoute
   '/treatments': typeof TreatmentsRouteWithChildren
+  '/book/$slug': typeof BookSlugRoute
   '/treatments/$slug': typeof TreatmentsSlugRoute
   '/treatments/': typeof TreatmentsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/book-confirmed': typeof BookConfirmedRoute
   '/team': typeof TeamRoute
+  '/book/$slug': typeof BookSlugRoute
   '/treatments/$slug': typeof TreatmentsSlugRoute
   '/treatments': typeof TreatmentsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/book-confirmed': typeof BookConfirmedRoute
   '/team': typeof TeamRoute
   '/treatments': typeof TreatmentsRouteWithChildren
+  '/book/$slug': typeof BookSlugRoute
   '/treatments/$slug': typeof TreatmentsSlugRoute
   '/treatments/': typeof TreatmentsIndexRoute
 }
@@ -66,25 +84,37 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/book-confirmed'
     | '/team'
     | '/treatments'
+    | '/book/$slug'
     | '/treatments/$slug'
     | '/treatments/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/team' | '/treatments/$slug' | '/treatments'
+  to:
+    | '/'
+    | '/book-confirmed'
+    | '/team'
+    | '/book/$slug'
+    | '/treatments/$slug'
+    | '/treatments'
   id:
     | '__root__'
     | '/'
+    | '/book-confirmed'
     | '/team'
     | '/treatments'
+    | '/book/$slug'
     | '/treatments/$slug'
     | '/treatments/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BookConfirmedRoute: typeof BookConfirmedRoute
   TeamRoute: typeof TeamRoute
   TreatmentsRoute: typeof TreatmentsRouteWithChildren
+  BookSlugRoute: typeof BookSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -101,6 +131,13 @@ declare module '@tanstack/react-router' {
       path: '/team'
       fullPath: '/team'
       preLoaderRoute: typeof TeamRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/book-confirmed': {
+      id: '/book-confirmed'
+      path: '/book-confirmed'
+      fullPath: '/book-confirmed'
+      preLoaderRoute: typeof BookConfirmedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -124,6 +161,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TreatmentsSlugRouteImport
       parentRoute: typeof TreatmentsRoute
     }
+    '/book/$slug': {
+      id: '/book/$slug'
+      path: '/book/$slug'
+      fullPath: '/book/$slug'
+      preLoaderRoute: typeof BookSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -143,8 +187,10 @@ const TreatmentsRouteWithChildren = TreatmentsRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BookConfirmedRoute: BookConfirmedRoute,
   TeamRoute: TeamRoute,
   TreatmentsRoute: TreatmentsRouteWithChildren,
+  BookSlugRoute: BookSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
