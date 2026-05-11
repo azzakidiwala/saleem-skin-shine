@@ -7,7 +7,7 @@ import { CTA } from "@/components/site/CTA";
 import { Footer } from "@/components/site/Footer";
 import { treatments, categories } from "@/data/treatments";
 
-export const Route = createFileRoute("/treatments")({
+export const Route = createFileRoute("/treatments/")({
   head: () => ({
     meta: [
       { title: "Our Treatments — Saleem Skin" },
