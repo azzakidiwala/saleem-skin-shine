@@ -1,0 +1,48 @@
+import { MapPin, Phone, Mail, Clock } from "lucide-react";
+import logo from "@/assets/logo.png";
+
+export function Footer() {
+  return (
+    <footer className="bg-deep-green text-primary-foreground">
+      <div className="container mx-auto px-6 py-20 grid md:grid-cols-2 lg:grid-cols-4 gap-12">
+        <div>
+          <img src={logo} alt="Saleem Skin" className="h-20 w-auto mb-4 brightness-0 invert opacity-90" />
+          <p className="text-sm text-primary-foreground/70 leading-relaxed">
+            Award-winning aesthetic clinic delivering exceptional skin, health and wellness treatments in the North.
+          </p>
+        </div>
+        <div>
+          <h4 className="text-xs tracking-[0.25em] uppercase text-gold mb-5 font-semibold">Quick Links</h4>
+          <ul className="space-y-3 text-sm">
+            <li><a href="/" className="hover:text-gold transition-colors">Home</a></li>
+            <li><a href="#treatments" className="hover:text-gold transition-colors">Treatments</a></li>
+            <li><a href="#team" className="hover:text-gold transition-colors">Meet the Team</a></li>
+            <li><a href="#book" className="hover:text-gold transition-colors">Book Consultation</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 className="text-xs tracking-[0.25em] uppercase text-gold mb-5 font-semibold">Contact</h4>
+          <ul className="space-y-3 text-sm text-primary-foreground/85">
+            <li className="flex gap-3"><MapPin className="h-4 w-4 text-gold flex-shrink-0 mt-0.5" /> 123 Wellness Avenue,<br />Manchester, M1 2AB</li>
+            <li className="flex gap-3"><Phone className="h-4 w-4 text-gold flex-shrink-0 mt-0.5" /> <a href="tel:07503959285" className="hover:text-gold">07503 959285</a></li>
+            <li className="flex gap-3"><Mail className="h-4 w-4 text-gold flex-shrink-0 mt-0.5" /> <a href="mailto:hello@saleemskin.co.uk" className="hover:text-gold">hello@saleemskin.co.uk</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 className="text-xs tracking-[0.25em] uppercase text-gold mb-5 font-semibold flex items-center gap-2"><Clock className="h-3.5 w-3.5" /> Opening Hours</h4>
+          <ul className="space-y-2 text-sm text-primary-foreground/85">
+            <li className="flex justify-between"><span>Mon – Fri</span><span>9:00 – 19:00</span></li>
+            <li className="flex justify-between"><span>Saturday</span><span>10:00 – 17:00</span></li>
+            <li className="flex justify-between"><span>Sunday</span><span>Closed</span></li>
+          </ul>
+        </div>
+      </div>
+      <div className="border-t border-primary-foreground/10">
+        <div className="container mx-auto px-6 py-5 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-primary-foreground/60">
+          <p>© {new Date().getFullYear()} Saleem Skin. All rights reserved.</p>
+          <a href="#" className="hover:text-gold transition-colors tracking-wider uppercase">Staff Login</a>
+        </div>
+      </div>
+    </footer>
+  );
+}
