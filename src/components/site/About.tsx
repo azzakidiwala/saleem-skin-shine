@@ -41,9 +41,9 @@ export function About() {
                 </div>
               ))}
             </div>
-            <a href="#team" className="inline-flex items-center justify-center bg-primary text-primary-foreground px-8 py-4 text-xs tracking-[0.25em] font-semibold uppercase hover:bg-primary/90 transition-colors">
+            <Link to="/team" className="inline-flex items-center justify-center bg-primary text-primary-foreground px-8 py-4 text-xs tracking-[0.25em] font-semibold uppercase hover:bg-primary/90 transition-colors">
               Meet Our Specialists
-            </a>
+            </Link>
           </div>
         </div>
       </div>
