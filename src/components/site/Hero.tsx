@@ -26,9 +26,9 @@ export function Hero() {
           🪷 Skin · Health · Wellness — Advanced aesthetic treatments by award-winning specialists
         </p>
         <div className="mt-10 flex flex-col sm:flex-row gap-4">
-          <a href="#treatments" className="inline-flex items-center justify-center bg-gold text-gold-foreground px-8 py-4 text-xs tracking-[0.25em] font-semibold uppercase hover:bg-gold/90 transition-colors">
+          <Link to="/treatments" className="inline-flex items-center justify-center bg-gold text-gold-foreground px-8 py-4 text-xs tracking-[0.25em] font-semibold uppercase hover:bg-gold/90 transition-colors">
             Browse Our Treatments
-          </a>
+          </Link>
           <a href="#team" className="inline-flex items-center justify-center border border-white/80 text-white px-8 py-4 text-xs tracking-[0.25em] font-semibold uppercase hover:bg-white hover:text-primary transition-colors">
             Meet the Team
           </a>
