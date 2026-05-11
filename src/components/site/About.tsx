@@ -1,4 +1,5 @@
 import { Award, ShieldCheck, Heart } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import about from "@/assets/about-clinic.jpg";
 
 const pillars = [
