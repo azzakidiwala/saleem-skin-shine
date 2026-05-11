@@ -70,7 +70,7 @@ export function Header() {
         {open && (
           <div className="md:hidden border-t border-border py-4 space-y-3">
             <Link to="/" className="block text-xs tracking-[0.25em] uppercase">Home</Link>
-            <a href="#treatments" className="block text-xs tracking-[0.25em] uppercase">Treatments</a>
+            <Link to="/treatments" className="block text-xs tracking-[0.25em] uppercase">Treatments</Link>
             <a href="#team" className="block text-xs tracking-[0.25em] uppercase">Meet the Team</a>
             <a href="tel:07503959285" className="flex items-center gap-2 text-primary"><Phone className="h-4 w-4" />07503 959285</a>
             <a href="#book" className="block bg-gold text-gold-foreground text-center py-3 text-xs tracking-[0.2em] uppercase font-semibold">Book Consultation</a>
