@@ -48,18 +48,18 @@ export function Header() {
         <nav className="hidden md:flex items-center justify-center gap-12 border-t border-border py-4 text-xs tracking-[0.25em] uppercase font-medium">
           <Link to="/" activeProps={{ className: "text-gold" }} className="hover:text-gold transition-colors">Home</Link>
           <div className="relative group">
-            <button className="flex items-center gap-1 hover:text-gold transition-colors">
+            <Link to="/treatments" activeProps={{ className: "text-gold" }} className="flex items-center gap-1 hover:text-gold transition-colors">
               Treatments <ChevronDown className="h-3 w-3" />
-            </button>
+            </Link>
             <div className="absolute left-1/2 -translate-x-1/2 top-full pt-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 w-[520px]">
               <div className="bg-card border border-border shadow-xl p-6">
                 <div className="text-gold text-[11px] tracking-[0.3em] mb-4">TREATMENTS</div>
                 <div className="grid grid-cols-2 gap-x-6 gap-y-2">
                   {treatments.map(t => (
-                    <a key={t} href="#treatments" className="flex items-start gap-2 py-1.5 text-[12px] tracking-[0.05em] normal-case font-normal text-foreground hover:text-gold transition-colors">
+                    <Link key={t} to="/treatments" className="flex items-start gap-2 py-1.5 text-[12px] tracking-[0.05em] normal-case font-normal text-foreground hover:text-gold transition-colors">
                       <span className="text-gold mt-1.5">•</span>
                       <span>{t}</span>
-                    </a>
+                    </Link>
                   ))}
                 </div>
               </div>
@@ -70,7 +70,7 @@ export function Header() {
         {open && (
           <div className="md:hidden border-t border-border py-4 space-y-3">
             <Link to="/" className="block text-xs tracking-[0.25em] uppercase">Home</Link>
-            <a href="#treatments" className="block text-xs tracking-[0.25em] uppercase">Treatments</a>
+            <Link to="/treatments" className="block text-xs tracking-[0.25em] uppercase">Treatments</Link>
             <a href="#team" className="block text-xs tracking-[0.25em] uppercase">Meet the Team</a>
             <a href="tel:07503959285" className="flex items-center gap-2 text-primary"><Phone className="h-4 w-4" />07503 959285</a>
             <a href="#book" className="block bg-gold text-gold-foreground text-center py-3 text-xs tracking-[0.2em] uppercase font-semibold">Book Consultation</a>
