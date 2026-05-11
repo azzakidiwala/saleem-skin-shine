@@ -51,13 +51,17 @@ export function Header() {
             <button className="flex items-center gap-1 hover:text-gold transition-colors">
               Treatments <ChevronDown className="h-3 w-3" />
             </button>
-            <div className="absolute left-1/2 -translate-x-1/2 top-full pt-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 w-64">
-              <div className="bg-card border border-border shadow-xl py-2">
-                {treatments.map(t => (
-                  <a key={t} href="#treatments" className="block px-5 py-2.5 text-[11px] tracking-[0.2em] hover:bg-secondary hover:text-gold transition-colors">
-                    {t}
-                  </a>
-                ))}
+            <div className="absolute left-1/2 -translate-x-1/2 top-full pt-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 w-[520px]">
+              <div className="bg-card border border-border shadow-xl p-6">
+                <div className="text-gold text-[11px] tracking-[0.3em] mb-4">TREATMENTS</div>
+                <div className="grid grid-cols-2 gap-x-6 gap-y-2">
+                  {treatments.map(t => (
+                    <a key={t} href="#treatments" className="flex items-start gap-2 py-1.5 text-[12px] tracking-[0.05em] normal-case font-normal text-foreground hover:text-gold transition-colors">
+                      <span className="text-gold mt-1.5">•</span>
+                      <span>{t}</span>
+                    </a>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
