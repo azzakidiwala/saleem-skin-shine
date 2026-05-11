@@ -114,9 +114,13 @@ function TreatmentDetailPage() {
                   </div>
                 </div>
                 <div className="pt-6 space-y-3">
-                  <button className="w-full bg-gold text-gold-foreground py-4 text-xs tracking-[0.25em] uppercase font-semibold hover:bg-gold/90 transition-colors">
+                  <Link
+                    to="/book/$slug"
+                    params={{ slug: t.slug }}
+                    className="w-full inline-flex items-center justify-center bg-gold text-gold-foreground py-4 text-xs tracking-[0.25em] uppercase font-semibold hover:bg-gold/90 transition-colors"
+                  >
                     Book Treatment
-                  </button>
+                  </Link>
                   <a
                     href="tel:07503959285"
                     className="w-full inline-flex items-center justify-center gap-2 border border-primary text-primary py-4 text-xs tracking-[0.25em] uppercase font-semibold hover:bg-primary hover:text-primary-foreground transition-colors"
