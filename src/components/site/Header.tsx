@@ -10,6 +10,7 @@ const treatments = [
   "Laser Treatments",
   "Body Contouring",
   "Advanced Facials",
+  "AlumierMD Partner",
 ];
 
 export function Header() {
