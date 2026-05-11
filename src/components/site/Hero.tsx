@@ -29,9 +29,9 @@ export function Hero() {
           <Link to="/treatments" className="inline-flex items-center justify-center bg-gold text-gold-foreground px-8 py-4 text-xs tracking-[0.25em] font-semibold uppercase hover:bg-gold/90 transition-colors">
             Browse Our Treatments
           </Link>
-          <a href="#team" className="inline-flex items-center justify-center border border-white/80 text-white px-8 py-4 text-xs tracking-[0.25em] font-semibold uppercase hover:bg-white hover:text-primary transition-colors">
+          <Link to="/team" className="inline-flex items-center justify-center border border-white/80 text-white px-8 py-4 text-xs tracking-[0.25em] font-semibold uppercase hover:bg-white hover:text-primary transition-colors">
             Meet the Team
-          </a>
+          </Link>
         </div>
       </div>
     </section>
