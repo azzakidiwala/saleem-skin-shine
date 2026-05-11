@@ -85,7 +85,7 @@ function TeamPage() {
         {/* Team grid */}
         <section className="pb-20 md:pb-28 bg-background">
           <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {team.map(({ name, role, bio, creds, tags, image, icon: Icon }) => (
                 <article key={name} className="flex flex-col">
                   <div className="aspect-[4/5] overflow-hidden bg-secondary mb-6">
