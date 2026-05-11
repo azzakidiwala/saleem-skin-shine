@@ -99,17 +99,20 @@ function BookingPage() {
     if (!date) return;
     setLoadingTimes(true);
     setTime(undefined);
-    supabase
-      .rpc("get_booked_times", { p_date: toIsoDate(date) })
-      .then(({ data, error }) => {
-        if (error) {
-          console.error(error);
-          setBookedTimes([]);
-        } else {
-          setBookedTimes((data ?? []).map((r: { appointment_time: string }) => r.appointment_time));
-        }
-      })
-      .finally(() => setLoadingTimes(false));
+    (async () => {
+      const { data, error } = await supabase.rpc("get_booked_times", {
+        p_date: toIsoDate(date),
+      });
+      if (error) {
+        console.error(error);
+        setBookedTimes([]);
+      } else {
+        setBookedTimes(
+          (data ?? []).map((r: { appointment_time: string }) => r.appointment_time),
+        );
+      }
+      setLoadingTimes(false);
+    })();
   }, [date]);
 
   const availableTimes = ALL_TIMES.filter((s) => !bookedTimes.includes(s));
