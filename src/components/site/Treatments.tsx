@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import antiWrinkle from "@/assets/treatment-anti-wrinkle.jpg";
 import fillers from "@/assets/treatment-fillers.jpg";
 import rejuvenation from "@/assets/treatment-rejuvenation.jpg";
