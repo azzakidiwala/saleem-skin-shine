@@ -78,7 +78,7 @@ function TreatmentDetailPage() {
               <div>
                 <h3 className="text-lg font-semibold text-foreground mb-4">Key Benefits</h3>
                 <ul className="space-y-3">
-                  {t.benefits.map((b) => (
+                  {t.benefits.map((b: string) => (
                     <li key={b} className="flex items-start gap-3 text-muted-foreground">
                       <Check className="h-5 w-5 text-gold shrink-0 mt-0.5" />
                       <span>{b}</span>
