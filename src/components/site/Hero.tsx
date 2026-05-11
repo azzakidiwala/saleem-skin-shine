@@ -1,4 +1,5 @@
 import { Award, Star } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import hero from "@/assets/hero-facial.jpg";
 
 export function Hero() {
