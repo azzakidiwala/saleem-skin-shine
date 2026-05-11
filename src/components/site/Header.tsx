@@ -4,13 +4,18 @@ import { useState } from "react";
 import logo from "@/assets/logo.png";
 
 const treatments = [
-  "Anti-Wrinkle Injections",
-  "Dermal Fillers",
-  "Skin Rejuvenation",
-  "Laser Treatments",
-  "Body Contouring",
-  "Advanced Facials",
-  "AlumierMD Partner",
+  "New Consultation",
+  "Deluxe HydraFacial",
+  "Wet Diamond HydraFacial",
+  "Promoitalia Lip Booster",
+  "TrapTox",
+  "Jawline Slimming Anti-Wrinkle Treatment",
+  "VTECH Microneedling with LED Face Mask",
+  "PRP Hair & Scalp Treatment",
+  "PRP Facial (Vampire Facial)",
+  "Hay Fever Treatment",
+  "Vitamin B12 Injection (Single)",
+  "Vitamin B12 Injection (Course of 6)",
 ];
 
 export function Header() {
