@@ -139,9 +139,29 @@ function Field({ row, value, onChange, onSave }: { row: Row; value: any; onChang
     finally { setUploading(false); }
   }
 
+  const hint = FIELD_HINT[row.key];
+
   return (
-    <div className="space-y-2">
-      <Label>{row.label}</Label>
+    <div className="space-y-2 rounded-md border bg-background/40 p-4">
+      <div className="flex items-start justify-between gap-4">
+        <Label>{row.label}</Label>
+        {hint && (
+          <a
+            href={hint.href}
+            target="_blank"
+            rel="noreferrer"
+            className="shrink-0 inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
+          >
+            View on site <ExternalLink className="h-3 w-3" />
+          </a>
+        )}
+      </div>
+      {hint && (
+        <p className="flex items-start gap-1.5 text-xs text-muted-foreground">
+          <MapPin className="h-3 w-3 mt-0.5 shrink-0" />
+          <span>{hint.where}</span>
+        </p>
+      )}
       {isImage ? (
         <div className="space-y-2">
           {value && <img src={value} alt="" className="h-32 rounded border object-cover" />}
@@ -163,6 +183,28 @@ function Field({ row, value, onChange, onSave }: { row: Row; value: any; onChang
         <Textarea rows={3} value={value ?? ""} onChange={(e) => onChange(e.target.value)} />
       ) : (
         <Input value={value ?? ""} onChange={(e) => onChange(e.target.value)} />
+      )}
+      {!isImage && (
+        <div className="rounded border border-dashed bg-muted/30 px-3 py-2">
+          <p className="text-[10px] uppercase tracking-wide text-muted-foreground mb-1">Preview</p>
+          {Array.isArray(value) ? (
+            value.length === 0 ? (
+              <p className="text-sm italic text-muted-foreground">Empty</p>
+            ) : (
+              <ul className="text-sm space-y-0.5">
+                {(value as string[]).slice(0, 5).map((line, i) => (
+                  <li key={i}>• {line}</li>
+                ))}
+              </ul>
+            )
+          ) : (
+            <p className="text-sm whitespace-pre-wrap break-words">
+              {typeof value === "string" && value.trim()
+                ? value
+                : <span className="italic text-muted-foreground">Empty</span>}
+            </p>
+          )}
+        </div>
       )}
       <div className="flex justify-end">
         <Button size="sm" onClick={onSave} disabled={uploading}>Save</Button>
