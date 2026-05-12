@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TreatmentsRouteImport } from './routes/treatments'
 import { Route as TeamRouteImport } from './routes/team'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as BookConfirmedRouteImport } from './routes/book-confirmed'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TreatmentsIndexRouteImport } from './routes/treatments.index'
@@ -25,6 +26,11 @@ const TreatmentsRoute = TreatmentsRouteImport.update({
 const TeamRoute = TeamRouteImport.update({
   id: '/team',
   path: '/team',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BookConfirmedRoute = BookConfirmedRouteImport.update({
@@ -56,6 +62,7 @@ const BookSlugRoute = BookSlugRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/book-confirmed': typeof BookConfirmedRoute
+  '/login': typeof LoginRoute
   '/team': typeof TeamRoute
   '/treatments': typeof TreatmentsRouteWithChildren
   '/book/$slug': typeof BookSlugRoute
@@ -65,6 +72,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/book-confirmed': typeof BookConfirmedRoute
+  '/login': typeof LoginRoute
   '/team': typeof TeamRoute
   '/book/$slug': typeof BookSlugRoute
   '/treatments/$slug': typeof TreatmentsSlugRoute
@@ -74,6 +82,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/book-confirmed': typeof BookConfirmedRoute
+  '/login': typeof LoginRoute
   '/team': typeof TeamRoute
   '/treatments': typeof TreatmentsRouteWithChildren
   '/book/$slug': typeof BookSlugRoute
@@ -85,6 +94,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/book-confirmed'
+    | '/login'
     | '/team'
     | '/treatments'
     | '/book/$slug'
@@ -94,6 +104,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/book-confirmed'
+    | '/login'
     | '/team'
     | '/book/$slug'
     | '/treatments/$slug'
@@ -102,6 +113,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/book-confirmed'
+    | '/login'
     | '/team'
     | '/treatments'
     | '/book/$slug'
@@ -112,6 +124,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BookConfirmedRoute: typeof BookConfirmedRoute
+  LoginRoute: typeof LoginRoute
   TeamRoute: typeof TeamRoute
   TreatmentsRoute: typeof TreatmentsRouteWithChildren
   BookSlugRoute: typeof BookSlugRoute
@@ -131,6 +144,13 @@ declare module '@tanstack/react-router' {
       path: '/team'
       fullPath: '/team'
       preLoaderRoute: typeof TeamRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/book-confirmed': {
@@ -188,6 +208,7 @@ const TreatmentsRouteWithChildren = TreatmentsRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BookConfirmedRoute: BookConfirmedRoute,
+  LoginRoute: LoginRoute,
   TeamRoute: TeamRoute,
   TreatmentsRoute: TreatmentsRouteWithChildren,
   BookSlugRoute: BookSlugRoute,
@@ -195,3 +216,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
