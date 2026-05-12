@@ -44,7 +44,14 @@ function ContentPage() {
 
   const save = useMutation({
     mutationFn: async (key: string) => {
-      const { error } = await supabase.from("site_content").update({ value: draft[key] }).eq("key", key);
+      let value = draft[key];
+      if (Array.isArray(value)) value = value.map((x) => (typeof x === "string" ? x.trim() : x)).filter(Boolean);
+      else if (typeof value === "string" && value.includes("\n")) {
+        // safety net for array fields still held as raw string
+        const orig = (data ?? []).find((r) => r.key === key);
+        if (Array.isArray(orig?.value)) value = value.split("\n").map((x) => x.trim()).filter(Boolean);
+      }
+      const { error } = await supabase.from("site_content").update({ value }).eq("key", key);
       if (error) throw error;
     },
     onSuccess: () => { toast.success("Saved"); qc.invalidateQueries({ queryKey: ["admin", "content"] }); qc.invalidateQueries({ queryKey: ["site_content"] }); },
