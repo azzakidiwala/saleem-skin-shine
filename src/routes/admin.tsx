@@ -60,7 +60,7 @@ function AdminLayout() {
             return (
               <Link
                 key={item.to}
-                to={item.to}
+                to={item.to as any}
                 className={cn(
                   "flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-colors",
                   active ? "bg-primary text-primary-foreground" : "hover:bg-muted text-foreground/80"
