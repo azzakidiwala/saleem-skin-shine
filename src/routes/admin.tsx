@@ -48,12 +48,12 @@ function AdminLayout() {
 
   return (
     <div className="min-h-screen flex bg-muted/20">
-      <aside className="w-60 border-r bg-card flex flex-col">
+      <aside className="w-60 border-r bg-card flex flex-col fixed inset-y-0 left-0 z-30">
         <div className="p-6 border-b">
           <Link to="/admin" className="font-semibold text-lg">Admin</Link>
           <p className="text-xs text-muted-foreground mt-1 truncate">{session.user.email}</p>
         </div>
-        <nav className="flex-1 p-3 space-y-1">
+        <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
           {nav.map((item) => {
             const active = item.exact ? pathname === item.to : pathname.startsWith(item.to);
             const Icon = item.icon;
@@ -84,7 +84,7 @@ function AdminLayout() {
           </button>
         </div>
       </aside>
-      <main className="flex-1 p-8 overflow-auto">
+      <main className="flex-1 p-8 overflow-auto ml-60">
         <Outlet />
       </main>
     </div>
