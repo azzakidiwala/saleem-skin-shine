@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
-import { Clock } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Clock, ChevronLeft, ChevronRight } from "lucide-react";
 import { AnnouncementBar } from "@/components/site/AnnouncementBar";
 import { Header } from "@/components/site/Header";
 import { CTA } from "@/components/site/CTA";
