@@ -16,6 +16,16 @@ import { Plus, Trash2 } from "lucide-react";
 import { listAdmins, inviteAdmin, removeAdmin } from "@/lib/admin/admins.functions";
 import { useIsAdmin } from "@/lib/admin/auth";
 
+type AdminRow = { user_id: string; email: string | null; created_at: string };
+
+function normalizeAdminsResponse(value: unknown): AdminRow[] {
+  if (Array.isArray(value)) return value as AdminRow[];
+  if (value && typeof value === "object" && Array.isArray((value as { result?: unknown }).result)) {
+    return (value as { result: AdminRow[] }).result;
+  }
+  return [];
+}
+
 export const Route = createFileRoute("/admin/admins")({
   component: AdminsPage,
 });
@@ -26,17 +36,26 @@ function AdminsPage() {
   const invite = useServerFn(inviteAdmin);
   const remove = useServerFn(removeAdmin);
   const { session } = useIsAdmin();
+  const getAuthHeaders = () => {
+    if (!session?.access_token) throw new Error("Please sign in again.");
+    return { Authorization: `Bearer ${session.access_token}` };
+  };
 
-  const { data, isLoading } = useQuery({ queryKey: ["admin", "admins"], queryFn: () => list({}) });
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["admin", "admins"],
+    queryFn: async () => normalizeAdminsResponse(await list({ headers: getAuthHeaders() })),
+    enabled: !!session?.access_token,
+    throwOnError: false,
+  });
 
   const inviteMut = useMutation({
-    mutationFn: async (input: { email: string; password: string }) => invite({ data: input }),
+    mutationFn: async (input: { email: string; password: string }) => invite({ data: input, headers: getAuthHeaders() }),
     onSuccess: () => { toast.success("Admin invited"); qc.invalidateQueries({ queryKey: ["admin", "admins"] }); },
     onError: (e: any) => toast.error(e.message),
   });
 
   const removeMut = useMutation({
-    mutationFn: async (user_id: string) => remove({ data: { user_id } }),
+    mutationFn: async (user_id: string) => remove({ data: { user_id }, headers: getAuthHeaders() }),
     onSuccess: () => { toast.success("Admin removed"); qc.invalidateQueries({ queryKey: ["admin", "admins"] }); },
     onError: (e: any) => toast.error(e.message),
   });
@@ -62,6 +81,7 @@ function AdminsPage() {
           </TableHeader>
           <TableBody>
             {isLoading && <TableRow><TableCell colSpan={3} className="text-center py-8 text-muted-foreground">Loading…</TableCell></TableRow>}
+            {error && <TableRow><TableCell colSpan={3} className="text-center py-8 text-destructive">Could not load admins. Please try again.</TableCell></TableRow>}
             {(data ?? []).map((a) => (
               <TableRow key={a.user_id}>
                 <TableCell className="font-medium">{a.email ?? a.user_id}{a.user_id === session?.user.id && <span className="ml-2 text-xs text-muted-foreground">(you)</span>}</TableCell>
