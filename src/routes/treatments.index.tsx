@@ -1,27 +1,19 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { Clock, ChevronLeft, ChevronRight } from "lucide-react";
+import { Clock, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { AnnouncementBar } from "@/components/site/AnnouncementBar";
 import { Header } from "@/components/site/Header";
 import { CTA } from "@/components/site/CTA";
 import { Footer } from "@/components/site/Footer";
-import { treatments, categories } from "@/data/treatments";
+import { useTreatments, treatmentCategories } from "@/lib/content/queries";
 
 export const Route = createFileRoute("/treatments/")({
   head: () => ({
     meta: [
       { title: "Our Treatments — Saleem Skin" },
-      {
-        name: "description",
-        content:
-          "Explore our full range of award-winning aesthetic treatments — HydraFacial, injectables, PRP, skin rejuvenation and wellness.",
-      },
+      { name: "description", content: "Explore our full range of award-winning aesthetic treatments — HydraFacial, injectables, PRP, skin rejuvenation and wellness." },
       { property: "og:title", content: "Our Treatments — Saleem Skin" },
-      {
-        property: "og:description",
-        content:
-          "From advanced injectables to skin rejuvenation, HydraFacial and wellness treatments — all by award-winning specialists.",
-      },
+      { property: "og:description", content: "From advanced injectables to skin rejuvenation, HydraFacial and wellness treatments — all by award-winning specialists." },
     ],
   }),
   component: TreatmentsPage,
@@ -29,8 +21,12 @@ export const Route = createFileRoute("/treatments/")({
 
 function TreatmentsPage() {
   const [active, setActive] = useState("All");
-  const filtered =
-    active === "All" ? treatments : treatments.filter((t) => t.category === active);
+  const { data: treatments = [], isLoading } = useTreatments();
+  const filtered = active === "All" ? treatments : treatments.filter((t) => t.category === active);
+
+  // categories from data + base list
+  const dynamicCats = Array.from(new Set(treatments.map((t) => t.category)));
+  const allCats = ["All", ...Array.from(new Set([...treatmentCategories.slice(1), ...dynamicCats]))];
 
   const scrollerRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
@@ -79,8 +75,7 @@ function TreatmentsPage() {
             <div className="text-gold text-[11px] tracking-[0.35em] mb-5">SALEEM SKIN</div>
             <h1 className="font-serif text-5xl md:text-6xl text-primary mb-6">Our Treatments</h1>
             <p className="text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-              From advanced injectables to skin rejuvenation, HydraFacial and wellness
-              treatments — all performed by our award-winning specialists.
+              From advanced injectables to skin rejuvenation, HydraFacial and wellness treatments — all performed by our award-winning specialists.
             </p>
           </div>
         </section>
@@ -91,9 +86,7 @@ function TreatmentsPage() {
               type="button"
               aria-label="Scroll categories left"
               onClick={() => scrollCats(-1)}
-              className={`hidden md:flex absolute left-2 top-1/2 -translate-y-1/2 z-10 items-center justify-center h-10 w-10 rounded-full bg-background border border-border shadow-md hover:border-gold hover:text-gold transition-all ${
-                canLeft ? "opacity-100" : "opacity-0 pointer-events-none"
-              }`}
+              className={`hidden md:flex absolute left-2 top-1/2 -translate-y-1/2 z-10 items-center justify-center h-10 w-10 rounded-full bg-background border border-border shadow-md hover:border-gold hover:text-gold transition-all ${canLeft ? "opacity-100" : "opacity-0 pointer-events-none"}`}
             >
               <ChevronLeft className="h-5 w-5" />
             </button>
@@ -101,7 +94,7 @@ function TreatmentsPage() {
               ref={scrollerRef}
               className="flex gap-3 overflow-x-auto scroll-smooth justify-start md:justify-center md:px-12 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
             >
-              {categories.map((c) => (
+              {allCats.map((c) => (
                 <button
                   key={c}
                   onClick={() => handleSelect(c)}
@@ -119,9 +112,7 @@ function TreatmentsPage() {
               type="button"
               aria-label="Scroll categories right"
               onClick={() => scrollCats(1)}
-              className={`hidden md:flex absolute right-2 top-1/2 -translate-y-1/2 z-10 items-center justify-center h-10 w-10 rounded-full bg-background border border-border shadow-md hover:border-gold hover:text-gold transition-all ${
-                canRight ? "opacity-100" : "opacity-0 pointer-events-none"
-              }`}
+              className={`hidden md:flex absolute right-2 top-1/2 -translate-y-1/2 z-10 items-center justify-center h-10 w-10 rounded-full bg-background border border-border shadow-md hover:border-gold hover:text-gold transition-all ${canRight ? "opacity-100" : "opacity-0 pointer-events-none"}`}
             >
               <ChevronRight className="h-5 w-5" />
             </button>
@@ -130,44 +121,40 @@ function TreatmentsPage() {
 
         <section ref={gridRef} className="py-16 md:py-20 bg-background scroll-mt-24">
           <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filtered.map((t) => (
-                <Link
-                  to="/treatments/$slug"
-                  params={{ slug: t.slug }}
-                  key={t.slug}
-                  className="group bg-card border border-border overflow-hidden flex flex-col hover:shadow-xl transition-shadow"
-                >
-                  <div className="relative aspect-[4/3] overflow-hidden">
-                    <img
-                      src={t.image}
-                      alt={t.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <span className="absolute top-4 left-4 bg-primary text-primary-foreground text-[10px] tracking-[0.25em] uppercase px-3 py-1.5">
-                      {t.category}
-                    </span>
-                  </div>
-                  <div className="p-6 flex flex-col flex-1">
-                    <h2 className="font-serif text-2xl text-primary mb-3 group-hover:text-gold transition-colors">{t.name}</h2>
-                    <p className="text-sm text-muted-foreground leading-relaxed flex-1">
-                      {t.description}
-                    </p>
-                    <div className="mt-6 pt-5 border-t border-border flex items-center justify-between">
-                      <span className="text-gold font-medium">{t.price}</span>
-                      <span className="text-xs text-muted-foreground flex items-center gap-1.5">
-                        <Clock className="h-3.5 w-3.5" />
-                        {t.duration}
+            {isLoading ? (
+              <div className="flex justify-center py-20"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {filtered.map((t) => (
+                  <Link
+                    to="/treatments/$slug"
+                    params={{ slug: t.slug }}
+                    key={t.slug}
+                    className="group bg-card border border-border overflow-hidden flex flex-col hover:shadow-xl transition-shadow"
+                  >
+                    <div className="relative aspect-[4/3] overflow-hidden">
+                      <img src={t.image} alt={t.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      <span className="absolute top-4 left-4 bg-primary text-primary-foreground text-[10px] tracking-[0.25em] uppercase px-3 py-1.5">
+                        {t.category}
                       </span>
                     </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-            {filtered.length === 0 && (
-              <p className="text-center text-muted-foreground py-12">
-                No treatments in this category yet.
-              </p>
+                    <div className="p-6 flex flex-col flex-1">
+                      <h2 className="font-serif text-2xl text-primary mb-3 group-hover:text-gold transition-colors">{t.name}</h2>
+                      <p className="text-sm text-muted-foreground leading-relaxed flex-1">{t.description}</p>
+                      <div className="mt-6 pt-5 border-t border-border flex items-center justify-between">
+                        <span className="text-gold font-medium">{t.price}</span>
+                        <span className="text-xs text-muted-foreground flex items-center gap-1.5">
+                          <Clock className="h-3.5 w-3.5" />
+                          {t.duration}
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
+            {!isLoading && filtered.length === 0 && (
+              <p className="text-center text-muted-foreground py-12">No treatments in this category yet.</p>
             )}
             <div className="text-center mt-16">
               <Link
