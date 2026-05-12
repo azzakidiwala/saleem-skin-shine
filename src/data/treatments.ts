@@ -6,6 +6,7 @@ import fillers from "@/assets/treatment-fillers.jpg";
 import laser from "@/assets/treatment-laser.jpg";
 import body from "@/assets/treatment-body.jpg";
 import clinic from "@/assets/about-clinic.jpg";
+import promoitaliaLipBooster from "@/assets/treatment-promoitalia-lip-booster.jpg";
 
 export type Treatment = {
   slug: string;
@@ -105,7 +106,7 @@ export const treatments: Treatment[] = [
     ],
     whatToExpect:
       "A topical numbing cream is applied before treatment. The injections take around 15 minutes. Mild swelling may occur and resolves within 24–48 hours.",
-    image: fillers,
+    image: promoitaliaLipBooster,
   },
   {
     slug: "traptox",
