@@ -112,18 +112,26 @@ function BookingsPage() {
       </div>
 
       <div className="flex flex-wrap gap-3 items-center">
-        <Select value={filter} onValueChange={setFilter}>
-          <SelectTrigger className="w-44"><SelectValue /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="upcoming">Upcoming</SelectItem>
-            <SelectItem value="all">All</SelectItem>
-            <SelectItem value="pending">Pending</SelectItem>
-            <SelectItem value="confirmed">Confirmed</SelectItem>
-            <SelectItem value="completed">Completed</SelectItem>
-            <SelectItem value="cancelled">Cancelled</SelectItem>
-            <SelectItem value="past">Past</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="flex flex-wrap gap-1 rounded-lg border bg-card p-1">
+          {[
+            { value: "upcoming", label: "Upcoming" },
+            { value: "all", label: "All" },
+            { value: "pending", label: "Pending" },
+            { value: "confirmed", label: "Confirmed" },
+            { value: "completed", label: "Completed" },
+            { value: "cancelled", label: "Cancelled" },
+            { value: "past", label: "Past" },
+          ].map((opt) => (
+            <Button
+              key={opt.value}
+              size="sm"
+              variant={filter === opt.value ? "default" : "ghost"}
+              onClick={() => setFilter(opt.value)}
+            >
+              {opt.label}
+            </Button>
+          ))}
+        </div>
         <Input placeholder="Search name, email, treatment…" value={search} onChange={(e) => setSearch(e.target.value)} className="max-w-xs" />
       </div>
 
