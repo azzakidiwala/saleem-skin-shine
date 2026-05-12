@@ -62,6 +62,21 @@ export const inviteAdmin = createServerFn({ method: "POST" })
     return { success: true };
   });
 
+export const updateAdminPassword = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data) => z.object({
+    user_id: z.string().uuid(),
+    password: z.string().min(8).max(72),
+  }).parse(data))
+  .handler(async ({ context, data }) => {
+    await ensureAdmin(context.userId);
+    const { error } = await supabaseAdmin.auth.admin.updateUserById(data.user_id, {
+      password: data.password,
+    });
+    if (error) throw new Error(error.message);
+    return { success: true };
+  });
+
 export const removeAdmin = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data) => z.object({ user_id: z.string().uuid() }).parse(data))
