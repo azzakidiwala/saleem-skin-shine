@@ -87,11 +87,8 @@ function LoginPage() {
         <Button type="submit" className="w-full" disabled={loading}>
           {loading ? "Working…" : mode === "signin" ? "Sign in" : "Create account"}
         </Button>
-        <div className="text-xs text-center text-muted-foreground space-y-1">
-          <button type="button" className="underline" onClick={() => setMode(mode === "signin" ? "signup" : "signin")}>
-            {mode === "signin" ? "Need to create the first admin? Sign up" : "Already have an account? Sign in"}
-          </button>
-          <div><Link to="/" className="underline">Back to site</Link></div>
+        <div className="text-xs text-center text-muted-foreground">
+          <Link to="/" className="underline">Back to site</Link>
         </div>
       </form>
     </div>
