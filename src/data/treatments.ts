@@ -1,4 +1,5 @@
 import facial from "@/assets/treatment-facial.jpg";
+import deluxeHydrafacial from "@/assets/treatment-deluxe-hydrafacial.jpg";
 import rejuvenation from "@/assets/treatment-rejuvenation.jpg";
 import antiWrinkle from "@/assets/treatment-anti-wrinkle.jpg";
 import fillers from "@/assets/treatment-fillers.jpg";
@@ -62,7 +63,7 @@ export const treatments: Treatment[] = [
     ],
     whatToExpect:
       "The treatment involves a multi-step process: cleanse, exfoliate, extract, and hydrate. You'll leave with visibly brighter, smoother skin. There is zero downtime.",
-    image: facial,
+    image: deluxeHydrafacial,
   },
   {
     slug: "wet-diamond-hydrafacial",
