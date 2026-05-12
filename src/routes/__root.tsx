@@ -4,11 +4,14 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
 
 import { Toaster } from "@/components/ui/sonner";
+import { ComingSoon } from "@/components/site/ComingSoon";
+import { useAuthSession } from "@/lib/admin/auth";
 
 import appCss from "../styles.css?url";
 
@@ -115,8 +118,28 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Outlet />
+      <SiteGate />
       <Toaster />
     </QueryClientProvider>
   );
+}
+
+function SiteGate() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const { session, loading } = useAuthSession();
+
+  // Routes that bypass the coming-soon gate entirely
+  const isBypass = pathname === "/login" || pathname.startsWith("/admin");
+  if (isBypass) return <Outlet />;
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-muted-foreground text-sm">
+        Loading…
+      </div>
+    );
+  }
+
+  if (!session) return <ComingSoon />;
+  return <Outlet />;
 }
