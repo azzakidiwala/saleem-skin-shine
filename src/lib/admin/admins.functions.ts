@@ -13,12 +13,32 @@ export const listAdmins = createServerFn({ method: "GET" })
       .select("user_id, role, created_at")
       .eq("role", "admin");
     if (error) throw new Error(error.message);
-    const out: { user_id: string; email: string | null; created_at: string }[] = [];
+    const out: { user_id: string; email: string | null; created_at: string; active: boolean }[] = [];
     for (const r of roles ?? []) {
       const { data: u } = await supabaseAdmin.auth.admin.getUserById(r.user_id);
-      out.push({ user_id: r.user_id, email: u?.user?.email ?? null, created_at: r.created_at });
+      const bannedUntil = (u?.user as any)?.banned_until as string | null | undefined;
+      const active = !bannedUntil || new Date(bannedUntil).getTime() <= Date.now();
+      out.push({ user_id: r.user_id, email: u?.user?.email ?? null, created_at: r.created_at, active });
     }
     return out;
+  });
+
+export const setAdminActive = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data) => z.object({
+    user_id: z.string().uuid(),
+    active: z.boolean(),
+  }).parse(data))
+  .handler(async ({ context, data }) => {
+    await ensureAdmin(context.userId);
+    if (data.user_id === context.userId && !data.active) {
+      throw new Error("You cannot deactivate your own account.");
+    }
+    const { error } = await (supabaseAdmin.auth.admin.updateUserById as any)(data.user_id, {
+      ban_duration: data.active ? "none" : "876000h",
+    });
+    if (error) throw new Error(error.message);
+    return { success: true };
   });
 
 export const inviteAdmin = createServerFn({ method: "POST" })
