@@ -113,8 +113,9 @@ function Field({ row, value, onChange, onSave }: { row: Row; value: any; onChang
       ) : isArray ? (
         <Textarea
           rows={4}
-          value={Array.isArray(value) ? value.join("\n") : ""}
-          onChange={(e) => onChange(e.target.value.split("\n").map((x) => x.trim()).filter(Boolean))}
+          value={Array.isArray(value) ? value.join("\n") : (typeof value === "string" ? value : "")}
+          onChange={(e) => onChange(e.target.value.split("\n"))}
+          onBlur={(e) => onChange(e.target.value.split("\n").map((x) => x.trim()).filter(Boolean))}
           placeholder="One per line"
         />
       ) : typeof row.value === "string" && row.value.length > 80 ? (
