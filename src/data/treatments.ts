@@ -63,7 +63,7 @@ export const treatments: Treatment[] = [
     ],
     whatToExpect:
       "The treatment involves a multi-step process: cleanse, exfoliate, extract, and hydrate. You'll leave with visibly brighter, smoother skin. There is zero downtime.",
-    image: facial,
+    image: deluxeHydrafacial,
   },
   {
     slug: "wet-diamond-hydrafacial",
