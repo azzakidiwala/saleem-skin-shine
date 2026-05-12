@@ -12,11 +12,12 @@ import {
 } from "@/components/ui/table";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Plus, Trash2, KeyRound } from "lucide-react";
-import { listAdmins, inviteAdmin, removeAdmin, updateAdminPassword } from "@/lib/admin/admins.functions";
+import { Plus, Trash2, KeyRound, UserCheck, UserX } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { listAdmins, inviteAdmin, removeAdmin, updateAdminPassword, setAdminActive } from "@/lib/admin/admins.functions";
 import { useIsAdmin } from "@/lib/admin/auth";
 
-type AdminRow = { user_id: string; email: string | null; created_at: string };
+type AdminRow = { user_id: string; email: string | null; created_at: string; active: boolean };
 
 function normalizeAdminsResponse(value: unknown): AdminRow[] {
   if (Array.isArray(value)) return value as AdminRow[];
@@ -36,6 +37,7 @@ function AdminsPage() {
   const invite = useServerFn(inviteAdmin);
   const remove = useServerFn(removeAdmin);
   const updatePw = useServerFn(updateAdminPassword);
+  const setActive = useServerFn(setAdminActive);
   const { session } = useIsAdmin();
   const getAuthHeaders = () => {
     if (!session?.access_token) throw new Error("Please sign in again.");
@@ -67,6 +69,12 @@ function AdminsPage() {
     onError: (e: any) => toast.error(e.message),
   });
 
+  const activeMut = useMutation({
+    mutationFn: async (input: { user_id: string; active: boolean }) => setActive({ data: input, headers: getAuthHeaders() }),
+    onSuccess: (_d, vars) => { toast.success(vars.active ? "Admin activated" : "Admin deactivated"); qc.invalidateQueries({ queryKey: ["admin", "admins"] }); },
+    onError: (e: any) => toast.error(e.message),
+  });
+
   return (
     <div className="space-y-6">
       <div className="flex items-end justify-between gap-4">
@@ -82,18 +90,30 @@ function AdminsPage() {
           <TableHeader>
             <TableRow>
               <TableHead>Email</TableHead>
+              <TableHead>Status</TableHead>
               <TableHead>Added</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {isLoading && <TableRow><TableCell colSpan={3} className="text-center py-8 text-muted-foreground">Loading…</TableCell></TableRow>}
-            {error && <TableRow><TableCell colSpan={3} className="text-center py-8 text-destructive">Could not load admins. Please try again.</TableCell></TableRow>}
+            {isLoading && <TableRow><TableCell colSpan={4} className="text-center py-8 text-muted-foreground">Loading…</TableCell></TableRow>}
+            {error && <TableRow><TableCell colSpan={4} className="text-center py-8 text-destructive">Could not load admins. Please try again.</TableCell></TableRow>}
             {(data ?? []).map((a) => (
               <TableRow key={a.user_id}>
                 <TableCell className="font-medium">{a.email ?? a.user_id}{a.user_id === session?.user.id && <span className="ml-2 text-xs text-muted-foreground">(you)</span>}</TableCell>
+                <TableCell>
+                  <Badge variant={a.active ? "default" : "secondary"}>{a.active ? "Active" : "Inactive"}</Badge>
+                </TableCell>
                 <TableCell className="text-sm text-muted-foreground">{new Date(a.created_at).toLocaleDateString()}</TableCell>
                 <TableCell className="text-right space-x-1">
+                  <Button
+                    variant="ghost" size="icon"
+                    disabled={a.user_id === session?.user.id || activeMut.isPending}
+                    title={a.active ? "Deactivate" : "Activate"}
+                    onClick={() => activeMut.mutate({ user_id: a.user_id, active: !a.active })}
+                  >
+                    {a.active ? <UserX className="h-4 w-4" /> : <UserCheck className="h-4 w-4" />}
+                  </Button>
                   <PasswordDialog
                     email={a.email ?? a.user_id}
                     onSave={(password) => passwordMut.mutateAsync({ user_id: a.user_id, password })}
