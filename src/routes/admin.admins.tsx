@@ -16,6 +16,16 @@ import { Plus, Trash2 } from "lucide-react";
 import { listAdmins, inviteAdmin, removeAdmin } from "@/lib/admin/admins.functions";
 import { useIsAdmin } from "@/lib/admin/auth";
 
+type AdminRow = { user_id: string; email: string | null; created_at: string };
+
+function normalizeAdminsResponse(value: unknown): AdminRow[] {
+  if (Array.isArray(value)) return value as AdminRow[];
+  if (value && typeof value === "object" && Array.isArray((value as { result?: unknown }).result)) {
+    return (value as { result: AdminRow[] }).result;
+  }
+  return [];
+}
+
 export const Route = createFileRoute("/admin/admins")({
   component: AdminsPage,
 });
@@ -33,7 +43,7 @@ function AdminsPage() {
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["admin", "admins"],
-    queryFn: () => list({ headers: getAuthHeaders() }),
+    queryFn: async () => normalizeAdminsResponse(await list({ headers: getAuthHeaders() })),
     enabled: !!session?.access_token,
     throwOnError: false,
   });
