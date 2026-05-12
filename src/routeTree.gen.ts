@@ -13,6 +13,7 @@ import { Route as TreatmentsRouteImport } from './routes/treatments'
 import { Route as TeamRouteImport } from './routes/team'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as BookConfirmedRouteImport } from './routes/book-confirmed'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TreatmentsIndexRouteImport } from './routes/treatments.index'
 import { Route as TreatmentsSlugRouteImport } from './routes/treatments.$slug'
@@ -38,6 +39,11 @@ const BookConfirmedRoute = BookConfirmedRouteImport.update({
   path: '/book-confirmed',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -61,6 +67,7 @@ const BookSlugRoute = BookSlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/book-confirmed': typeof BookConfirmedRoute
   '/login': typeof LoginRoute
   '/team': typeof TeamRoute
@@ -71,6 +78,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/book-confirmed': typeof BookConfirmedRoute
   '/login': typeof LoginRoute
   '/team': typeof TeamRoute
@@ -81,6 +89,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/book-confirmed': typeof BookConfirmedRoute
   '/login': typeof LoginRoute
   '/team': typeof TeamRoute
@@ -93,6 +102,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/book-confirmed'
     | '/login'
     | '/team'
@@ -103,6 +113,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/admin'
     | '/book-confirmed'
     | '/login'
     | '/team'
@@ -112,6 +123,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/admin'
     | '/book-confirmed'
     | '/login'
     | '/team'
@@ -123,6 +135,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRoute
   BookConfirmedRoute: typeof BookConfirmedRoute
   LoginRoute: typeof LoginRoute
   TeamRoute: typeof TeamRoute
@@ -158,6 +171,13 @@ declare module '@tanstack/react-router' {
       path: '/book-confirmed'
       fullPath: '/book-confirmed'
       preLoaderRoute: typeof BookConfirmedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -207,6 +227,7 @@ const TreatmentsRouteWithChildren = TreatmentsRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRoute,
   BookConfirmedRoute: BookConfirmedRoute,
   LoginRoute: LoginRoute,
   TeamRoute: TeamRoute,
