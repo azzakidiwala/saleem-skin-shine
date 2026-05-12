@@ -185,28 +185,7 @@ function Field({ row, value, onChange, onSave }: { row: Row; value: any; onChang
       ) : (
         <Input value={value ?? ""} onChange={(e) => onChange(e.target.value)} />
       )}
-      {!isImage && (
-        <div className="rounded border border-dashed bg-muted/30 px-3 py-2">
-          <p className="text-[10px] uppercase tracking-wide text-muted-foreground mb-1">Preview</p>
-          {Array.isArray(value) ? (
-            value.length === 0 ? (
-              <p className="text-sm italic text-muted-foreground">Empty</p>
-            ) : (
-              <ul className="text-sm space-y-0.5">
-                {(value as string[]).slice(0, 5).map((line, i) => (
-                  <li key={i}>• {line}</li>
-                ))}
-              </ul>
-            )
-          ) : (
-            <p className="text-sm whitespace-pre-wrap break-words">
-              {typeof value === "string" && value.trim()
-                ? value
-                : <span className="italic text-muted-foreground">Empty</span>}
-            </p>
-          )}
-        </div>
-      )}
+      {hint && <SectionPreview href={hint.href} label={row.label} />}
       <div className="flex justify-end">
         <Button size="sm" onClick={onSave} disabled={uploading}>Save</Button>
       </div>
