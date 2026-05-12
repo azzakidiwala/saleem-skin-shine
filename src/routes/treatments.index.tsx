@@ -32,6 +32,43 @@ function TreatmentsPage() {
   const filtered =
     active === "All" ? treatments : treatments.filter((t) => t.category === active);
 
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+  const [canLeft, setCanLeft] = useState(false);
+  const [canRight, setCanRight] = useState(false);
+
+  const updateArrows = () => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    setCanLeft(el.scrollLeft > 4);
+    setCanRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 4);
+  };
+
+  useEffect(() => {
+    updateArrows();
+    const el = scrollerRef.current;
+    if (!el) return;
+    el.addEventListener("scroll", updateArrows, { passive: true });
+    window.addEventListener("resize", updateArrows);
+    return () => {
+      el.removeEventListener("scroll", updateArrows);
+      window.removeEventListener("resize", updateArrows);
+    };
+  }, []);
+
+  const scrollCats = (dir: 1 | -1) => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    el.scrollBy({ left: dir * Math.max(240, el.clientWidth * 0.7), behavior: "smooth" });
+  };
+
+  const handleSelect = (c: string) => {
+    setActive(c);
+    requestAnimationFrame(() => {
+      gridRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <AnnouncementBar />
@@ -49,12 +86,25 @@ function TreatmentsPage() {
         </section>
 
         <section className="border-y border-border bg-card sticky top-0 z-30">
-          <div className="container mx-auto px-4 py-5">
-            <div className="flex gap-3 overflow-x-auto justify-start md:justify-center">
+          <div className="container mx-auto px-4 py-5 relative">
+            <button
+              type="button"
+              aria-label="Scroll categories left"
+              onClick={() => scrollCats(-1)}
+              className={`hidden md:flex absolute left-2 top-1/2 -translate-y-1/2 z-10 items-center justify-center h-10 w-10 rounded-full bg-background border border-border shadow-md hover:border-gold hover:text-gold transition-all ${
+                canLeft ? "opacity-100" : "opacity-0 pointer-events-none"
+              }`}
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+            <div
+              ref={scrollerRef}
+              className="flex gap-3 overflow-x-auto scroll-smooth justify-start md:justify-center md:px-12 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+            >
               {categories.map((c) => (
                 <button
                   key={c}
-                  onClick={() => setActive(c)}
+                  onClick={() => handleSelect(c)}
                   className={`shrink-0 px-5 py-2.5 text-[11px] tracking-[0.2em] uppercase border transition-colors ${
                     active === c
                       ? "bg-primary text-primary-foreground border-primary"
@@ -65,6 +115,16 @@ function TreatmentsPage() {
                 </button>
               ))}
             </div>
+            <button
+              type="button"
+              aria-label="Scroll categories right"
+              onClick={() => scrollCats(1)}
+              className={`hidden md:flex absolute right-2 top-1/2 -translate-y-1/2 z-10 items-center justify-center h-10 w-10 rounded-full bg-background border border-border shadow-md hover:border-gold hover:text-gold transition-all ${
+                canRight ? "opacity-100" : "opacity-0 pointer-events-none"
+              }`}
+            >
+              <ChevronRight className="h-5 w-5" />
+            </button>
           </div>
         </section>
 
