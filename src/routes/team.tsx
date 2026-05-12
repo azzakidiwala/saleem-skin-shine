@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Stethoscope, GraduationCap, Award, Sparkles, Gem, Flower2 } from "lucide-react";
 import { AnnouncementBar } from "@/components/site/AnnouncementBar";
 import { Header } from "@/components/site/Header";
@@ -117,6 +117,12 @@ function TeamPage() {
                   </div>
                 </article>
               ))}
+            </div>
+            <div className="text-center mt-16">
+              <p className="text-muted-foreground mb-6">Discover the treatments our specialists provide</p>
+              <Link to="/treatments" className="inline-flex items-center justify-center bg-gold text-gold-foreground px-8 py-4 text-xs tracking-[0.25em] font-semibold uppercase hover:bg-gold/90 transition-colors">
+                View All Treatments
+              </Link>
             </div>
           </div>
         </section>
