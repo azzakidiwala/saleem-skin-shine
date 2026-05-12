@@ -12,11 +12,12 @@ import {
 } from "@/components/ui/table";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Plus, Trash2, KeyRound } from "lucide-react";
-import { listAdmins, inviteAdmin, removeAdmin, updateAdminPassword } from "@/lib/admin/admins.functions";
+import { Plus, Trash2, KeyRound, UserCheck, UserX } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { listAdmins, inviteAdmin, removeAdmin, updateAdminPassword, setAdminActive } from "@/lib/admin/admins.functions";
 import { useIsAdmin } from "@/lib/admin/auth";
 
-type AdminRow = { user_id: string; email: string | null; created_at: string };
+type AdminRow = { user_id: string; email: string | null; created_at: string; active: boolean };
 
 function normalizeAdminsResponse(value: unknown): AdminRow[] {
   if (Array.isArray(value)) return value as AdminRow[];
