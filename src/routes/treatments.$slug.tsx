@@ -4,7 +4,7 @@ import { AnnouncementBar } from "@/components/site/AnnouncementBar";
 import { Header } from "@/components/site/Header";
 import { CTA } from "@/components/site/CTA";
 import { Footer } from "@/components/site/Footer";
-import { fetchTreatmentBySlug, fetchTreatments } from "@/lib/content/queries";
+import { fetchTreatmentBySlug, fetchTreatments, type Treatment } from "@/lib/content/queries";
 
 export const Route = createFileRoute("/treatments/$slug")({
   loader: async ({ params }) => {
@@ -43,10 +43,10 @@ export const Route = createFileRoute("/treatments/$slug")({
 function TreatmentDetailPage() {
   const { treatment: t, all } = Route.useLoaderData();
 
-  const related = all
-    .filter((x) => x.slug !== t.slug && x.category === t.category)
+  const related: Treatment[] = (all as Treatment[])
+    .filter((x: Treatment) => x.slug !== t.slug && x.category === t.category)
     .slice(0, 3)
-    .concat(all.filter((x) => x.slug !== t.slug && x.category !== t.category))
+    .concat((all as Treatment[]).filter((x: Treatment) => x.slug !== t.slug && x.category !== t.category))
     .slice(0, 3);
 
   return (
@@ -133,7 +133,7 @@ function TreatmentDetailPage() {
           <div className="container mx-auto px-6">
             <h2 className="font-serif text-3xl text-primary text-center mb-10">Other Treatments You May Like</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {related.map((r) => (
+              {related.map((r: Treatment) => (
                 <Link
                   to="/treatments/$slug"
                   params={{ slug: r.slug }}
