@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { AlertTriangle } from "lucide-react";
 import { uploadSiteImage } from "@/lib/admin/storage";
 
 export const Route = createFileRoute("/admin/content")({
@@ -69,6 +70,16 @@ function ContentPage() {
       <div>
         <h1 className="text-3xl font-semibold">Site Content</h1>
         <p className="text-muted-foreground mt-1">Edit text and images shown across the public site.</p>
+      </div>
+
+      <div role="alert" className="flex gap-3 rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm">
+        <AlertTriangle className="h-5 w-5 shrink-0 text-destructive mt-0.5" />
+        <div className="space-y-1">
+          <p className="font-semibold text-destructive">Changes go live immediately</p>
+          <p className="text-foreground/80">
+            Anything you save here updates the public website right away and cannot be undone. Please double-check spelling, links, and images before clicking Save.
+          </p>
+        </div>
       </div>
 
       {Object.entries(grouped).map(([group, rows]) => (
