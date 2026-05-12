@@ -192,3 +192,72 @@ function Field({ row, value, onChange, onSave }: { row: Row; value: any; onChang
     </div>
   );
 }
+
+function SectionPreview({ href, label }: { href: string; label: string }) {
+  // Cache-bust on each mount so the preview reflects the latest saved content
+  const [cacheKey] = useState(() => Date.now());
+  const src = `${href}${href.includes("?") ? "&" : "?"}_t=${cacheKey}`;
+
+  return (
+    <div className="rounded border border-dashed bg-muted/30 p-2 space-y-2">
+      <div className="flex items-center justify-between">
+        <p className="text-[10px] uppercase tracking-wide text-muted-foreground">Live preview</p>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button type="button" variant="ghost" size="sm" className="h-6 px-2 text-xs">
+              <Maximize2 className="h-3 w-3 mr-1" /> Expand
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-5xl w-[95vw] p-0 overflow-hidden">
+            <DialogHeader className="px-4 py-3 border-b">
+              <DialogTitle className="text-sm font-medium">Preview — {label}</DialogTitle>
+            </DialogHeader>
+            <div className="bg-muted/30">
+              <iframe
+                src={src}
+                title={`Preview of ${label}`}
+                className="w-full h-[75vh] bg-background border-0"
+              />
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
+      <Dialog>
+        <DialogTrigger asChild>
+          <button
+            type="button"
+            className="block w-full overflow-hidden rounded border bg-background relative group"
+            style={{ height: 180 }}
+            aria-label={`Expand preview of ${label}`}
+          >
+            <iframe
+              src={src}
+              title={`Thumbnail of ${label}`}
+              tabIndex={-1}
+              className="border-0 pointer-events-none"
+              style={{
+                width: 1280,
+                height: 800,
+                transform: "scale(0.35)",
+                transformOrigin: "top left",
+              }}
+            />
+            <span className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/5 transition-colors" />
+          </button>
+        </DialogTrigger>
+        <DialogContent className="max-w-5xl w-[95vw] p-0 overflow-hidden">
+          <DialogHeader className="px-4 py-3 border-b">
+            <DialogTitle className="text-sm font-medium">Preview — {label}</DialogTitle>
+          </DialogHeader>
+          <div className="bg-muted/30">
+            <iframe
+              src={src}
+              title={`Expanded preview of ${label}`}
+              className="w-full h-[75vh] bg-background border-0"
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
