@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, ExternalLink, MapPin } from "lucide-react";
 import { uploadSiteImage } from "@/lib/admin/storage";
 
 export const Route = createFileRoute("/admin/content")({
@@ -21,6 +21,29 @@ const GROUP_LABEL: Record<string, string> = {
   about: "About Section",
   cta: "Call to Action / Contact",
   announcement: "Announcement Bar",
+};
+
+const FIELD_HINT: Record<string, { where: string; href: string }> = {
+  "hero.eyebrow":        { where: "Homepage hero — small badge above the title", href: "/#hero" },
+  "hero.title_line1":    { where: "Homepage hero — first line of the headline",  href: "/#hero" },
+  "hero.title_emphasis": { where: "Homepage hero — emphasised word in headline", href: "/#hero" },
+  "hero.title_line2":    { where: "Homepage hero — second line of the headline", href: "/#hero" },
+  "hero.subtitle":       { where: "Homepage hero — subtitle under the headline", href: "/#hero" },
+  "hero.image_url":      { where: "Homepage hero — background image",            href: "/#hero" },
+  "about.eyebrow":       { where: "Homepage About section — small label",        href: "/#about" },
+  "about.title":         { where: "Homepage About section — section title",      href: "/#about" },
+  "about.body":          { where: "Homepage About section — paragraph text",     href: "/#about" },
+  "about.years":         { where: "Homepage About section — years badge",        href: "/#about" },
+  "about.image_url":     { where: "Homepage About section — image",              href: "/#about" },
+  "cta.eyebrow":         { where: "Contact / CTA section — small label",         href: "/#contact" },
+  "cta.title_line1":     { where: "Contact / CTA section — title line 1",        href: "/#contact" },
+  "cta.title_emphasis":  { where: "Contact / CTA section — emphasised word",     href: "/#contact" },
+  "cta.title_line2":     { where: "Contact / CTA section — title line 2",        href: "/#contact" },
+  "cta.body":            { where: "Contact / CTA section — paragraph text",      href: "/#contact" },
+  "cta.phone":           { where: "Used for the call link site-wide",            href: "/#contact" },
+  "cta.phone_display":   { where: "Phone number shown to visitors",              href: "/#contact" },
+  "cta.email":           { where: "Email shown to visitors",                     href: "/#contact" },
+  "announcement.messages": { where: "Top of every page — rotating banner",       href: "/" },
 };
 
 function ContentPage() {
