@@ -68,7 +68,9 @@ function BookingsPage() {
 
   const updateStatus = useMutation({
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
-      const { error } = await supabase.from("bookings").update({ status }).eq("id", id);
+      const patch: Record<string, unknown> = { status };
+      if (status === "confirmed") patch.confirmed_at = new Date().toISOString();
+      const { error } = await supabase.from("bookings").update(patch).eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => { toast.success("Status updated"); qc.invalidateQueries({ queryKey: ["admin", "bookings"] }); },
