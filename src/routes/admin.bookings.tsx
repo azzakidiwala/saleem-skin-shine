@@ -176,6 +176,11 @@ function BookingsPage() {
                       {STATUSES.map((s) => <SelectItem key={s} value={s} className="capitalize">{s}</SelectItem>)}
                     </SelectContent>
                   </Select>
+                  {b.status === "confirmed" && b.confirmed_at && (
+                    <div className="text-[10px] text-muted-foreground mt-1">
+                      Confirmed {new Date(b.confirmed_at).toLocaleString("en-GB")}
+                    </div>
+                  )}
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-1">
