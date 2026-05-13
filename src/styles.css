@@ -93,3 +93,16 @@
     font-weight: 500;
   }
 }
+
+/* Highlight the targeted content element when previewing from the admin */
+[id^="c-"]:target {
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
+  border-radius: 2px;
+  scroll-margin-top: 80px;
+  animation: content-target-pulse 1.4s ease-out 1;
+}
+@keyframes content-target-pulse {
+  0%   { box-shadow: 0 0 0 0 color-mix(in oklab, var(--gold) 60%, transparent); }
+  100% { box-shadow: 0 0 0 14px color-mix(in oklab, var(--gold) 0%, transparent); }
+}
