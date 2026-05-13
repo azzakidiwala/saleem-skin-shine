@@ -13,7 +13,7 @@ export function Hero() {
   const heroImage = getString(content, "hero.image_url", "") || hero;
 
   return (
-    <section className="relative h-[88vh] min-h-[640px] w-full overflow-hidden">
+    <section id="hero" className="relative h-[88vh] min-h-[640px] w-full overflow-hidden">
       <img src={heroImage} alt="Luxury aesthetic treatment room" className="absolute inset-0 h-full w-full object-cover" />
       <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/60" />
       <div className="relative z-10 container mx-auto h-full px-6 flex flex-col items-center justify-center text-center text-white">

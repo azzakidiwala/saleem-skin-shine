@@ -18,7 +18,7 @@ export function About() {
   const aboutImage = getString(content, "about.image_url", "") || about;
 
   return (
-    <section className="py-24 md:py-32 bg-background">
+    <section id="about" className="py-24 md:py-32 bg-background">
       <div className="container mx-auto px-6">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           <div className="relative">
