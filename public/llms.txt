@@ -1,0 +1,15 @@
+# Saleem Skin
+
+> Award-winning aesthetic clinic in Manchester offering premium skin, health and wellness treatments by expert specialists.
+
+Saleem Skin delivers advanced aesthetic treatments — including HydraFacial, injectables, PRP, skin rejuvenation and wellness therapies — at its Manchester clinic.
+
+## Pages
+
+- [Home](/): Overview of the clinic, featured treatments and team.
+- [Treatments](/treatments): Full catalogue of aesthetic and wellness treatments.
+- [Meet the Team](/team): Our award-winning specialists and practitioners.
+
+## Optional
+
+- [Booking confirmed](/book-confirmed): Post-booking confirmation page.

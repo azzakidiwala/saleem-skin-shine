@@ -9,6 +9,12 @@ import { toast } from "sonner";
 import { claimFirstAdmin } from "@/lib/admin/bootstrap.functions";
 
 export const Route = createFileRoute("/login")({
+  head: () => ({
+    meta: [
+      { title: "Sign in — Saleem Skin" },
+      { name: "robots", content: "noindex" },
+    ],
+  }),
   component: LoginPage,
 });
 

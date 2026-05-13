@@ -25,10 +25,11 @@ export const Route = createFileRoute("/book/$slug")({
           { title: `Book ${loaderData.treatment.name} — Saleem Skin` },
           {
             name: "description",
-            content: `Book your ${loaderData.treatment.name} appointment online at Saleem Skin.`,
+            content: `Book your ${loaderData.treatment.name} appointment online at Saleem Skin Manchester.`,
           },
+          { name: "robots", content: "noindex" },
         ]
-      : [],
+      : [{ name: "robots", content: "noindex" }],
   }),
   notFoundComponent: () => (
     <div className="min-h-screen flex items-center justify-center">
