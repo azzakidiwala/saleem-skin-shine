@@ -19,6 +19,9 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as TreatmentsIndexRouteImport } from './routes/treatments.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as TreatmentsSlugRouteImport } from './routes/treatments.$slug'
+import { Route as ConditionsSkinRouteImport } from './routes/conditions.skin'
+import { Route as ConditionsFaceRouteImport } from './routes/conditions.face'
+import { Route as ConditionsBodyRouteImport } from './routes/conditions.body'
 import { Route as BookSlugRouteImport } from './routes/book.$slug'
 import { Route as AdminTreatmentsRouteImport } from './routes/admin.treatments'
 import { Route as AdminTeamRouteImport } from './routes/admin.team'
@@ -78,6 +81,21 @@ const TreatmentsSlugRoute = TreatmentsSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => TreatmentsRoute,
 } as any)
+const ConditionsSkinRoute = ConditionsSkinRouteImport.update({
+  id: '/conditions/skin',
+  path: '/conditions/skin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConditionsFaceRoute = ConditionsFaceRouteImport.update({
+  id: '/conditions/face',
+  path: '/conditions/face',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConditionsBodyRoute = ConditionsBodyRouteImport.update({
+  id: '/conditions/body',
+  path: '/conditions/body',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BookSlugRoute = BookSlugRouteImport.update({
   id: '/book/$slug',
   path: '/book/$slug',
@@ -134,6 +152,9 @@ export interface FileRoutesByFullPath {
   '/admin/team': typeof AdminTeamRoute
   '/admin/treatments': typeof AdminTreatmentsRoute
   '/book/$slug': typeof BookSlugRoute
+  '/conditions/body': typeof ConditionsBodyRoute
+  '/conditions/face': typeof ConditionsFaceRoute
+  '/conditions/skin': typeof ConditionsSkinRoute
   '/treatments/$slug': typeof TreatmentsSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/treatments/': typeof TreatmentsIndexRoute
@@ -152,6 +173,9 @@ export interface FileRoutesByTo {
   '/admin/team': typeof AdminTeamRoute
   '/admin/treatments': typeof AdminTreatmentsRoute
   '/book/$slug': typeof BookSlugRoute
+  '/conditions/body': typeof ConditionsBodyRoute
+  '/conditions/face': typeof ConditionsFaceRoute
+  '/conditions/skin': typeof ConditionsSkinRoute
   '/treatments/$slug': typeof TreatmentsSlugRoute
   '/admin': typeof AdminIndexRoute
   '/treatments': typeof TreatmentsIndexRoute
@@ -173,6 +197,9 @@ export interface FileRoutesById {
   '/admin/team': typeof AdminTeamRoute
   '/admin/treatments': typeof AdminTreatmentsRoute
   '/book/$slug': typeof BookSlugRoute
+  '/conditions/body': typeof ConditionsBodyRoute
+  '/conditions/face': typeof ConditionsFaceRoute
+  '/conditions/skin': typeof ConditionsSkinRoute
   '/treatments/$slug': typeof TreatmentsSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/treatments/': typeof TreatmentsIndexRoute
@@ -195,6 +222,9 @@ export interface FileRouteTypes {
     | '/admin/team'
     | '/admin/treatments'
     | '/book/$slug'
+    | '/conditions/body'
+    | '/conditions/face'
+    | '/conditions/skin'
     | '/treatments/$slug'
     | '/admin/'
     | '/treatments/'
@@ -213,6 +243,9 @@ export interface FileRouteTypes {
     | '/admin/team'
     | '/admin/treatments'
     | '/book/$slug'
+    | '/conditions/body'
+    | '/conditions/face'
+    | '/conditions/skin'
     | '/treatments/$slug'
     | '/admin'
     | '/treatments'
@@ -233,6 +266,9 @@ export interface FileRouteTypes {
     | '/admin/team'
     | '/admin/treatments'
     | '/book/$slug'
+    | '/conditions/body'
+    | '/conditions/face'
+    | '/conditions/skin'
     | '/treatments/$slug'
     | '/admin/'
     | '/treatments/'
@@ -249,6 +285,9 @@ export interface RootRouteChildren {
   TeamRoute: typeof TeamRoute
   TreatmentsRoute: typeof TreatmentsRouteWithChildren
   BookSlugRoute: typeof BookSlugRoute
+  ConditionsBodyRoute: typeof ConditionsBodyRoute
+  ConditionsFaceRoute: typeof ConditionsFaceRoute
+  ConditionsSkinRoute: typeof ConditionsSkinRoute
   ApiPublicConfirmBookingRoute: typeof ApiPublicConfirmBookingRoute
   LovableEmailQueueProcessRoute: typeof LovableEmailQueueProcessRoute
 }
@@ -324,6 +363,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/treatments/$slug'
       preLoaderRoute: typeof TreatmentsSlugRouteImport
       parentRoute: typeof TreatmentsRoute
+    }
+    '/conditions/skin': {
+      id: '/conditions/skin'
+      path: '/conditions/skin'
+      fullPath: '/conditions/skin'
+      preLoaderRoute: typeof ConditionsSkinRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/conditions/face': {
+      id: '/conditions/face'
+      path: '/conditions/face'
+      fullPath: '/conditions/face'
+      preLoaderRoute: typeof ConditionsFaceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/conditions/body': {
+      id: '/conditions/body'
+      path: '/conditions/body'
+      fullPath: '/conditions/body'
+      preLoaderRoute: typeof ConditionsBodyRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/book/$slug': {
       id: '/book/$slug'
@@ -427,6 +487,9 @@ const rootRouteChildren: RootRouteChildren = {
   TeamRoute: TeamRoute,
   TreatmentsRoute: TreatmentsRouteWithChildren,
   BookSlugRoute: BookSlugRoute,
+  ConditionsBodyRoute: ConditionsBodyRoute,
+  ConditionsFaceRoute: ConditionsFaceRoute,
+  ConditionsSkinRoute: ConditionsSkinRoute,
   ApiPublicConfirmBookingRoute: ApiPublicConfirmBookingRoute,
   LovableEmailQueueProcessRoute: LovableEmailQueueProcessRoute,
 }
