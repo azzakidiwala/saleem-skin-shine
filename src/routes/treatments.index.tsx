@@ -10,11 +10,13 @@ import { useTreatments, treatmentCategories } from "@/lib/content/queries";
 export const Route = createFileRoute("/treatments/")({
   head: () => ({
     meta: [
-      { title: "Our Treatments — Saleem Skin" },
-      { name: "description", content: "Explore our full range of award-winning aesthetic treatments — HydraFacial, injectables, PRP, skin rejuvenation and wellness." },
-      { property: "og:title", content: "Our Treatments — Saleem Skin" },
-      { property: "og:description", content: "From advanced injectables to skin rejuvenation, HydraFacial and wellness treatments — all by award-winning specialists." },
+      { title: "Aesthetic Treatments in Manchester — Saleem Skin" },
+      { name: "description", content: "Explore our full range of award-winning aesthetic treatments at Saleem Skin Manchester — HydraFacial, injectables, PRP, skin rejuvenation and wellness." },
+      { property: "og:title", content: "Aesthetic Treatments in Manchester — Saleem Skin" },
+      { property: "og:description", content: "From advanced injectables to skin rejuvenation, HydraFacial and wellness treatments — all by award-winning specialists in Manchester." },
+      { property: "og:url", content: "https://saleemskin.co.uk/treatments" },
     ],
+    links: [{ rel: "canonical", href: "https://saleemskin.co.uk/treatments" }],
   }),
   component: TreatmentsPage,
 });

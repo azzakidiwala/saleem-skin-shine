@@ -13,17 +13,42 @@ export const Route = createFileRoute("/treatments/$slug")({
     const all = await fetchTreatments();
     return { treatment, all };
   },
-  head: ({ loaderData }) => ({
-    meta: loaderData
-      ? [
-          { title: `${loaderData.treatment.name} — Saleem Skin` },
-          { name: "description", content: loaderData.treatment.description },
-          { property: "og:title", content: `${loaderData.treatment.name} — Saleem Skin` },
-          { property: "og:description", content: loaderData.treatment.description },
-          { property: "og:image", content: loaderData.treatment.image },
-        ]
-      : [],
-  }),
+  head: ({ loaderData, params }) => {
+    if (!loaderData) return { meta: [] };
+    const url = `https://saleemskin.co.uk/treatments/${params.slug}`;
+    return {
+      meta: [
+        { title: `${loaderData.treatment.name} — Saleem Skin` },
+        { name: "description", content: loaderData.treatment.description },
+        { property: "og:title", content: `${loaderData.treatment.name} — Saleem Skin` },
+        { property: "og:description", content: loaderData.treatment.description },
+        { property: "og:image", content: loaderData.treatment.image },
+        { property: "og:url", content: url },
+        { property: "og:type", content: "article" },
+        { name: "twitter:image", content: loaderData.treatment.image },
+      ],
+      links: [{ rel: "canonical", href: url }],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Service",
+            name: loaderData.treatment.name,
+            description: loaderData.treatment.description,
+            image: loaderData.treatment.image,
+            category: loaderData.treatment.category,
+            url,
+            provider: {
+              "@type": "HealthAndBeautyBusiness",
+              name: "Saleem Skin",
+              url: "https://saleemskin.co.uk/",
+            },
+          }),
+        },
+      ],
+    };
+  },
   notFoundComponent: () => (
     <div className="min-h-screen flex items-center justify-center">
       <div className="text-center">

@@ -48,11 +48,13 @@ const badges = [
 export const Route = createFileRoute("/team")({
   head: () => ({
     meta: [
-      { title: "Meet the Team — Saleem Skin" },
-      { name: "description", content: "Meet the award-winning team of aesthetic practitioners and skin therapists at Saleem Skin." },
-      { property: "og:title", content: "Meet the Team — Saleem Skin" },
-      { property: "og:description", content: "Our award-winning team of aesthetic practitioners and skin therapists." },
+      { title: "Meet the Team — Saleem Skin Manchester" },
+      { name: "description", content: "Meet the award-winning team of aesthetic practitioners and skin therapists at Saleem Skin Manchester — specialists in skin, health and wellness." },
+      { property: "og:title", content: "Meet the Team — Saleem Skin Manchester" },
+      { property: "og:description", content: "Our award-winning team of aesthetic practitioners and skin therapists in Manchester." },
+      { property: "og:url", content: "https://saleemskin.co.uk/team" },
     ],
+    links: [{ rel: "canonical", href: "https://saleemskin.co.uk/team" }],
   }),
   component: TeamPage,
 });
