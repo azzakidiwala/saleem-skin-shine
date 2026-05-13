@@ -34,6 +34,7 @@ type Booking = {
   appointment_date: string;
   appointment_time: string;
   status: string;
+  confirmed_at: string | null;
   created_at: string;
 };
 
