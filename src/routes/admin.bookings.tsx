@@ -34,6 +34,7 @@ type Booking = {
   appointment_date: string;
   appointment_time: string;
   status: string;
+  confirmed_at: string | null;
   created_at: string;
 };
 
@@ -67,7 +68,9 @@ function BookingsPage() {
 
   const updateStatus = useMutation({
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
-      const { error } = await supabase.from("bookings").update({ status }).eq("id", id);
+      const patch: { status: string; confirmed_at?: string } = { status };
+      if (status === "confirmed") patch.confirmed_at = new Date().toISOString();
+      const { error } = await supabase.from("bookings").update(patch).eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => { toast.success("Status updated"); qc.invalidateQueries({ queryKey: ["admin", "bookings"] }); },
@@ -173,6 +176,11 @@ function BookingsPage() {
                       {STATUSES.map((s) => <SelectItem key={s} value={s} className="capitalize">{s}</SelectItem>)}
                     </SelectContent>
                   </Select>
+                  {b.status === "confirmed" && b.confirmed_at && (
+                    <div className="text-[10px] text-muted-foreground mt-1">
+                      Confirmed {new Date(b.confirmed_at).toLocaleString("en-GB")}
+                    </div>
+                  )}
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-1">

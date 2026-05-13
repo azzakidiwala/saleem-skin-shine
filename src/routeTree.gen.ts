@@ -24,6 +24,7 @@ import { Route as AdminTeamRouteImport } from './routes/admin.team'
 import { Route as AdminContentRouteImport } from './routes/admin.content'
 import { Route as AdminBookingsRouteImport } from './routes/admin.bookings'
 import { Route as AdminAdminsRouteImport } from './routes/admin.admins'
+import { Route as ApiPublicConfirmBookingRouteImport } from './routes/api/public/confirm-booking'
 import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
 
 const TreatmentsRoute = TreatmentsRouteImport.update({
@@ -101,6 +102,11 @@ const AdminAdminsRoute = AdminAdminsRouteImport.update({
   path: '/admins',
   getParentRoute: () => AdminRoute,
 } as any)
+const ApiPublicConfirmBookingRoute = ApiPublicConfirmBookingRouteImport.update({
+  id: '/api/public/confirm-booking',
+  path: '/api/public/confirm-booking',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LovableEmailQueueProcessRoute =
   LovableEmailQueueProcessRouteImport.update({
     id: '/lovable/email/queue/process',
@@ -124,6 +130,7 @@ export interface FileRoutesByFullPath {
   '/treatments/$slug': typeof TreatmentsSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/treatments/': typeof TreatmentsIndexRoute
+  '/api/public/confirm-booking': typeof ApiPublicConfirmBookingRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
 }
 export interface FileRoutesByTo {
@@ -140,6 +147,7 @@ export interface FileRoutesByTo {
   '/treatments/$slug': typeof TreatmentsSlugRoute
   '/admin': typeof AdminIndexRoute
   '/treatments': typeof TreatmentsIndexRoute
+  '/api/public/confirm-booking': typeof ApiPublicConfirmBookingRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
 }
 export interface FileRoutesById {
@@ -159,6 +167,7 @@ export interface FileRoutesById {
   '/treatments/$slug': typeof TreatmentsSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/treatments/': typeof TreatmentsIndexRoute
+  '/api/public/confirm-booking': typeof ApiPublicConfirmBookingRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
 }
 export interface FileRouteTypes {
@@ -179,6 +188,7 @@ export interface FileRouteTypes {
     | '/treatments/$slug'
     | '/admin/'
     | '/treatments/'
+    | '/api/public/confirm-booking'
     | '/lovable/email/queue/process'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -195,6 +205,7 @@ export interface FileRouteTypes {
     | '/treatments/$slug'
     | '/admin'
     | '/treatments'
+    | '/api/public/confirm-booking'
     | '/lovable/email/queue/process'
   id:
     | '__root__'
@@ -213,6 +224,7 @@ export interface FileRouteTypes {
     | '/treatments/$slug'
     | '/admin/'
     | '/treatments/'
+    | '/api/public/confirm-booking'
     | '/lovable/email/queue/process'
   fileRoutesById: FileRoutesById
 }
@@ -224,6 +236,7 @@ export interface RootRouteChildren {
   TeamRoute: typeof TeamRoute
   TreatmentsRoute: typeof TreatmentsRouteWithChildren
   BookSlugRoute: typeof BookSlugRoute
+  ApiPublicConfirmBookingRoute: typeof ApiPublicConfirmBookingRoute
   LovableEmailQueueProcessRoute: typeof LovableEmailQueueProcessRoute
 }
 
@@ -334,6 +347,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAdminsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/api/public/confirm-booking': {
+      id: '/api/public/confirm-booking'
+      path: '/api/public/confirm-booking'
+      fullPath: '/api/public/confirm-booking'
+      preLoaderRoute: typeof ApiPublicConfirmBookingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/lovable/email/queue/process': {
       id: '/lovable/email/queue/process'
       path: '/lovable/email/queue/process'
@@ -386,6 +406,7 @@ const rootRouteChildren: RootRouteChildren = {
   TeamRoute: TeamRoute,
   TreatmentsRoute: TreatmentsRouteWithChildren,
   BookSlugRoute: BookSlugRoute,
+  ApiPublicConfirmBookingRoute: ApiPublicConfirmBookingRoute,
   LovableEmailQueueProcessRoute: LovableEmailQueueProcessRoute,
 }
 export const routeTree = rootRouteImport

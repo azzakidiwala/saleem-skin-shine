@@ -148,6 +148,7 @@ function BookingPage() {
       // Send emails (non-blocking failure)
       const { error: fnErr } = await supabase.functions.invoke("send-booking-emails", {
         body: {
+          bookingId: inserted.id,
           firstName: firstName.trim(),
           surname: surname.trim(),
           email: email.trim(),
