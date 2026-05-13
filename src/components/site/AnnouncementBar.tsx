@@ -18,7 +18,7 @@ export function AnnouncementBar() {
     return () => clearInterval(id);
   }, [messages.length]);
   return (
-    <div className="bg-primary text-primary-foreground text-xs sm:text-sm">
+    <div id="c-announcement-messages" className="bg-primary text-primary-foreground text-xs sm:text-sm">
       <div className="container mx-auto flex items-center justify-center gap-2 px-4 py-2.5 text-center">
         <Award className="h-4 w-4 text-gold" />
         <span className="tracking-wider font-medium transition-opacity duration-500">
