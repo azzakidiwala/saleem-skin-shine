@@ -22,16 +22,16 @@ export function About() {
       <div className="container mx-auto px-6">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           <div className="relative">
-            <img src={aboutImage} alt="Saleem Skin clinic interior" loading="lazy" className="w-full aspect-[4/5] object-cover" />
-            <div className="absolute -bottom-px right-8 bg-gold text-gold-foreground px-10 py-6 text-center">
+            <img id="c-about-image" src={aboutImage} alt="Saleem Skin clinic interior" loading="lazy" className="w-full aspect-[4/5] object-cover" />
+            <div id="c-about-years" className="absolute -bottom-px right-8 bg-gold text-gold-foreground px-10 py-6 text-center">
               <div className="text-3xl font-display font-semibold">{years}</div>
               <div className="text-[10px] tracking-[0.25em] uppercase font-semibold">Years Experience</div>
             </div>
           </div>
           <div>
-            <p className="eyebrow mb-4">{eyebrow}</p>
-            <h2 className="text-3xl md:text-4xl mb-6 leading-tight">{title}</h2>
-            <p className="text-muted-foreground leading-relaxed mb-10">{body}</p>
+            <p id="c-about-eyebrow" className="eyebrow mb-4">{eyebrow}</p>
+            <h2 id="c-about-title" className="text-3xl md:text-4xl mb-6 leading-tight">{title}</h2>
+            <p id="c-about-body" className="text-muted-foreground leading-relaxed mb-10">{body}</p>
             <div className="space-y-6 mb-10">
               {pillars.map(p => (
                 <div key={p.title} className="flex gap-4">
