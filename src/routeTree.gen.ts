@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TreatmentsRouteImport } from './routes/treatments'
 import { Route as TeamRouteImport } from './routes/team'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as BookConfirmedRouteImport } from './routes/book-confirmed'
 import { Route as AdminRouteImport } from './routes/admin'
@@ -35,6 +36,11 @@ const TreatmentsRoute = TreatmentsRouteImport.update({
 const TeamRoute = TeamRouteImport.update({
   id: '/team',
   path: '/team',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -119,6 +125,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteWithChildren
   '/book-confirmed': typeof BookConfirmedRoute
   '/login': typeof LoginRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/team': typeof TeamRoute
   '/treatments': typeof TreatmentsRouteWithChildren
   '/admin/admins': typeof AdminAdminsRoute
@@ -137,6 +144,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/book-confirmed': typeof BookConfirmedRoute
   '/login': typeof LoginRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/team': typeof TeamRoute
   '/admin/admins': typeof AdminAdminsRoute
   '/admin/bookings': typeof AdminBookingsRoute
@@ -156,6 +164,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/book-confirmed': typeof BookConfirmedRoute
   '/login': typeof LoginRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/team': typeof TeamRoute
   '/treatments': typeof TreatmentsRouteWithChildren
   '/admin/admins': typeof AdminAdminsRoute
@@ -177,6 +186,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/book-confirmed'
     | '/login'
+    | '/sitemap.xml'
     | '/team'
     | '/treatments'
     | '/admin/admins'
@@ -195,6 +205,7 @@ export interface FileRouteTypes {
     | '/'
     | '/book-confirmed'
     | '/login'
+    | '/sitemap.xml'
     | '/team'
     | '/admin/admins'
     | '/admin/bookings'
@@ -213,6 +224,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/book-confirmed'
     | '/login'
+    | '/sitemap.xml'
     | '/team'
     | '/treatments'
     | '/admin/admins'
@@ -233,6 +245,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   BookConfirmedRoute: typeof BookConfirmedRoute
   LoginRoute: typeof LoginRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TeamRoute: typeof TeamRoute
   TreatmentsRoute: typeof TreatmentsRouteWithChildren
   BookSlugRoute: typeof BookSlugRoute
@@ -254,6 +267,13 @@ declare module '@tanstack/react-router' {
       path: '/team'
       fullPath: '/team'
       preLoaderRoute: typeof TeamRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -403,6 +423,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   BookConfirmedRoute: BookConfirmedRoute,
   LoginRoute: LoginRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   TeamRoute: TeamRoute,
   TreatmentsRoute: TreatmentsRouteWithChildren,
   BookSlugRoute: BookSlugRoute,
