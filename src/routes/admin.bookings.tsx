@@ -68,7 +68,7 @@ function BookingsPage() {
 
   const updateStatus = useMutation({
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
-      const patch: Record<string, unknown> = { status };
+      const patch: { status: string; confirmed_at?: string } = { status };
       if (status === "confirmed") patch.confirmed_at = new Date().toISOString();
       const { error } = await supabase.from("bookings").update(patch).eq("id", id);
       if (error) throw error;
