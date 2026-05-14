@@ -5,6 +5,7 @@ import { z } from "zod";
 import { AnnouncementBar } from "@/components/site/AnnouncementBar";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
+import { WhatsAppButton, WhatsAppIcon, whatsappHref } from "@/components/site/WhatsAppButton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -78,7 +79,7 @@ function ContactPage() {
             <p className="text-sm text-muted-foreground">Our Manchester clinic welcomes you for consultations and treatments six days a week.</p>
           </div>
 
-          <div className="grid sm:grid-cols-3 gap-6 mb-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
             <div className="bg-card border border-border p-6 flex flex-col items-center text-center gap-3">
               <MapPin className="h-6 w-6 text-gold" />
               <div className="text-xs tracking-[0.25em] uppercase text-muted-foreground">Address</div>
@@ -93,6 +94,14 @@ function ContactPage() {
               <Mail className="h-6 w-6 text-gold" />
               <div className="text-xs tracking-[0.25em] uppercase text-muted-foreground">Email</div>
               <a href="mailto:info@saleemskin.co.uk" className="hover:text-gold break-all">info@saleemskin.co.uk</a>
+            </div>
+            <div className="bg-card border border-border p-6 flex flex-col items-center text-center gap-3">
+              <WhatsAppIcon className="h-6 w-6 text-[#25D366]" />
+              <div className="text-xs tracking-[0.25em] uppercase text-muted-foreground">WhatsApp</div>
+              <a href={whatsappHref()} target="_blank" rel="noopener noreferrer" className="hover:text-[#25D366]">07503 959285</a>
+              <WhatsAppButton className="mt-1 px-4 py-2 text-xs tracking-wide rounded-sm" label="Chat on WhatsApp">
+                Chat now
+              </WhatsAppButton>
             </div>
           </div>
 

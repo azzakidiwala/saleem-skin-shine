@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Phone, ChevronDown, Menu } from "lucide-react";
 import { useState } from "react";
 import logo from "@/assets/logo.png";
+import { WhatsAppButton } from "@/components/site/WhatsAppButton";
 
 const treatments = [
   "New Consultation",
@@ -24,10 +25,15 @@ export function Header() {
     <header className="bg-background border-b border-border">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-3 items-center py-5">
-          <a href="tel:07503959285" className="hidden md:flex items-center gap-2 text-primary font-medium tracking-wide">
-            <Phone className="h-4 w-4" />
-            <span>07503 959285</span>
-          </a>
+          <div className="hidden md:flex items-center gap-4">
+            <a href="tel:07503959285" className="flex items-center gap-2 text-primary font-medium tracking-wide">
+              <Phone className="h-4 w-4" />
+              <span>07503 959285</span>
+            </a>
+            <WhatsAppButton className="px-3 py-1.5 text-xs tracking-wide rounded-sm" label="Chat on WhatsApp">
+              WhatsApp
+            </WhatsAppButton>
+          </div>
           <button onClick={() => setOpen(o => !o)} className="md:hidden text-primary">
             <Menu className="h-6 w-6" />
           </button>
@@ -102,6 +108,9 @@ export function Header() {
             <Link to="/faq" className="block text-xs tracking-[0.25em] uppercase">FAQ</Link>
             <Link to="/contact" className="block text-xs tracking-[0.25em] uppercase">Contact</Link>
             <a href="tel:07503959285" className="flex items-center gap-2 text-primary"><Phone className="h-4 w-4" />07503 959285</a>
+            <WhatsAppButton className="w-full py-3 text-xs tracking-[0.2em] uppercase font-semibold" label="Chat on WhatsApp">
+              WhatsApp
+            </WhatsAppButton>
             <a href="#book" className="block bg-gold text-gold-foreground text-center py-3 text-xs tracking-[0.2em] uppercase font-semibold">Book Consultation</a>
           </div>
         )}
