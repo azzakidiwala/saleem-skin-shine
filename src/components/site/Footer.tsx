@@ -18,6 +18,7 @@ export function Footer() {
             <li><Link to="/" className="hover:text-gold transition-colors">Home</Link></li>
             <li><Link to="/treatments" className="hover:text-gold transition-colors">Treatments</Link></li>
             <li><Link to="/team" className="hover:text-gold transition-colors">Meet the Team</Link></li>
+            <li><Link to="/contact" className="hover:text-gold transition-colors">Contact</Link></li>
             <li><a href="#book" className="hover:text-gold transition-colors">Book Consultation</a></li>
           </ul>
         </div>
@@ -26,7 +27,7 @@ export function Footer() {
           <ul className="space-y-3 text-sm text-primary-foreground/85">
             <li className="flex gap-3"><MapPin className="h-4 w-4 text-gold flex-shrink-0 mt-0.5" /> 123 Wellness Avenue,<br />Manchester, M1 2AB</li>
             <li className="flex gap-3"><Phone className="h-4 w-4 text-gold flex-shrink-0 mt-0.5" /> <a href="tel:07503959285" className="hover:text-gold">07503 959285</a></li>
-            <li className="flex gap-3"><Mail className="h-4 w-4 text-gold flex-shrink-0 mt-0.5" /> <a href="mailto:hello@saleemskin.co.uk" className="hover:text-gold">hello@saleemskin.co.uk</a></li>
+            <li className="flex gap-3"><Mail className="h-4 w-4 text-gold flex-shrink-0 mt-0.5" /> <a href="mailto:info@saleemskin.co.uk" className="hover:text-gold">info@saleemskin.co.uk</a></li>
           </ul>
         </div>
         <div>
