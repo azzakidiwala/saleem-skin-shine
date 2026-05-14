@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import clinicImage from "@/assets/contact-clinic.jpg";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -26,14 +27,15 @@ export const Route = createFileRoute("/contact")({
 });
 
 const contactSchema = z.object({
-  name: z.string().trim().min(1, "Name is required").max(100),
+  firstName: z.string().trim().min(1, "First name is required").max(100),
+  surname: z.string().trim().min(1, "Surname is required").max(100),
   mobile: z.string().trim().min(7, "Enter a valid mobile number").max(20),
   email: z.string().trim().email("Enter a valid email").max(255),
   message: z.string().trim().min(5, "Please describe your query").max(1000),
 });
 
 function ContactPage() {
-  const [form, setForm] = useState({ name: "", mobile: "", email: "", message: "" });
+  const [form, setForm] = useState({ firstName: "", surname: "", mobile: "", email: "", message: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const onSubmit = (e: React.FormEvent) => {
@@ -46,9 +48,10 @@ function ContactPage() {
       return;
     }
     setErrors({});
-    const subject = encodeURIComponent(`Website enquiry from ${parsed.data.name}`);
+    const fullName = `${parsed.data.firstName} ${parsed.data.surname}`;
+    const subject = encodeURIComponent(`Website enquiry from ${fullName}`);
     const body = encodeURIComponent(
-      `Name: ${parsed.data.name}\nMobile: ${parsed.data.mobile}\nEmail: ${parsed.data.email}\n\nQuery:\n${parsed.data.message}`,
+      `First name: ${parsed.data.firstName}\nSurname: ${parsed.data.surname}\nMobile: ${parsed.data.mobile}\nEmail: ${parsed.data.email}\n\nQuery:\n${parsed.data.message}`,
     );
     window.location.href = `mailto:info@saleemskin.co.uk?subject=${subject}&body=${body}`;
     toast.success("Opening your email app to send the message");
@@ -69,77 +72,102 @@ function ContactPage() {
         </div>
       </section>
 
-      <section className="container mx-auto px-6 py-16 grid lg:grid-cols-2 gap-12">
-        <div className="space-y-8">
-          <div>
-            <h2 className="text-2xl font-light mb-6">Visit, Call or Email</h2>
-            <ul className="space-y-5 text-foreground/85">
-              <li className="flex gap-4">
-                <MapPin className="h-5 w-5 text-gold flex-shrink-0 mt-0.5" />
-                <div>
-                  <div className="text-xs tracking-[0.25em] uppercase text-muted-foreground mb-1">Address</div>
-                  123 Wellness Avenue,<br />Manchester, M1 2AB
-                </div>
-              </li>
-              <li className="flex gap-4">
-                <Phone className="h-5 w-5 text-gold flex-shrink-0 mt-0.5" />
-                <div>
-                  <div className="text-xs tracking-[0.25em] uppercase text-muted-foreground mb-1">Telephone</div>
-                  <a href="tel:07503959285" className="hover:text-gold">07503 959285</a>
-                </div>
-              </li>
-              <li className="flex gap-4">
-                <Mail className="h-5 w-5 text-gold flex-shrink-0 mt-0.5" />
-                <div>
-                  <div className="text-xs tracking-[0.25em] uppercase text-muted-foreground mb-1">Email</div>
-                  <a href="mailto:info@saleemskin.co.uk" className="hover:text-gold">info@saleemskin.co.uk</a>
-                </div>
-              </li>
-              <li className="flex gap-4">
-                <Clock className="h-5 w-5 text-gold flex-shrink-0 mt-0.5" />
-                <div>
-                  <div className="text-xs tracking-[0.25em] uppercase text-muted-foreground mb-1">Opening Hours</div>
-                  Mon – Fri: 9:00 – 19:00<br />
-                  Saturday: 10:00 – 17:00<br />
-                  Sunday: Closed
-                </div>
-              </li>
-            </ul>
+      <section className="container mx-auto px-6 py-16">
+        <div className="grid lg:grid-cols-5 gap-10 mb-16">
+          <div className="lg:col-span-3 grid sm:grid-cols-2 gap-6">
+            <div className="sm:col-span-2">
+              <h2 className="text-2xl font-light mb-2">Visit, Call or Email</h2>
+              <p className="text-sm text-muted-foreground">Our Manchester clinic welcomes you for consultations and treatments six days a week.</p>
+            </div>
+
+            <div className="bg-card border border-border p-5 flex gap-4">
+              <MapPin className="h-5 w-5 text-gold flex-shrink-0 mt-0.5" />
+              <div>
+                <div className="text-xs tracking-[0.25em] uppercase text-muted-foreground mb-1">Address</div>
+                123 Wellness Avenue,<br />Manchester, M1 2AB
+              </div>
+            </div>
+            <div className="bg-card border border-border p-5 flex gap-4">
+              <Phone className="h-5 w-5 text-gold flex-shrink-0 mt-0.5" />
+              <div>
+                <div className="text-xs tracking-[0.25em] uppercase text-muted-foreground mb-1">Telephone</div>
+                <a href="tel:07503959285" className="hover:text-gold">07503 959285</a>
+              </div>
+            </div>
+            <div className="bg-card border border-border p-5 flex gap-4">
+              <Mail className="h-5 w-5 text-gold flex-shrink-0 mt-0.5" />
+              <div>
+                <div className="text-xs tracking-[0.25em] uppercase text-muted-foreground mb-1">Email</div>
+                <a href="mailto:info@saleemskin.co.uk" className="hover:text-gold break-all">info@saleemskin.co.uk</a>
+              </div>
+            </div>
+            <div className="bg-card border border-border p-5 flex gap-4">
+              <Clock className="h-5 w-5 text-gold flex-shrink-0 mt-0.5" />
+              <div>
+                <div className="text-xs tracking-[0.25em] uppercase text-muted-foreground mb-1">Opening Hours</div>
+                Mon – Fri: 9 – 19<br />
+                Sat: 10 – 17 · Sun: Closed
+              </div>
+            </div>
+
+            <div className="sm:col-span-2 bg-deep-green text-primary-foreground p-6 flex items-center justify-between gap-4">
+              <div>
+                <h3 className="text-lg font-light">Ready to book?</h3>
+                <p className="text-sm text-primary-foreground/75">Browse treatments and book online.</p>
+              </div>
+              <Button asChild className="bg-gold text-gold-foreground hover:bg-gold/90 uppercase tracking-[0.2em] text-xs">
+                <Link to="/treatments"><CalendarCheck className="h-4 w-4 mr-2" /> Book In Now</Link>
+              </Button>
+            </div>
           </div>
 
-          <div className="bg-card border border-border p-6">
-            <h3 className="text-lg font-light mb-2">Ready to book?</h3>
-            <p className="text-sm text-muted-foreground mb-4">Browse our treatments and book your appointment online.</p>
-            <Button asChild className="bg-gold text-gold-foreground hover:bg-gold/90 uppercase tracking-[0.2em] text-xs">
-              <Link to="/treatments"><CalendarCheck className="h-4 w-4 mr-2" /> Book In Now</Link>
-            </Button>
+          <div className="lg:col-span-2">
+            <img
+              src={clinicImage}
+              alt="Saleem Skin Manchester treatment room"
+              loading="lazy"
+              width={1024}
+              height={1280}
+              className="w-full h-full object-cover min-h-[400px]"
+            />
           </div>
         </div>
 
-        <form onSubmit={onSubmit} className="bg-card border border-border p-8 space-y-5">
-          <h2 className="text-2xl font-light">Send us a message</h2>
-
+        <form onSubmit={onSubmit} noValidate className="bg-card border border-border p-8 max-w-3xl mx-auto space-y-5">
           <div>
-            <Label htmlFor="name">Name</Label>
-            <Input id="name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} maxLength={100} />
-            {errors.name && <p className="text-xs text-destructive mt-1">{errors.name}</p>}
+            <h2 className="text-2xl font-light">Send us a message</h2>
+            <p className="text-sm text-muted-foreground mt-1">All fields are required.</p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-5">
+            <div>
+              <Label htmlFor="firstName">First name *</Label>
+              <Input id="firstName" required value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} maxLength={100} />
+              {errors.firstName && <p className="text-xs text-destructive mt-1">{errors.firstName}</p>}
+            </div>
+            <div>
+              <Label htmlFor="surname">Surname *</Label>
+              <Input id="surname" required value={form.surname} onChange={(e) => setForm({ ...form, surname: e.target.value })} maxLength={100} />
+              {errors.surname && <p className="text-xs text-destructive mt-1">{errors.surname}</p>}
+            </div>
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-5">
+            <div>
+              <Label htmlFor="mobile">Mobile number *</Label>
+              <Input id="mobile" type="tel" required value={form.mobile} onChange={(e) => setForm({ ...form, mobile: e.target.value })} maxLength={20} />
+              {errors.mobile && <p className="text-xs text-destructive mt-1">{errors.mobile}</p>}
+            </div>
+            <div>
+              <Label htmlFor="email">Email *</Label>
+              <Input id="email" type="email" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} maxLength={255} />
+              {errors.email && <p className="text-xs text-destructive mt-1">{errors.email}</p>}
+            </div>
           </div>
 
           <div>
-            <Label htmlFor="mobile">Mobile number</Label>
-            <Input id="mobile" type="tel" value={form.mobile} onChange={(e) => setForm({ ...form, mobile: e.target.value })} maxLength={20} />
-            {errors.mobile && <p className="text-xs text-destructive mt-1">{errors.mobile}</p>}
-          </div>
-
-          <div>
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} maxLength={255} />
-            {errors.email && <p className="text-xs text-destructive mt-1">{errors.email}</p>}
-          </div>
-
-          <div>
-            <Label htmlFor="message">Description of your query</Label>
-            <Textarea id="message" rows={5} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} maxLength={1000} />
+            <Label htmlFor="message">Description of your query *</Label>
+            <Textarea id="message" required rows={5} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} maxLength={1000} />
             {errors.message && <p className="text-xs text-destructive mt-1">{errors.message}</p>}
           </div>
 
