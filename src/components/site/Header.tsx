@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Phone, ChevronDown, Menu } from "lucide-react";
 import { useState } from "react";
 import logo from "@/assets/logo.png";
-import { WhatsAppButton } from "@/components/site/WhatsAppButton";
+import { WhatsAppButton, WhatsAppIcon, whatsappHref } from "@/components/site/WhatsAppButton";
 
 const treatments = [
   "New Consultation",
@@ -25,14 +25,22 @@ export function Header() {
     <header className="bg-background border-b border-border">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-3 items-center py-5">
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-5">
             <a href="tel:07503959285" className="flex items-center gap-2 text-primary font-medium tracking-wide">
               <Phone className="h-4 w-4" />
               <span>07503 959285</span>
             </a>
-            <WhatsAppButton className="px-3 py-1.5 text-xs tracking-wide rounded-sm" label="Chat on WhatsApp">
-              WhatsApp
-            </WhatsAppButton>
+            <span className="h-4 w-px bg-border" aria-hidden="true" />
+            <a
+              href={whatsappHref()}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Chat on WhatsApp"
+              className="group inline-flex items-center gap-2 text-primary hover:text-gold transition-colors text-[11px] tracking-[0.25em] uppercase font-medium"
+            >
+              <WhatsAppIcon className="h-4 w-4 text-gold transition-transform group-hover:scale-110" />
+              <span>WhatsApp</span>
+            </a>
           </div>
           <button onClick={() => setOpen(o => !o)} className="md:hidden text-primary">
             <Menu className="h-6 w-6" />
