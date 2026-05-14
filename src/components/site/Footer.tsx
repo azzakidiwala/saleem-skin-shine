@@ -1,7 +1,7 @@
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import logo from "@/assets/logo.png";
-import { WhatsAppButton, WhatsAppIcon, whatsappHref } from "@/components/site/WhatsAppButton";
+import { WhatsAppIcon, whatsappHref } from "@/components/site/WhatsAppButton";
 
 export function Footer() {
   return (
@@ -31,9 +31,6 @@ export function Footer() {
             <li className="flex gap-3"><Mail className="h-4 w-4 text-gold flex-shrink-0 mt-0.5" /> <a href="mailto:info@saleemskin.co.uk" className="hover:text-gold">info@saleemskin.co.uk</a></li>
             <li className="flex gap-3"><WhatsAppIcon className="h-4 w-4 text-gold flex-shrink-0 mt-0.5" /> <a href={whatsappHref()} target="_blank" rel="noopener noreferrer" className="hover:text-gold">Chat on WhatsApp</a></li>
           </ul>
-          <WhatsAppButton className="mt-5 px-4 py-2 text-xs tracking-wide rounded-sm" label="Chat on WhatsApp">
-            Message us on WhatsApp
-          </WhatsAppButton>
         </div>
         <div>
           <h4 className="text-xs tracking-[0.25em] uppercase text-gold mb-5 font-semibold flex items-center gap-2"><Clock className="h-3.5 w-3.5" /> Opening Hours</h4>
