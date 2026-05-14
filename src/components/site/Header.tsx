@@ -87,6 +87,7 @@ export function Header() {
             </div>
           </div>
           <Link to="/team" activeProps={{ className: "text-gold" }} className="hover:text-gold transition-colors">Meet the Team</Link>
+          <Link to="/faq" activeProps={{ className: "text-gold" }} className="hover:text-gold transition-colors">FAQ</Link>
           <Link to="/contact" activeProps={{ className: "text-gold" }} className="hover:text-gold transition-colors">Contact</Link>
         </nav>
         {open && (
@@ -98,6 +99,7 @@ export function Header() {
             <Link to="/conditions/body" className="block pl-4 text-xs tracking-[0.15em] normal-case">Body</Link>
             <Link to="/conditions/skin" className="block pl-4 text-xs tracking-[0.15em] normal-case">Skin</Link>
             <Link to="/team" className="block text-xs tracking-[0.25em] uppercase">Meet the Team</Link>
+            <Link to="/faq" className="block text-xs tracking-[0.25em] uppercase">FAQ</Link>
             <Link to="/contact" className="block text-xs tracking-[0.25em] uppercase">Contact</Link>
             <a href="tel:07503959285" className="flex items-center gap-2 text-primary"><Phone className="h-4 w-4" />07503 959285</a>
             <a href="#book" className="block bg-gold text-gold-foreground text-center py-3 text-xs tracking-[0.2em] uppercase font-semibold">Book Consultation</a>

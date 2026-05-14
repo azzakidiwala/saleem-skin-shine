@@ -13,6 +13,7 @@ import { Route as TreatmentsRouteImport } from './routes/treatments'
 import { Route as TeamRouteImport } from './routes/team'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as FaqRouteImport } from './routes/faq'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as BookConfirmedRouteImport } from './routes/book-confirmed'
 import { Route as AdminRouteImport } from './routes/admin'
@@ -50,6 +51,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FaqRoute = FaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -149,6 +155,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteWithChildren
   '/book-confirmed': typeof BookConfirmedRoute
   '/contact': typeof ContactRoute
+  '/faq': typeof FaqRoute
   '/login': typeof LoginRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/team': typeof TeamRoute
@@ -172,6 +179,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/book-confirmed': typeof BookConfirmedRoute
   '/contact': typeof ContactRoute
+  '/faq': typeof FaqRoute
   '/login': typeof LoginRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/team': typeof TeamRoute
@@ -196,6 +204,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/book-confirmed': typeof BookConfirmedRoute
   '/contact': typeof ContactRoute
+  '/faq': typeof FaqRoute
   '/login': typeof LoginRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/team': typeof TeamRoute
@@ -222,6 +231,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/book-confirmed'
     | '/contact'
+    | '/faq'
     | '/login'
     | '/sitemap.xml'
     | '/team'
@@ -245,6 +255,7 @@ export interface FileRouteTypes {
     | '/'
     | '/book-confirmed'
     | '/contact'
+    | '/faq'
     | '/login'
     | '/sitemap.xml'
     | '/team'
@@ -268,6 +279,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/book-confirmed'
     | '/contact'
+    | '/faq'
     | '/login'
     | '/sitemap.xml'
     | '/team'
@@ -293,6 +305,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   BookConfirmedRoute: typeof BookConfirmedRoute
   ContactRoute: typeof ContactRoute
+  FaqRoute: typeof FaqRoute
   LoginRoute: typeof LoginRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TeamRoute: typeof TeamRoute
@@ -333,6 +346,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -503,6 +523,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   BookConfirmedRoute: BookConfirmedRoute,
   ContactRoute: ContactRoute,
+  FaqRoute: FaqRoute,
   LoginRoute: LoginRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TeamRoute: TeamRoute,
@@ -517,3 +538,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
