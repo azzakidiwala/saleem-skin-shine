@@ -10,7 +10,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import clinicImage from "@/assets/contact-clinic.jpg";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -73,63 +72,59 @@ function ContactPage() {
       </section>
 
       <section className="container mx-auto px-6 py-16">
-        <div className="grid lg:grid-cols-5 gap-10 mb-16">
-          <div className="lg:col-span-3 grid sm:grid-cols-2 gap-6">
-            <div className="sm:col-span-2">
-              <h2 className="text-2xl font-light mb-2">Visit, Call or Email</h2>
-              <p className="text-sm text-muted-foreground">Our Manchester clinic welcomes you for consultations and treatments six days a week.</p>
-            </div>
+        <div className="max-w-5xl mx-auto mb-16">
+          <div className="text-center mb-10">
+            <h2 className="text-2xl font-light mb-2">Visit, Call or Email</h2>
+            <p className="text-sm text-muted-foreground">Our Manchester clinic welcomes you for consultations and treatments six days a week.</p>
+          </div>
 
-            <div className="bg-card border border-border p-5 flex gap-4">
-              <MapPin className="h-5 w-5 text-gold flex-shrink-0 mt-0.5" />
-              <div>
-                <div className="text-xs tracking-[0.25em] uppercase text-muted-foreground mb-1">Address</div>
-                123 Wellness Avenue,<br />Manchester, M1 2AB
-              </div>
+          <div className="grid sm:grid-cols-3 gap-6 mb-6">
+            <div className="bg-card border border-border p-6 flex flex-col items-center text-center gap-3">
+              <MapPin className="h-6 w-6 text-gold" />
+              <div className="text-xs tracking-[0.25em] uppercase text-muted-foreground">Address</div>
+              <div>123 Wellness Avenue,<br />Manchester, M1 2AB</div>
             </div>
-            <div className="bg-card border border-border p-5 flex gap-4">
-              <Phone className="h-5 w-5 text-gold flex-shrink-0 mt-0.5" />
-              <div>
-                <div className="text-xs tracking-[0.25em] uppercase text-muted-foreground mb-1">Telephone</div>
-                <a href="tel:07503959285" className="hover:text-gold">07503 959285</a>
-              </div>
+            <div className="bg-card border border-border p-6 flex flex-col items-center text-center gap-3">
+              <Phone className="h-6 w-6 text-gold" />
+              <div className="text-xs tracking-[0.25em] uppercase text-muted-foreground">Telephone</div>
+              <a href="tel:07503959285" className="hover:text-gold">07503 959285</a>
             </div>
-            <div className="bg-card border border-border p-5 flex gap-4">
-              <Mail className="h-5 w-5 text-gold flex-shrink-0 mt-0.5" />
-              <div>
-                <div className="text-xs tracking-[0.25em] uppercase text-muted-foreground mb-1">Email</div>
-                <a href="mailto:info@saleemskin.co.uk" className="hover:text-gold break-all">info@saleemskin.co.uk</a>
-              </div>
-            </div>
-            <div className="bg-card border border-border p-5 flex gap-4">
-              <Clock className="h-5 w-5 text-gold flex-shrink-0 mt-0.5" />
-              <div>
-                <div className="text-xs tracking-[0.25em] uppercase text-muted-foreground mb-1">Opening Hours</div>
-                Mon – Fri: 9 – 19<br />
-                Sat: 10 – 17 · Sun: Closed
-              </div>
-            </div>
-
-            <div className="sm:col-span-2 bg-deep-green text-primary-foreground p-6 flex items-center justify-between gap-4">
-              <div>
-                <h3 className="text-lg font-light">Ready to book?</h3>
-                <p className="text-sm text-primary-foreground/75">Browse treatments and book online.</p>
-              </div>
-              <Button asChild className="bg-gold text-gold-foreground hover:bg-gold/90 uppercase tracking-[0.2em] text-xs">
-                <Link to="/treatments"><CalendarCheck className="h-4 w-4 mr-2" /> Book In Now</Link>
-              </Button>
+            <div className="bg-card border border-border p-6 flex flex-col items-center text-center gap-3">
+              <Mail className="h-6 w-6 text-gold" />
+              <div className="text-xs tracking-[0.25em] uppercase text-muted-foreground">Email</div>
+              <a href="mailto:info@saleemskin.co.uk" className="hover:text-gold break-all">info@saleemskin.co.uk</a>
             </div>
           </div>
 
-          <div className="lg:col-span-2">
-            <img
-              src={clinicImage}
-              alt="Saleem Skin Manchester treatment room"
-              loading="lazy"
-              width={1024}
-              height={1280}
-              className="w-full h-full object-cover min-h-[400px]"
-            />
+          <div className="bg-card border border-border p-6 mb-6">
+            <div className="flex items-center justify-center gap-2 mb-5">
+              <Clock className="h-5 w-5 text-gold" />
+              <div className="text-xs tracking-[0.25em] uppercase text-muted-foreground">Opening Hours</div>
+            </div>
+            <ul className="grid sm:grid-cols-3 gap-4 text-sm max-w-2xl mx-auto">
+              <li className="flex justify-between sm:flex-col sm:items-center sm:text-center gap-1 border-b sm:border-b-0 sm:border-r border-border pb-3 sm:pb-0 sm:pr-4 last:border-0">
+                <span className="text-xs tracking-[0.2em] uppercase text-muted-foreground">Mon – Fri</span>
+                <span className="font-medium">9:00 – 19:00</span>
+              </li>
+              <li className="flex justify-between sm:flex-col sm:items-center sm:text-center gap-1 border-b sm:border-b-0 sm:border-r border-border pb-3 sm:pb-0 sm:pr-4 last:border-0">
+                <span className="text-xs tracking-[0.2em] uppercase text-muted-foreground">Saturday</span>
+                <span className="font-medium">10:00 – 17:00</span>
+              </li>
+              <li className="flex justify-between sm:flex-col sm:items-center sm:text-center gap-1">
+                <span className="text-xs tracking-[0.2em] uppercase text-muted-foreground">Sunday</span>
+                <span className="font-medium text-muted-foreground">Closed</span>
+              </li>
+            </ul>
+          </div>
+
+          <div className="bg-deep-green text-primary-foreground p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="text-center sm:text-left">
+              <h3 className="text-lg font-light">Ready to book?</h3>
+              <p className="text-sm text-primary-foreground/75">Browse treatments and book online.</p>
+            </div>
+            <Button asChild className="bg-gold text-gold-foreground hover:bg-gold/90 uppercase tracking-[0.2em] text-xs">
+              <Link to="/treatments"><CalendarCheck className="h-4 w-4 mr-2" /> Book In Now</Link>
+            </Button>
           </div>
         </div>
 
