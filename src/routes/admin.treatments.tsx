@@ -190,7 +190,7 @@ function EditorDialog({ trigger, initial, onSave }: { trigger: React.ReactNode; 
   }
 
   return (
-    <Dialog open={open} onOpenChange={(o) => { setOpen(o); if (o) setRow(initial); }}>
+    <Dialog open={open} onOpenChange={(o) => { setOpen(o); if (o) { setRow(initial); setBenefitsText(initial.benefits.join("\n")); setExtraCats(initial.category && !CATS.includes(initial.category) ? [initial.category] : []); setAddingCat(false); setNewCat(""); } }}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
