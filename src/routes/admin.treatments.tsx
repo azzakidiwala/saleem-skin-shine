@@ -247,7 +247,15 @@ function EditorDialog({ trigger, initial, onSave }: { trigger: React.ReactNode; 
           <div className="space-y-2"><Label>Long description</Label><Textarea rows={4} value={row.long_description} onChange={(e) => update("long_description", e.target.value)} /></div>
           <div className="space-y-2">
             <Label>Benefits (one per line)</Label>
-            <Textarea rows={4} value={row.benefits.join("\n")} onChange={(e) => update("benefits", e.target.value.split("\n").map((x) => x.trim()).filter(Boolean))} />
+            <Textarea
+              rows={4}
+              value={benefitsText}
+              onChange={(e) => {
+                const text = e.target.value;
+                setBenefitsText(text);
+                update("benefits", text.split("\n").map((x) => x.trim()).filter(Boolean));
+              }}
+            />
           </div>
           <div className="space-y-2"><Label>What to expect</Label><Textarea rows={3} value={row.what_to_expect} onChange={(e) => update("what_to_expect", e.target.value)} /></div>
           <div className="space-y-2">
