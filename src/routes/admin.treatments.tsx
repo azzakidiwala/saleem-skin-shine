@@ -167,6 +167,13 @@ function EditorDialog({ trigger, initial, onSave }: { trigger: React.ReactNode; 
   const [open, setOpen] = useState(false);
   const [row, setRow] = useState<Row>(initial);
   const [uploading, setUploading] = useState(false);
+  const [benefitsText, setBenefitsText] = useState<string>(initial.benefits.join("\n"));
+  const [extraCats, setExtraCats] = useState<string[]>(
+    initial.category && !CATS.includes(initial.category) ? [initial.category] : []
+  );
+  const [addingCat, setAddingCat] = useState(false);
+  const [newCat, setNewCat] = useState("");
+  const allCats = [...CATS, ...extraCats];
 
   function update<K extends keyof Row>(k: K, v: Row[K]) { setRow((r) => ({ ...r, [k]: v })); }
 
