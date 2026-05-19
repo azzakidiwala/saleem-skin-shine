@@ -205,10 +205,37 @@ function EditorDialog({ trigger, initial, onSave }: { trigger: React.ReactNode; 
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
               <Label>Category</Label>
-              <Select value={row.category} onValueChange={(v) => update("category", v)}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
-                <SelectContent>{CATS.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
-              </Select>
+              <div className="flex gap-2">
+                <Select value={row.category} onValueChange={(v) => update("category", v)}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>{allCats.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
+                </Select>
+                <Button type="button" variant="outline" size="icon" onClick={() => setAddingCat((v) => !v)} title="Add new category">
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
+              {addingCat && (
+                <div className="flex gap-2">
+                  <Input
+                    value={newCat}
+                    onChange={(e) => setNewCat(e.target.value)}
+                    placeholder="New category name"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        const v = newCat.trim();
+                        if (v && !allCats.includes(v)) { setExtraCats((x) => [...x, v]); update("category", v); }
+                        setNewCat(""); setAddingCat(false);
+                      }
+                    }}
+                  />
+                  <Button type="button" size="sm" onClick={() => {
+                    const v = newCat.trim();
+                    if (v && !allCats.includes(v)) { setExtraCats((x) => [...x, v]); update("category", v); }
+                    setNewCat(""); setAddingCat(false);
+                  }}>Add</Button>
+                </div>
+              )}
             </div>
             <div className="space-y-2"><Label>Price</Label><Input value={row.price} onChange={(e) => update("price", e.target.value)} placeholder="£100" /></div>
           </div>
