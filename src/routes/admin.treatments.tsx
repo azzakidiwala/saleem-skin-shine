@@ -167,6 +167,13 @@ function EditorDialog({ trigger, initial, onSave }: { trigger: React.ReactNode; 
   const [open, setOpen] = useState(false);
   const [row, setRow] = useState<Row>(initial);
   const [uploading, setUploading] = useState(false);
+  const [benefitsText, setBenefitsText] = useState<string>(initial.benefits.join("\n"));
+  const [extraCats, setExtraCats] = useState<string[]>(
+    initial.category && !CATS.includes(initial.category) ? [initial.category] : []
+  );
+  const [addingCat, setAddingCat] = useState(false);
+  const [newCat, setNewCat] = useState("");
+  const allCats = [...CATS, ...extraCats];
 
   function update<K extends keyof Row>(k: K, v: Row[K]) { setRow((r) => ({ ...r, [k]: v })); }
 
@@ -183,7 +190,7 @@ function EditorDialog({ trigger, initial, onSave }: { trigger: React.ReactNode; 
   }
 
   return (
-    <Dialog open={open} onOpenChange={(o) => { setOpen(o); if (o) setRow(initial); }}>
+    <Dialog open={open} onOpenChange={(o) => { setOpen(o); if (o) { setRow(initial); setBenefitsText(initial.benefits.join("\n")); setExtraCats(initial.category && !CATS.includes(initial.category) ? [initial.category] : []); setAddingCat(false); setNewCat(""); } }}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
@@ -198,10 +205,37 @@ function EditorDialog({ trigger, initial, onSave }: { trigger: React.ReactNode; 
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
               <Label>Category</Label>
-              <Select value={row.category} onValueChange={(v) => update("category", v)}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
-                <SelectContent>{CATS.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
-              </Select>
+              <div className="flex gap-2">
+                <Select value={row.category} onValueChange={(v) => update("category", v)}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>{allCats.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
+                </Select>
+                <Button type="button" variant="outline" size="icon" onClick={() => setAddingCat((v) => !v)} title="Add new category">
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
+              {addingCat && (
+                <div className="flex gap-2">
+                  <Input
+                    value={newCat}
+                    onChange={(e) => setNewCat(e.target.value)}
+                    placeholder="New category name"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        const v = newCat.trim();
+                        if (v && !allCats.includes(v)) { setExtraCats((x) => [...x, v]); update("category", v); }
+                        setNewCat(""); setAddingCat(false);
+                      }
+                    }}
+                  />
+                  <Button type="button" size="sm" onClick={() => {
+                    const v = newCat.trim();
+                    if (v && !allCats.includes(v)) { setExtraCats((x) => [...x, v]); update("category", v); }
+                    setNewCat(""); setAddingCat(false);
+                  }}>Add</Button>
+                </div>
+              )}
             </div>
             <div className="space-y-2"><Label>Price</Label><Input value={row.price} onChange={(e) => update("price", e.target.value)} placeholder="£100" /></div>
           </div>
@@ -213,7 +247,15 @@ function EditorDialog({ trigger, initial, onSave }: { trigger: React.ReactNode; 
           <div className="space-y-2"><Label>Long description</Label><Textarea rows={4} value={row.long_description} onChange={(e) => update("long_description", e.target.value)} /></div>
           <div className="space-y-2">
             <Label>Benefits (one per line)</Label>
-            <Textarea rows={4} value={row.benefits.join("\n")} onChange={(e) => update("benefits", e.target.value.split("\n").map((x) => x.trim()).filter(Boolean))} />
+            <Textarea
+              rows={4}
+              value={benefitsText}
+              onChange={(e) => {
+                const text = e.target.value;
+                setBenefitsText(text);
+                update("benefits", text.split("\n").map((x) => x.trim()).filter(Boolean));
+              }}
+            />
           </div>
           <div className="space-y-2"><Label>What to expect</Label><Textarea rows={3} value={row.what_to_expect} onChange={(e) => update("what_to_expect", e.target.value)} /></div>
           <div className="space-y-2">
