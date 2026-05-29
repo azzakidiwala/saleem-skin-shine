@@ -14,6 +14,7 @@ import wetDiamond from "@/assets/treatment-wet-diamond.jpg";
 import vtechMicroneedling from "@/assets/treatment-vtech-microneedling.jpg";
 import prpHair from "@/assets/treatment-prp-hair.jpg";
 import hayFever from "@/assets/treatment-hay-fever.jpg";
+import prpFacial from "@/assets/treatment-prp-facial.jpg";
 import b12Single from "@/assets/treatment-b12-single.jpg";
 import b12Course from "@/assets/treatment-b12-course.jpg";
 import drSaleem from "@/assets/team-dr-saleem.jpg";
