@@ -30,7 +30,7 @@ export const treatmentImageFallback: Record<string, string> = {
   "vtech-microneedling-led": vtechMicroneedling,
   "prp-hair-scalp": prpHair,
   "prp-facial-vampire": rejuvenation,
-  "hay-fever-treatment": clinic,
+  "hay-fever-treatment": hayFever,
   "vitamin-b12-single": body,
   "vitamin-b12-course": body,
 };
