@@ -1,49 +1,25 @@
 import { Link } from "@tanstack/react-router";
-import antiWrinkle from "@/assets/treatment-anti-wrinkle.jpg";
-import fillers from "@/assets/treatment-fillers.jpg";
-import rejuvenation from "@/assets/treatment-rejuvenation.jpg";
-import laser from "@/assets/treatment-laser.jpg";
-import body from "@/assets/treatment-body.jpg";
-import facial from "@/assets/treatment-facial.jpg";
+import { treatments } from "@/data/treatments";
 
-const items = [
-  {
-    img: antiWrinkle,
-    title: "Anti-Wrinkle Injections",
-    desc: "Reduce the appearance of fine lines and wrinkles with precision-targeted injections for a refreshed, youthful look.",
-    tags: ["Fine Lines", "Crow's Feet", "Forehead Lines"],
-  },
-  {
-    img: fillers,
-    title: "Dermal Fillers",
-    desc: "Restore lost volume and enhance facial contours with advanced hyaluronic acid fillers tailored to your features.",
-    tags: ["Lip Enhancement", "Cheek Contouring", "Jawline"],
-  },
-  {
-    img: rejuvenation,
-    title: "Skin Rejuvenation",
-    desc: "Transform your complexion with our cutting-edge skin rejuvenation treatments including chemical peels and microneedling.",
-    tags: ["Acne Scars", "Pigmentation", "Texture"],
-  },
-  {
-    img: laser,
-    title: "Laser Treatments",
-    desc: "State-of-the-art laser therapy for hair removal, vascular lesions and skin resurfacing with proven results.",
-    tags: ["Hair Removal", "Resurfacing", "Pigment"],
-  },
-  {
-    img: body,
-    title: "Body Contouring",
-    desc: "Sculpt and refine your silhouette with non-surgical body contouring backed by clinical evidence.",
-    tags: ["Fat Reduction", "Skin Tightening", "Cellulite"],
-  },
-  {
-    img: facial,
-    title: "Advanced Facials",
-    desc: "Bespoke facial treatments combining medical-grade products with expert techniques for radiant skin.",
-    tags: ["Hydrafacial", "Dermaplaning", "LED Therapy"],
-  },
+const FEATURED_SLUGS = [
+  "deluxe-hydrafacial",
+  "wet-diamond-hydrafacial",
+  "promoitalia-lip-booster",
+  "jawline-slimming-anti-wrinkle",
+  "vtech-microneedling-led",
+  "prp-facial-vampire",
 ];
+
+const items = FEATURED_SLUGS.map((slug) => {
+  const t = treatments.find((x) => x.slug === slug)!;
+  return {
+    slug: t.slug,
+    img: t.image,
+    title: t.name,
+    desc: t.description,
+    tags: t.benefits.slice(0, 3).map((b) => b.split(" ").slice(0, 3).join(" ")),
+  };
+});
 
 export function Treatments() {
   return (
