@@ -238,7 +238,7 @@ export const treatments: Treatment[] = [
     ],
     whatToExpect:
       "A consultation is performed to assess suitability. The injection takes only minutes. Relief is typically experienced for the duration of the hay fever season.",
-    image: clinic,
+    image: hayFever,
   },
   {
     slug: "vitamin-b12-single",
