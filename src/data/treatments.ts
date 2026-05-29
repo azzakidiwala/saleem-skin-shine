@@ -129,7 +129,7 @@ export const treatments: Treatment[] = [
     ],
     whatToExpect:
       "Injections are placed into the trapezius muscles. You may feel mild discomfort. Results become visible within 1–2 weeks and last 3–4 months on average.",
-    image: antiWrinkle,
+    image: traptox,
   },
   {
     slug: "jawline-slimming-anti-wrinkle",
