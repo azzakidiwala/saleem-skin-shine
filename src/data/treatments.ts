@@ -1,6 +1,7 @@
 import facial from "@/assets/treatment-facial.jpg";
 import deluxeHydrafacial from "@/assets/treatment-deluxe-hydrafacial.jpg";
 import rejuvenation from "@/assets/treatment-rejuvenation.jpg";
+import prpFacial from "@/assets/treatment-prp-facial.jpg";
 import antiWrinkle from "@/assets/treatment-anti-wrinkle.jpg";
 import traptox from "@/assets/treatment-traptox.jpg";
 import jawlineSlimming from "@/assets/treatment-jawline-slimming.jpg";
