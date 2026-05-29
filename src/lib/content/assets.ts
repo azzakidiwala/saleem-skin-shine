@@ -14,6 +14,7 @@ import wetDiamond from "@/assets/treatment-wet-diamond.jpg";
 import vtechMicroneedling from "@/assets/treatment-vtech-microneedling.jpg";
 import prpHair from "@/assets/treatment-prp-hair.jpg";
 import hayFever from "@/assets/treatment-hay-fever.jpg";
+import prpFacial from "@/assets/treatment-prp-facial.jpg";
 import b12Single from "@/assets/treatment-b12-single.jpg";
 import b12Course from "@/assets/treatment-b12-course.jpg";
 import drSaleem from "@/assets/team-dr-saleem.jpg";
@@ -31,7 +32,7 @@ export const treatmentImageFallback: Record<string, string> = {
   "jawline-slimming-anti-wrinkle": jawlineSlimming,
   "vtech-microneedling-led": vtechMicroneedling,
   "prp-hair-scalp": prpHair,
-  "prp-facial-vampire": rejuvenation,
+  "prp-facial-vampire": prpFacial,
   "hay-fever-treatment": hayFever,
   "vitamin-b12-single": b12Single,
   "vitamin-b12-course": b12Course,

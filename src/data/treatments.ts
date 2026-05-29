@@ -1,6 +1,7 @@
 import facial from "@/assets/treatment-facial.jpg";
 import deluxeHydrafacial from "@/assets/treatment-deluxe-hydrafacial.jpg";
 import rejuvenation from "@/assets/treatment-rejuvenation.jpg";
+import prpFacial from "@/assets/treatment-prp-facial.jpg";
 import antiWrinkle from "@/assets/treatment-anti-wrinkle.jpg";
 import traptox from "@/assets/treatment-traptox.jpg";
 import jawlineSlimming from "@/assets/treatment-jawline-slimming.jpg";
@@ -219,7 +220,7 @@ export const treatments: Treatment[] = [
     ],
     whatToExpect:
       "Blood is drawn and processed to extract PRP, which is then applied with microneedling. Mild redness may last 24–48 hours. Results develop over weeks.",
-    image: rejuvenation,
+    image: prpFacial,
   },
   {
     slug: "hay-fever-treatment",
