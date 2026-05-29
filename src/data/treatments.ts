@@ -11,6 +11,7 @@ import clinic from "@/assets/about-clinic.jpg";
 import promoitaliaLipBooster from "@/assets/treatment-promoitalia-lip-booster.jpg";
 import wetDiamond from "@/assets/treatment-wet-diamond.jpg";
 import vtechMicroneedling from "@/assets/treatment-vtech-microneedling.jpg";
+import prpHair from "@/assets/treatment-prp-hair.jpg";
 
 export type Treatment = {
   slug: string;
@@ -194,7 +195,7 @@ export const treatments: Treatment[] = [
     ],
     whatToExpect:
       "A small amount of blood is drawn, processed to extract PRP, then injected into the scalp. Mild tenderness may follow. A course of 3 sessions is recommended for best results.",
-    image: body,
+    image: prpHair,
   },
   {
     slug: "prp-facial-vampire",
