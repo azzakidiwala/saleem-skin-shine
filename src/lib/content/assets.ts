@@ -4,6 +4,7 @@ import deluxeHydrafacial from "@/assets/treatment-deluxe-hydrafacial.jpg";
 import rejuvenation from "@/assets/treatment-rejuvenation.jpg";
 import antiWrinkle from "@/assets/treatment-anti-wrinkle.jpg";
 import traptox from "@/assets/treatment-traptox.jpg";
+import jawlineSlimming from "@/assets/treatment-jawline-slimming.jpg";
 import fillers from "@/assets/treatment-fillers.jpg";
 import laser from "@/assets/treatment-laser.jpg";
 import body from "@/assets/treatment-body.jpg";
@@ -22,7 +23,7 @@ export const treatmentImageFallback: Record<string, string> = {
   "wet-diamond-hydrafacial": wetDiamond,
   "promoitalia-lip-booster": promoitaliaLipBooster,
   "traptox": traptox,
-  "jawline-slimming-anti-wrinkle": antiWrinkle,
+  "jawline-slimming-anti-wrinkle": jawlineSlimming,
   "vtech-microneedling-led": laser,
   "prp-hair-scalp": body,
   "prp-facial-vampire": rejuvenation,
