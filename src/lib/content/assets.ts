@@ -15,6 +15,7 @@ import vtechMicroneedling from "@/assets/treatment-vtech-microneedling.jpg";
 import prpHair from "@/assets/treatment-prp-hair.jpg";
 import hayFever from "@/assets/treatment-hay-fever.jpg";
 import b12Single from "@/assets/treatment-b12-single.jpg";
+import b12Course from "@/assets/treatment-b12-course.jpg";
 import drSaleem from "@/assets/team-dr-saleem.jpg";
 import rnSaleem from "@/assets/team-rn-saleem.jpg";
 import hSaleem from "@/assets/team-h-saleem.jpg";
@@ -33,7 +34,7 @@ export const treatmentImageFallback: Record<string, string> = {
   "prp-facial-vampire": rejuvenation,
   "hay-fever-treatment": hayFever,
   "vitamin-b12-single": b12Single,
-  "vitamin-b12-course": body,
+  "vitamin-b12-course": b12Course,
 };
 
 export const teamImageFallback: Record<string, string> = {
