@@ -220,7 +220,7 @@ export const treatments: Treatment[] = [
     ],
     whatToExpect:
       "Blood is drawn and processed to extract PRP, which is then applied with microneedling. Mild redness may last 24–48 hours. Results develop over weeks.",
-    image: rejuvenation,
+    image: prpFacial,
   },
   {
     slug: "hay-fever-treatment",
