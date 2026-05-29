@@ -18,7 +18,7 @@ import ctaBg from "@/assets/cta-bg.jpg";
 export const treatmentImageFallback: Record<string, string> = {
   "new-consultation": clinic,
   "deluxe-hydrafacial": deluxeHydrafacial,
-  "wet-diamond-hydrafacial": rejuvenation,
+  "wet-diamond-hydrafacial": wetDiamond,
   "promoitalia-lip-booster": promoitaliaLipBooster,
   "traptox": antiWrinkle,
   "jawline-slimming-anti-wrinkle": antiWrinkle,
