@@ -21,7 +21,7 @@ export const treatmentImageFallback: Record<string, string> = {
   "deluxe-hydrafacial": deluxeHydrafacial,
   "wet-diamond-hydrafacial": wetDiamond,
   "promoitalia-lip-booster": promoitaliaLipBooster,
-  "traptox": antiWrinkle,
+  "traptox": traptox,
   "jawline-slimming-anti-wrinkle": antiWrinkle,
   "vtech-microneedling-led": laser,
   "prp-hair-scalp": body,
