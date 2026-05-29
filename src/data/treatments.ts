@@ -12,6 +12,7 @@ import promoitaliaLipBooster from "@/assets/treatment-promoitalia-lip-booster.jp
 import wetDiamond from "@/assets/treatment-wet-diamond.jpg";
 import vtechMicroneedling from "@/assets/treatment-vtech-microneedling.jpg";
 import prpHair from "@/assets/treatment-prp-hair.jpg";
+import hayFever from "@/assets/treatment-hay-fever.jpg";
 
 export type Treatment = {
   slug: string;
@@ -237,7 +238,7 @@ export const treatments: Treatment[] = [
     ],
     whatToExpect:
       "A consultation is performed to assess suitability. The injection takes only minutes. Relief is typically experienced for the duration of the hay fever season.",
-    image: clinic,
+    image: hayFever,
   },
   {
     slug: "vitamin-b12-single",

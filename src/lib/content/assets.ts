@@ -13,6 +13,7 @@ import promoitaliaLipBooster from "@/assets/treatment-promoitalia-lip-booster.jp
 import wetDiamond from "@/assets/treatment-wet-diamond.jpg";
 import vtechMicroneedling from "@/assets/treatment-vtech-microneedling.jpg";
 import prpHair from "@/assets/treatment-prp-hair.jpg";
+import hayFever from "@/assets/treatment-hay-fever.jpg";
 import drSaleem from "@/assets/team-dr-saleem.jpg";
 import rnSaleem from "@/assets/team-rn-saleem.jpg";
 import hSaleem from "@/assets/team-h-saleem.jpg";
@@ -29,7 +30,7 @@ export const treatmentImageFallback: Record<string, string> = {
   "vtech-microneedling-led": vtechMicroneedling,
   "prp-hair-scalp": prpHair,
   "prp-facial-vampire": rejuvenation,
-  "hay-fever-treatment": clinic,
+  "hay-fever-treatment": hayFever,
   "vitamin-b12-single": body,
   "vitamin-b12-course": body,
 };
