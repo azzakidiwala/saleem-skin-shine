@@ -1,24 +1,18 @@
 import { Link } from "@tanstack/react-router";
 import { treatments } from "@/data/treatments";
 
-const FEATURED_SLUGS = [
-  "deluxe-hydrafacial",
-  "wet-diamond-hydrafacial",
-  "promoitalia-lip-booster",
-  "jawline-slimming-anti-wrinkle",
-  "vtech-microneedling-led",
-  "prp-facial-vampire",
+const FEATURED: { slug: string; tags: string[] }[] = [
+  { slug: "deluxe-hydrafacial", tags: ["Cleanse", "Hydrate", "Glow"] },
+  { slug: "wet-diamond-hydrafacial", tags: ["Diamond Tip", "Brightening", "Glass Skin"] },
+  { slug: "promoitalia-lip-booster", tags: ["Lip Hydration", "Natural Plump", "Definition"] },
+  { slug: "jawline-slimming-anti-wrinkle", tags: ["Jaw Slimming", "Bruxism", "Contour"] },
+  { slug: "vtech-microneedling-led", tags: ["Collagen", "Scarring", "LED Therapy"] },
+  { slug: "prp-facial-vampire", tags: ["Rejuvenation", "Tone", "Texture"] },
 ];
 
-const items = FEATURED_SLUGS.map((slug) => {
+const items = FEATURED.map(({ slug, tags }) => {
   const t = treatments.find((x) => x.slug === slug)!;
-  return {
-    slug: t.slug,
-    img: t.image,
-    title: t.name,
-    desc: t.description,
-    tags: t.benefits.slice(0, 3).map((b) => b.split(" ").slice(0, 3).join(" ")),
-  };
+  return { slug: t.slug, img: t.image, title: t.name, desc: t.description, tags };
 });
 
 export function Treatments() {
