@@ -11,6 +11,7 @@ import body from "@/assets/treatment-body.jpg";
 import clinic from "@/assets/about-clinic.jpg";
 import promoitaliaLipBooster from "@/assets/treatment-promoitalia-lip-booster.jpg";
 import wetDiamond from "@/assets/treatment-wet-diamond.jpg";
+import vtechMicroneedling from "@/assets/treatment-vtech-microneedling.jpg";
 import drSaleem from "@/assets/team-dr-saleem.jpg";
 import rnSaleem from "@/assets/team-rn-saleem.jpg";
 import hSaleem from "@/assets/team-h-saleem.jpg";
@@ -24,7 +25,7 @@ export const treatmentImageFallback: Record<string, string> = {
   "promoitalia-lip-booster": promoitaliaLipBooster,
   "traptox": traptox,
   "jawline-slimming-anti-wrinkle": jawlineSlimming,
-  "vtech-microneedling-led": laser,
+  "vtech-microneedling-led": vtechMicroneedling,
   "prp-hair-scalp": body,
   "prp-facial-vampire": rejuvenation,
   "hay-fever-treatment": clinic,

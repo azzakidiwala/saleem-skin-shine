@@ -10,6 +10,7 @@ import body from "@/assets/treatment-body.jpg";
 import clinic from "@/assets/about-clinic.jpg";
 import promoitaliaLipBooster from "@/assets/treatment-promoitalia-lip-booster.jpg";
 import wetDiamond from "@/assets/treatment-wet-diamond.jpg";
+import vtechMicroneedling from "@/assets/treatment-vtech-microneedling.jpg";
 
 export type Treatment = {
   slug: string;
@@ -172,7 +173,7 @@ export const treatments: Treatment[] = [
     ],
     whatToExpect:
       "A numbing cream is applied prior to treatment. Mild redness and sensitivity may last 24–48 hours. A course of treatments is recommended for optimal results.",
-    image: laser,
+    image: vtechMicroneedling,
   },
   {
     slug: "prp-hair-scalp",
