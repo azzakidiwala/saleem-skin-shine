@@ -151,7 +151,7 @@ export const treatments: Treatment[] = [
     ],
     whatToExpect:
       "Treatment takes around 15–20 minutes. Results begin to show after 2 weeks and reach full effect at 4–6 weeks. Top-ups are typically needed every 4–6 months.",
-    image: antiWrinkle,
+    image: jawlineSlimming,
   },
   {
     slug: "vtech-microneedling-led",
