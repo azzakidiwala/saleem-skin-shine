@@ -7,6 +7,7 @@ import laser from "@/assets/treatment-laser.jpg";
 import body from "@/assets/treatment-body.jpg";
 import clinic from "@/assets/about-clinic.jpg";
 import promoitaliaLipBooster from "@/assets/treatment-promoitalia-lip-booster.jpg";
+import wetDiamond from "@/assets/treatment-wet-diamond.jpg";
 
 export type Treatment = {
   slug: string;
@@ -85,7 +86,7 @@ export const treatments: Treatment[] = [
     ],
     whatToExpect:
       "Expect a deeply satisfying, relaxing treatment lasting one hour. You may experience mild redness that subsides within a few hours. Most clients describe the result as a 'glass skin' effect.",
-    image: rejuvenation,
+    image: wetDiamond,
   },
   {
     slug: "promoitalia-lip-booster",

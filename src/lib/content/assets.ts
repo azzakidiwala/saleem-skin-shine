@@ -8,6 +8,7 @@ import laser from "@/assets/treatment-laser.jpg";
 import body from "@/assets/treatment-body.jpg";
 import clinic from "@/assets/about-clinic.jpg";
 import promoitaliaLipBooster from "@/assets/treatment-promoitalia-lip-booster.jpg";
+import wetDiamond from "@/assets/treatment-wet-diamond.jpg";
 import drSaleem from "@/assets/team-dr-saleem.jpg";
 import rnSaleem from "@/assets/team-rn-saleem.jpg";
 import hSaleem from "@/assets/team-h-saleem.jpg";
@@ -17,7 +18,7 @@ import ctaBg from "@/assets/cta-bg.jpg";
 export const treatmentImageFallback: Record<string, string> = {
   "new-consultation": clinic,
   "deluxe-hydrafacial": deluxeHydrafacial,
-  "wet-diamond-hydrafacial": rejuvenation,
+  "wet-diamond-hydrafacial": wetDiamond,
   "promoitalia-lip-booster": promoitaliaLipBooster,
   "traptox": antiWrinkle,
   "jawline-slimming-anti-wrinkle": antiWrinkle,
