@@ -3,6 +3,7 @@ import deluxeHydrafacial from "@/assets/treatment-deluxe-hydrafacial.jpg";
 import rejuvenation from "@/assets/treatment-rejuvenation.jpg";
 import antiWrinkle from "@/assets/treatment-anti-wrinkle.jpg";
 import traptox from "@/assets/treatment-traptox.jpg";
+import jawlineSlimming from "@/assets/treatment-jawline-slimming.jpg";
 import fillers from "@/assets/treatment-fillers.jpg";
 import laser from "@/assets/treatment-laser.jpg";
 import body from "@/assets/treatment-body.jpg";
