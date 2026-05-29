@@ -12,6 +12,7 @@ import promoitaliaLipBooster from "@/assets/treatment-promoitalia-lip-booster.jp
 import wetDiamond from "@/assets/treatment-wet-diamond.jpg";
 import vtechMicroneedling from "@/assets/treatment-vtech-microneedling.jpg";
 import prpHair from "@/assets/treatment-prp-hair.jpg";
+import hayFever from "@/assets/treatment-hay-fever.jpg";
 
 export type Treatment = {
   slug: string;
