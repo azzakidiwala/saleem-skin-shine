@@ -14,6 +14,7 @@ import vtechMicroneedling from "@/assets/treatment-vtech-microneedling.jpg";
 import prpHair from "@/assets/treatment-prp-hair.jpg";
 import hayFever from "@/assets/treatment-hay-fever.jpg";
 import b12Single from "@/assets/treatment-b12-single.jpg";
+import b12Course from "@/assets/treatment-b12-course.jpg";
 
 export type Treatment = {
   slug: string;
@@ -281,7 +282,7 @@ export const treatments: Treatment[] = [
     ],
     whatToExpect:
       "Six injections are administered over a recommended schedule. Each appointment is quick and simple, with cumulative benefits over the course.",
-    image: body,
+    image: b12Course,
   },
 ];
 
