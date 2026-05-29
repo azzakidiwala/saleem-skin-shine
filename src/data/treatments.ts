@@ -13,6 +13,7 @@ import wetDiamond from "@/assets/treatment-wet-diamond.jpg";
 import vtechMicroneedling from "@/assets/treatment-vtech-microneedling.jpg";
 import prpHair from "@/assets/treatment-prp-hair.jpg";
 import hayFever from "@/assets/treatment-hay-fever.jpg";
+import b12Single from "@/assets/treatment-b12-single.jpg";
 
 export type Treatment = {
   slug: string;
@@ -259,7 +260,7 @@ export const treatments: Treatment[] = [
     ],
     whatToExpect:
       "A quick injection is administered into the upper arm. Effects are typically felt within 24–72 hours and last several weeks.",
-    image: body,
+    image: b12Single,
   },
   {
     slug: "vitamin-b12-course",
