@@ -28,7 +28,7 @@ export function Treatments() {
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {items.map((t) => (
-            <Link to="/treatments" key={t.title} className="bg-card border border-border group block hover:shadow-xl transition-shadow">
+            <Link to="/treatments/$slug" params={{ slug: t.slug }} key={t.slug} className="bg-card border border-border group block hover:shadow-xl transition-shadow">
               <div className="aspect-[4/3] overflow-hidden bg-secondary">
                 <img src={t.img} alt={t.title} loading="lazy" className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-700" />
               </div>
