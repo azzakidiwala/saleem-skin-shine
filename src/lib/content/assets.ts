@@ -13,6 +13,7 @@ import promoitaliaLipBooster from "@/assets/treatment-promoitalia-lip-booster.jp
 import wetDiamond from "@/assets/treatment-wet-diamond.jpg";
 import vtechMicroneedling from "@/assets/treatment-vtech-microneedling.jpg";
 import prpHair from "@/assets/treatment-prp-hair.jpg";
+import hayFever from "@/assets/treatment-hay-fever.jpg";
 import drSaleem from "@/assets/team-dr-saleem.jpg";
 import rnSaleem from "@/assets/team-rn-saleem.jpg";
 import hSaleem from "@/assets/team-h-saleem.jpg";
