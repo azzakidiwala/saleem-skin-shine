@@ -7,6 +7,7 @@ import laser from "@/assets/treatment-laser.jpg";
 import body from "@/assets/treatment-body.jpg";
 import clinic from "@/assets/about-clinic.jpg";
 import promoitaliaLipBooster from "@/assets/treatment-promoitalia-lip-booster.jpg";
+import wetDiamond from "@/assets/treatment-wet-diamond.jpg";
 
 export type Treatment = {
   slug: string;
