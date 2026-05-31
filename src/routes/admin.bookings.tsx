@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,6 +18,7 @@ import {
 import { useState } from "react";
 import { toast } from "sonner";
 import { Trash2, Pencil } from "lucide-react";
+import { updateBookingStatus } from "@/lib/admin/bookings.functions";
 
 export const Route = createFileRoute("/admin/bookings")({
   component: BookingsPage,
@@ -49,6 +51,7 @@ function statusVariant(status: string): "default" | "secondary" | "destructive" 
 
 function BookingsPage() {
   const qc = useQueryClient();
+  const setBookingStatus = useServerFn(updateBookingStatus);
   const [filter, setFilter] = useState<string>("upcoming");
   const [search, setSearch] = useState("");
 
@@ -68,12 +71,12 @@ function BookingsPage() {
 
   const updateStatus = useMutation({
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
-      const patch: { status: string; confirmed_at?: string } = { status };
-      if (status === "confirmed") patch.confirmed_at = new Date().toISOString();
-      const { error } = await supabase.from("bookings").update(patch).eq("id", id);
-      if (error) throw error;
+      await setBookingStatus({ data: { id, status: status as "pending" | "confirmed" | "completed" | "cancelled" } });
     },
-    onSuccess: () => { toast.success("Status updated"); qc.invalidateQueries({ queryKey: ["admin", "bookings"] }); },
+    onSuccess: (_data, vars) => {
+      toast.success(vars.status === "confirmed" ? "Booking confirmed and customer emailed" : "Status updated");
+      qc.invalidateQueries({ queryKey: ["admin", "bookings"] });
+    },
     onError: (e: any) => toast.error(e.message),
   });
 
