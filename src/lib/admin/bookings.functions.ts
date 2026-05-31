@@ -22,10 +22,9 @@ export const updateBookingStatus = createServerFn({ method: "POST" })
     if (readError) throw new Error(readError.message);
     if (!existing) throw new Error("Booking not found.");
 
-    const confirmedAt = data.status === "confirmed" ? new Date().toISOString() : null;
     const patch = data.status === "confirmed"
-      ? { status: data.status, confirmed_at: confirmedAt }
-      : { status: data.status, confirmed_at: null };
+      ? { status: data.status, confirmed_at: new Date().toISOString() }
+      : { status: data.status };
 
     const { data: updated, error: updateError } = await supabaseAdmin
       .from("bookings")
