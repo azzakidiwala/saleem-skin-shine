@@ -24,7 +24,7 @@ interface BookingPayload {
 
 const SENDER_DOMAIN = "notify.saleemskin.co.uk";
 const FROM = "Saleem Skin <bookings@notify.saleemskin.co.uk>";
-const CLINIC_INBOX = "info@saleemskin.co.uk";
+const FALLBACK_CLINIC_INBOX = "info@saleemskin.co.uk";
 const SITE_URL = "https://saleemskin.co.uk";
 const ADMIN_URL = `${SITE_URL}/admin/bookings`;
 
@@ -191,7 +191,15 @@ Deno.serve(async (req) => {
 
     const acceptUrl = `${SITE_URL}/api/public/confirm-booking?id=${b.bookingId}&token=${token}`;
 
-    const results = await Promise.allSettled([
+    // Resolve clinic recipients from the admin-managed list
+    const { data: recipients } = await supabase
+      .from("booking_notification_recipients")
+      .select("email")
+      .eq("enabled", true);
+    const clinicEmails = (recipients ?? []).map((r: { email: string }) => r.email);
+    if (clinicEmails.length === 0) clinicEmails.push(FALLBACK_CLINIC_INBOX);
+
+    const tasks: Promise<unknown>[] = [
       enqueue(
         supabase,
         b.email,
@@ -200,15 +208,21 @@ Deno.serve(async (req) => {
         "booking-received",
         `booking-received-${b.bookingId}`,
       ),
-      enqueue(
-        supabase,
-        CLINIC_INBOX,
-        `New booking: ${b.firstName} ${b.surname} — ${b.treatmentName}`,
-        clinicHtml(b, acceptUrl),
-        "booking-clinic-notification",
-        `booking-clinic-${b.bookingId}`,
-      ),
-    ]);
+    ];
+    for (const to of clinicEmails) {
+      tasks.push(
+        enqueue(
+          supabase,
+          to,
+          `New booking: ${b.firstName} ${b.surname} — ${b.treatmentName}`,
+          clinicHtml(b, acceptUrl),
+          "booking-clinic-notification",
+          `booking-clinic-${b.bookingId}-${to}`,
+        ),
+      );
+    }
+
+    const results = await Promise.allSettled(tasks);
 
     const errors = results
       .filter((r) => r.status === "rejected")

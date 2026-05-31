@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      booking_notification_recipients: {
+        Row: {
+          created_at: string
+          email: string
+          enabled: boolean
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          enabled?: boolean
+          id?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          enabled?: boolean
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       bookings: {
         Row: {
           appointment_date: string
