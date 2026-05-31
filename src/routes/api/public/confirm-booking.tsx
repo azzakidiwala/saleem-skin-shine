@@ -1,8 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
-
-const SENDER_DOMAIN = "notify.saleemskin.co.uk";
-const FROM = "Saleem Skin <bookings@notify.saleemskin.co.uk>";
+import { sendBookingConfirmedEmail } from "@/lib/booking-confirmation-email.server";
 
 function htmlPage(title: string, body: string, color = "#0a0a0a") {
   return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title}</title></head>
@@ -22,24 +20,6 @@ function formatDateLong(iso: string) {
     month: "long",
     year: "numeric",
   });
-}
-
-function customerConfirmedHtml(b: any) {
-  return `
-    <div style="font-family: Arial, sans-serif; color:#1a1a1a; max-width:560px; margin:0 auto; padding:24px;">
-      <h1 style="font-size:22px; margin:0 0 16px;">Your booking is confirmed</h1>
-      <p>Hi ${b.first_name},</p>
-      <p>Great news — your appointment with Saleem Skin has been confirmed by our team.</p>
-      <p style="font-size:18px; font-weight:bold; margin:16px 0;">
-        ${formatDateLong(b.appointment_date)} at ${b.appointment_time}
-      </p>
-      <table style="border-collapse:collapse; margin:16px 0;">
-        <tr><td style="padding:6px 12px 6px 0; color:#666;">Treatment</td><td style="padding:6px 0;"><strong>${b.treatment_name}</strong></td></tr>
-        ${b.treatment_price ? `<tr><td style="padding:6px 12px 6px 0; color:#666;">Price</td><td style="padding:6px 0;">${b.treatment_price}</td></tr>` : ""}
-      </table>
-      <p>If you need to reschedule, please call us on 07503 959285.</p>
-      <p style="margin-top:24px;">Warm regards,<br/>The Saleem Skin Team</p>
-    </div>`;
 }
 
 async function handle(id: string | null, token: string | null) {
@@ -71,6 +51,7 @@ async function handle(id: string | null, token: string | null) {
   }
 
   if (booking.status === "confirmed" && booking.confirmed_at) {
+    await sendBookingConfirmedEmail(booking);
     const when = new Date(booking.confirmed_at).toLocaleString("en-GB");
     return new Response(
       htmlPage(
@@ -94,30 +75,7 @@ async function handle(id: string | null, token: string | null) {
     });
   }
 
-  // Enqueue confirmation email to customer
-  const messageId = crypto.randomUUID();
-  const payload = {
-    to: booking.email,
-    from: FROM,
-    sender_domain: SENDER_DOMAIN,
-    subject: "Your Saleem Skin booking is confirmed",
-    html: customerConfirmedHtml(booking),
-    purpose: "transactional",
-    label: "booking-confirmed",
-    idempotency_key: `booking-confirmed-${id}`,
-    message_id: messageId,
-    queued_at: new Date().toISOString(),
-  };
-  await supabaseAdmin.rpc("enqueue_email" as any, {
-    queue_name: "transactional_emails",
-    payload,
-  });
-  await supabaseAdmin.from("email_send_log").insert({
-    message_id: messageId,
-    template_name: "booking-confirmed",
-    recipient_email: booking.email,
-    status: "pending",
-  });
+  await sendBookingConfirmedEmail(booking);
 
   const when = new Date(confirmedAt).toLocaleString("en-GB");
   return new Response(
