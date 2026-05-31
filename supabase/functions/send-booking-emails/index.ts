@@ -126,6 +126,37 @@ function clinicHtml(b: BookingPayload, acceptUrl: string) {
   return layout(inner, `New booking — ${b.firstName} ${b.surname}`);
 }
 
+function htmlToText(html: string): string {
+  return html
+    .replace(/<style[\s\S]*?<\/style>/gi, "")
+    .replace(/<script[\s\S]*?<\/script>/gi, "")
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<\/(p|div|tr|h[1-6])>/gi, "\n")
+    .replace(/<[^>]+>/g, "")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&middot;/g, "·")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/\n\s*\n/g, "\n\n")
+    .trim();
+}
+
+async function getUnsubscribeToken(supabase: any, email: string): Promise<string> {
+  const { data: existing } = await supabase
+    .from("email_unsubscribe_tokens")
+    .select("token")
+    .eq("email", email)
+    .maybeSingle();
+  if (existing?.token) return existing.token;
+  const token = crypto.randomUUID().replace(/-/g, "") +
+    crypto.randomUUID().replace(/-/g, "");
+  await supabase
+    .from("email_unsubscribe_tokens")
+    .insert({ email, token });
+  return token;
+}
+
 async function enqueue(
   supabase: any,
   to: string,
@@ -135,15 +166,18 @@ async function enqueue(
   idempotencyKey: string,
 ) {
   const messageId = crypto.randomUUID();
+  const unsubscribeToken = await getUnsubscribeToken(supabase, to);
   const payload = {
     to,
     from: FROM,
     sender_domain: SENDER_DOMAIN,
     subject,
     html,
+    text: htmlToText(html),
     purpose: "transactional",
     label,
     idempotency_key: idempotencyKey,
+    unsubscribe_token: unsubscribeToken,
     message_id: messageId,
     queued_at: new Date().toISOString(),
   };
