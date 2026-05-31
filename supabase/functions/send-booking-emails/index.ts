@@ -126,6 +126,22 @@ function clinicHtml(b: BookingPayload, acceptUrl: string) {
   return layout(inner, `New booking — ${b.firstName} ${b.surname}`);
 }
 
+function htmlToText(html: string): string {
+  return html
+    .replace(/<style[\s\S]*?<\/style>/gi, "")
+    .replace(/<script[\s\S]*?<\/script>/gi, "")
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<\/(p|div|tr|h[1-6])>/gi, "\n")
+    .replace(/<[^>]+>/g, "")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&middot;/g, "·")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/\n\s*\n/g, "\n\n")
+    .trim();
+}
+
 async function enqueue(
   supabase: any,
   to: string,
@@ -141,6 +157,7 @@ async function enqueue(
     sender_domain: SENDER_DOMAIN,
     subject,
     html,
+    text: htmlToText(html),
     purpose: "transactional",
     label,
     idempotency_key: idempotencyKey,
