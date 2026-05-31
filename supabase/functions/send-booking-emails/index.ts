@@ -1,6 +1,6 @@
 // Sends booking emails via Lovable email queue.
 // - Customer: booking received, awaiting confirmation
-// - Clinic (info@techwala.co.uk): booking details + Accept link
+// - Clinic (info@saleemskin.co.uk): booking details + Accept + Admin links
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
@@ -24,45 +24,106 @@ interface BookingPayload {
 
 const SENDER_DOMAIN = "notify.saleemskin.co.uk";
 const FROM = "Saleem Skin <bookings@notify.saleemskin.co.uk>";
-const CLINIC_INBOX = "info@techwala.co.uk";
+const CLINIC_INBOX = "info@saleemskin.co.uk";
 const SITE_URL = "https://saleemskin.co.uk";
+const ADMIN_URL = `${SITE_URL}/admin/bookings`;
+
+// Brand palette
+const BRAND = {
+  primary: "#0a0a0a",
+  gold: "#b8924d",
+  bg: "#f7f4ef",
+  text: "#1a1a1a",
+  muted: "#6b6b6b",
+  border: "#e7e2d8",
+};
+
+function layout(inner: string, preheader: string) {
+  return `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Saleem Skin</title>
+  </head>
+  <body style="margin:0;padding:0;background:${BRAND.bg};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:${BRAND.text};">
+    <span style="display:none!important;visibility:hidden;opacity:0;color:transparent;height:0;width:0;overflow:hidden;">${preheader}</span>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${BRAND.bg};padding:32px 16px;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border:1px solid ${BRAND.border};border-radius:8px;overflow:hidden;">
+            <tr>
+              <td style="background:${BRAND.primary};padding:28px 32px;text-align:center;">
+                <div style="color:#ffffff;font-size:11px;letter-spacing:0.35em;text-transform:uppercase;margin-bottom:8px;">Saleem Skin</div>
+                <div style="color:${BRAND.gold};font-size:11px;letter-spacing:0.25em;text-transform:uppercase;">Aesthetic &amp; Skin Clinic</div>
+              </td>
+            </tr>
+            <tr><td style="padding:36px 32px;">${inner}</td></tr>
+            <tr>
+              <td style="background:${BRAND.bg};padding:24px 32px;border-top:1px solid ${BRAND.border};text-align:center;color:${BRAND.muted};font-size:12px;line-height:1.6;">
+                Saleem Skin Clinic &middot; 07503 959285<br/>
+                <a href="${SITE_URL}" style="color:${BRAND.muted};text-decoration:underline;">saleemskin.co.uk</a>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>`;
+}
+
+function detailsTable(rows: Array<[string, string]>) {
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid ${BRAND.border};border-radius:6px;margin:20px 0;">
+    ${rows.map(([k, v], i) => `
+      <tr>
+        <td style="padding:12px 16px;color:${BRAND.muted};font-size:13px;width:40%;${i ? `border-top:1px solid ${BRAND.border};` : ""}">${k}</td>
+        <td style="padding:12px 16px;color:${BRAND.text};font-size:14px;font-weight:600;${i ? `border-top:1px solid ${BRAND.border};` : ""}">${v}</td>
+      </tr>`).join("")}
+  </table>`;
+}
+
+function button(href: string, label: string, variant: "primary" | "secondary" = "primary") {
+  const bg = variant === "primary" ? BRAND.primary : "#ffffff";
+  const color = variant === "primary" ? "#ffffff" : BRAND.primary;
+  const border = variant === "primary" ? BRAND.primary : BRAND.primary;
+  return `<a href="${href}" style="display:inline-block;background:${bg};color:${color};border:1px solid ${border};text-decoration:none;padding:14px 28px;font-size:12px;letter-spacing:0.2em;text-transform:uppercase;font-weight:600;border-radius:4px;margin:4px;">${label}</a>`;
+}
 
 function customerHtml(b: BookingPayload) {
-  return `
-    <div style="font-family: Arial, sans-serif; color:#1a1a1a; max-width:560px; margin:0 auto; padding:24px;">
-      <h1 style="font-size:22px; margin:0 0 16px;">We've received your booking</h1>
-      <p>Hi ${b.firstName},</p>
-      <p>Thank you for booking with Saleem Skin. Your request has been received and will be reviewed by our team. Once it has been confirmed, you will receive a confirmation email.</p>
-      <p style="font-size:18px; font-weight:bold; margin:16px 0;">
-        ${b.appointmentDate} at ${b.appointmentTime}
-      </p>
-      <table style="border-collapse:collapse; margin:16px 0;">
-        <tr><td style="padding:6px 12px 6px 0; color:#666;">Treatment</td><td style="padding:6px 0;"><strong>${b.treatmentName}</strong></td></tr>
-        <tr><td style="padding:6px 12px 6px 0; color:#666;">Price</td><td style="padding:6px 0;">${b.treatmentPrice}</td></tr>
-      </table>
-      <p>If you need to make any changes, please call us on 07503 959285.</p>
-      <p style="margin-top:24px;">Warm regards,<br/>The Saleem Skin Team</p>
-    </div>`;
+  const inner = `
+    <h1 style="font-size:24px;font-weight:600;margin:0 0 8px;color:${BRAND.text};">Thank you, ${b.firstName}</h1>
+    <p style="font-size:15px;line-height:1.6;color:${BRAND.muted};margin:0 0 24px;">We've received your booking request. Please wait for a confirmation from Saleem Skin to approve your appointment — you'll receive a separate email as soon as it's confirmed.</p>
+    ${detailsTable([
+      ["Treatment", b.treatmentName],
+      ["Date", b.appointmentDate],
+      ["Time", b.appointmentTime],
+      ["Price", b.treatmentPrice],
+    ])}
+    <p style="font-size:14px;line-height:1.6;color:${BRAND.text};margin:24px 0 0;">If you need to change or cancel your appointment, please call us on <strong>07503 959285</strong>.</p>
+    <p style="font-size:14px;line-height:1.6;color:${BRAND.text};margin:24px 0 0;">Warm regards,<br/><strong>The Saleem Skin Team</strong></p>`;
+  return layout(inner, "We've received your booking — awaiting confirmation");
 }
 
 function clinicHtml(b: BookingPayload, acceptUrl: string) {
-  return `
-    <div style="font-family: Arial, sans-serif; color:#1a1a1a; max-width:560px; margin:0 auto; padding:24px;">
-      <h1 style="font-size:20px; margin:0 0 16px;">New booking — review required</h1>
-      <table style="border-collapse:collapse;">
-        <tr><td style="padding:6px 12px 6px 0; color:#666;">Name</td><td><strong>${b.firstName} ${b.surname}</strong></td></tr>
-        <tr><td style="padding:6px 12px 6px 0; color:#666;">Email</td><td>${b.email}</td></tr>
-        <tr><td style="padding:6px 12px 6px 0; color:#666;">Mobile</td><td>${b.mobile}</td></tr>
-        <tr><td style="padding:6px 12px 6px 0; color:#666;">Treatment</td><td>${b.treatmentName}</td></tr>
-        <tr><td style="padding:6px 12px 6px 0; color:#666;">Price</td><td>${b.treatmentPrice}</td></tr>
-        <tr><td style="padding:6px 12px 6px 0; color:#666;">Date</td><td><strong>${b.appointmentDate}</strong></td></tr>
-        <tr><td style="padding:6px 12px 6px 0; color:#666;">Time</td><td><strong>${b.appointmentTime}</strong></td></tr>
-      </table>
-      <div style="margin:28px 0;">
-        <a href="${acceptUrl}" style="display:inline-block; background:#0a0a0a; color:#fff; text-decoration:none; padding:14px 24px; font-size:13px; letter-spacing:0.15em; text-transform:uppercase; border-radius:4px;">Accept booking</a>
-      </div>
-      <p style="font-size:12px; color:#888;">Clicking Accept will mark this booking as confirmed in the admin panel and send the customer their confirmation email.</p>
-    </div>`;
+  const inner = `
+    <div style="font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:${BRAND.gold};margin-bottom:8px;">New booking request</div>
+    <h1 style="font-size:22px;font-weight:600;margin:0 0 8px;color:${BRAND.text};">${b.firstName} ${b.surname}</h1>
+    <p style="font-size:14px;color:${BRAND.muted};margin:0 0 24px;">Review the details below and confirm to notify the customer.</p>
+    ${detailsTable([
+      ["Treatment", b.treatmentName],
+      ["Price", b.treatmentPrice],
+      ["Date", b.appointmentDate],
+      ["Time", b.appointmentTime],
+      ["Email", `<a href="mailto:${b.email}" style="color:${BRAND.text};">${b.email}</a>`],
+      ["Mobile", `<a href="tel:${b.mobile}" style="color:${BRAND.text};">${b.mobile}</a>`],
+    ])}
+    <div style="text-align:center;margin:32px 0 8px;">
+      ${button(acceptUrl, "Accept booking", "primary")}
+      ${button(ADMIN_URL, "Open admin", "secondary")}
+    </div>
+    <p style="font-size:12px;color:${BRAND.muted};text-align:center;margin:16px 0 0;line-height:1.6;">Accepting will mark this booking as confirmed and send the customer their confirmation email.</p>`;
+  return layout(inner, `New booking — ${b.firstName} ${b.surname}`);
 }
 
 async function enqueue(
