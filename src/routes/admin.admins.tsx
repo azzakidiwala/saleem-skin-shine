@@ -133,6 +133,136 @@ function AdminsPage() {
           </TableBody>
         </Table>
       </div>
+
+      <NotificationRecipients />
+    </div>
+  );
+}
+
+type Recipient = { id: string; email: string; enabled: boolean };
+
+function NotificationRecipients() {
+  const qc = useQueryClient();
+  const [newEmail, setNewEmail] = useState("");
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["admin", "booking-recipients"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("booking_notification_recipients")
+        .select("id, email, enabled")
+        .order("created_at", { ascending: true });
+      if (error) throw error;
+      return data as Recipient[];
+    },
+  });
+
+  const toggle = useMutation({
+    mutationFn: async (r: { id: string; enabled: boolean }) => {
+      const { error } = await supabase
+        .from("booking_notification_recipients")
+        .update({ enabled: r.enabled })
+        .eq("id", r.id);
+      if (error) throw error;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["admin", "booking-recipients"] }),
+    onError: (e: any) => toast.error(e.message),
+  });
+
+  const add = useMutation({
+    mutationFn: async (email: string) => {
+      const { error } = await supabase
+        .from("booking_notification_recipients")
+        .insert({ email: email.trim().toLowerCase(), enabled: true });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      setNewEmail("");
+      toast.success("Recipient added");
+      qc.invalidateQueries({ queryKey: ["admin", "booking-recipients"] });
+    },
+    onError: (e: any) => toast.error(e.message),
+  });
+
+  const remove = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from("booking_notification_recipients")
+        .delete()
+        .eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Recipient removed");
+      qc.invalidateQueries({ queryKey: ["admin", "booking-recipients"] });
+    },
+    onError: (e: any) => toast.error(e.message),
+  });
+
+  return (
+    <div className="space-y-4 pt-6 border-t">
+      <div>
+        <h2 className="text-2xl font-semibold flex items-center gap-2">
+          <Mail className="h-5 w-5" /> Booking notification recipients
+        </h2>
+        <p className="text-muted-foreground mt-1 text-sm">
+          Choose which addresses receive an email when a new booking comes in from the website. Tick to enable.
+        </p>
+      </div>
+
+      <div className="rounded-lg border bg-card overflow-hidden">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-20">Receive</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {isLoading && (
+              <TableRow><TableCell colSpan={3} className="text-center py-8 text-muted-foreground">Loading…</TableCell></TableRow>
+            )}
+            {(data ?? []).map((r) => (
+              <TableRow key={r.id}>
+                <TableCell>
+                  <Checkbox
+                    checked={r.enabled}
+                    onCheckedChange={(v) => toggle.mutate({ id: r.id, enabled: !!v })}
+                  />
+                </TableCell>
+                <TableCell className="font-medium">{r.email}</TableCell>
+                <TableCell className="text-right">
+                  <Button
+                    variant="ghost" size="icon"
+                    onClick={() => { if (confirm(`Remove ${r.email}?`)) remove.mutate(r.id); }}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+            {data && data.length === 0 && (
+              <TableRow><TableCell colSpan={3} className="text-center py-8 text-muted-foreground">No recipients yet.</TableCell></TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+
+      <div className="flex gap-2 max-w-md">
+        <Input
+          type="email"
+          placeholder="name@example.com"
+          value={newEmail}
+          onChange={(e) => setNewEmail(e.target.value)}
+        />
+        <Button
+          disabled={!newEmail.includes("@") || add.isPending}
+          onClick={() => add.mutate(newEmail)}
+        >
+          <Plus className="h-4 w-4 mr-1" /> Add
+        </Button>
+      </div>
     </div>
   );
 }
