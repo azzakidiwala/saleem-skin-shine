@@ -24,7 +24,7 @@ interface BookingPayload {
 
 const SENDER_DOMAIN = "notify.saleemskin.co.uk";
 const FROM = "Saleem Skin <bookings@notify.saleemskin.co.uk>";
-const CLINIC_INBOX = "info@saleemskin.co.uk";
+const FALLBACK_CLINIC_INBOX = "info@saleemskin.co.uk";
 const SITE_URL = "https://saleemskin.co.uk";
 const ADMIN_URL = `${SITE_URL}/admin/bookings`;
 
