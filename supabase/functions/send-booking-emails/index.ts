@@ -142,6 +142,21 @@ function htmlToText(html: string): string {
     .trim();
 }
 
+async function getUnsubscribeToken(supabase: any, email: string): Promise<string> {
+  const { data: existing } = await supabase
+    .from("email_unsubscribe_tokens")
+    .select("token")
+    .eq("email", email)
+    .maybeSingle();
+  if (existing?.token) return existing.token;
+  const token = crypto.randomUUID().replace(/-/g, "") +
+    crypto.randomUUID().replace(/-/g, "");
+  await supabase
+    .from("email_unsubscribe_tokens")
+    .insert({ email, token });
+  return token;
+}
+
 async function enqueue(
   supabase: any,
   to: string,
@@ -151,6 +166,7 @@ async function enqueue(
   idempotencyKey: string,
 ) {
   const messageId = crypto.randomUUID();
+  const unsubscribeToken = await getUnsubscribeToken(supabase, to);
   const payload = {
     to,
     from: FROM,
@@ -161,6 +177,7 @@ async function enqueue(
     purpose: "transactional",
     label,
     idempotency_key: idempotencyKey,
+    unsubscribe_token: unsubscribeToken,
     message_id: messageId,
     queued_at: new Date().toISOString(),
   };
