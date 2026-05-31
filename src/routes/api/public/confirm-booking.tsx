@@ -51,6 +51,7 @@ async function handle(id: string | null, token: string | null) {
   }
 
   if (booking.status === "confirmed" && booking.confirmed_at) {
+    await sendBookingConfirmedEmail(booking);
     const when = new Date(booking.confirmed_at).toLocaleString("en-GB");
     return new Response(
       htmlPage(
