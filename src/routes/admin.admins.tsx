@@ -1,9 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogDescription,
 } from "@/components/ui/dialog";
@@ -12,7 +14,7 @@ import {
 } from "@/components/ui/table";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Plus, Trash2, KeyRound, UserCheck, UserX } from "lucide-react";
+import { Plus, Trash2, KeyRound, UserCheck, UserX, Mail } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { listAdmins, inviteAdmin, removeAdmin, updateAdminPassword, setAdminActive } from "@/lib/admin/admins.functions";
 import { useIsAdmin } from "@/lib/admin/auth";
