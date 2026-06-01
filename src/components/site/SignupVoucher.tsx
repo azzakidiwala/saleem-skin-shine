@@ -58,7 +58,7 @@ export function SignupVoucher() {
         },
       });
       if (res.status === "issued") {
-        setIssued({ code: res.code, discount_pennies: res.discount_pennies, expires_at: res.expires_at });
+        setIssued({ code: res.code, discount_pennies: res.discount_pennies, expires_at: res.expires_at ?? "" });
         toast.success("Voucher sent!", { description: `Your code is ${res.code}` });
       } else {
         toast.error(res.message);

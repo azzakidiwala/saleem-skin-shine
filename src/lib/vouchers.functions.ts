@@ -154,8 +154,8 @@ export const redeemVoucherForBooking = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const { data: result, error } = await supabaseAdmin.rpc("redeem_voucher", {
       p_code: data.code,
-      p_email: data.email ?? null,
-    });
+      p_email: data.email,
+    } as never);
     if (error) throw new Error(error.message);
     const row = Array.isArray(result) && result.length > 0 ? result[0] : null;
     if (!row) throw new Error("Voucher could not be redeemed.");
