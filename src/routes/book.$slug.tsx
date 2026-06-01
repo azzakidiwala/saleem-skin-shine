@@ -347,6 +347,12 @@ function BookingPage() {
               {step === 2 && (
                 <div className="bg-card border border-border p-6 md:p-8">
                   <h2 className="text-lg font-semibold text-foreground mb-6">Your details</h2>
+                  {returningName && (
+                    <div className="mb-6 border border-gold/40 bg-gold/5 text-foreground px-4 py-3 text-sm">
+                      <span className="text-gold tracking-[0.2em] uppercase text-[10px] mr-2">Welcome back</span>
+                      Thank you for returning, {returningName}! We've kept your details — feel free to update them below.
+                    </div>
+                  )}
                   <div className="grid md:grid-cols-2 gap-5">
                     <div>
                       <Label htmlFor="firstName">First name *</Label>
