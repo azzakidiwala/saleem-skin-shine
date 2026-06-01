@@ -85,7 +85,7 @@ function ContactPage() {
             <div className="bg-card border border-border p-6 flex flex-col items-center text-center gap-3">
               <MapPin className="h-6 w-6 text-gold" />
               <div className="text-xs tracking-[0.25em] uppercase text-muted-foreground">Address</div>
-              <div>123 Wellness Avenue,<br />Manchester, M1 2AB</div>
+              <div className="whitespace-pre-line">{getString(content, "contact.address", "123 Wellness Avenue,\nManchester, M1 2AB")}</div>
             </div>
             <div className="bg-card border border-border p-6 flex flex-col items-center text-center gap-3">
               <Phone className="h-6 w-6 text-gold" />
