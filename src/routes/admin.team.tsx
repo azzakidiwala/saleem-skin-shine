@@ -16,6 +16,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Plus, Trash2, Pencil } from "lucide-react";
 import { uploadSiteImage } from "@/lib/admin/storage";
+import { resolveTeamImage } from "@/lib/content/assets";
 
 export const Route = createFileRoute("/admin/team")({
   component: TeamPage,
