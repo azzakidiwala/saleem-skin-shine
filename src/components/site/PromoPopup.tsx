@@ -23,12 +23,21 @@ export function PromoPopup() {
     staleTime: 60_000,
   });
 
-  // Show after delay
+  // Show after delay, then auto-minimize after 5s
   useEffect(() => {
     if (!promo) return;
-    const t = window.setTimeout(() => setOpen(true), 1500);
-    return () => window.clearTimeout(t);
+    const show = window.setTimeout(() => setOpen(true), 1500);
+    return () => window.clearTimeout(show);
   }, [promo]);
+
+  useEffect(() => {
+    if (!open || minimized) return;
+    const hide = window.setTimeout(() => {
+      setOpen(false);
+      setMinimized(true);
+    }, 5000);
+    return () => window.clearTimeout(hide);
+  }, [open, minimized]);
 
   if (!promo) return null;
 
