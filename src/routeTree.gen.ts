@@ -27,6 +27,7 @@ import { Route as ConditionsBodyRouteImport } from './routes/conditions.body'
 import { Route as BookSlugRouteImport } from './routes/book.$slug'
 import { Route as AdminTreatmentsRouteImport } from './routes/admin.treatments'
 import { Route as AdminTeamRouteImport } from './routes/admin.team'
+import { Route as AdminCustomersRouteImport } from './routes/admin.customers'
 import { Route as AdminContentRouteImport } from './routes/admin.content'
 import { Route as AdminBookingsRouteImport } from './routes/admin.bookings'
 import { Route as AdminAdminsRouteImport } from './routes/admin.admins'
@@ -123,6 +124,11 @@ const AdminTeamRoute = AdminTeamRouteImport.update({
   path: '/team',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminCustomersRoute = AdminCustomersRouteImport.update({
+  id: '/customers',
+  path: '/customers',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminContentRoute = AdminContentRouteImport.update({
   id: '/content',
   path: '/content',
@@ -163,6 +169,7 @@ export interface FileRoutesByFullPath {
   '/admin/admins': typeof AdminAdminsRoute
   '/admin/bookings': typeof AdminBookingsRoute
   '/admin/content': typeof AdminContentRoute
+  '/admin/customers': typeof AdminCustomersRoute
   '/admin/team': typeof AdminTeamRoute
   '/admin/treatments': typeof AdminTreatmentsRoute
   '/book/$slug': typeof BookSlugRoute
@@ -186,6 +193,7 @@ export interface FileRoutesByTo {
   '/admin/admins': typeof AdminAdminsRoute
   '/admin/bookings': typeof AdminBookingsRoute
   '/admin/content': typeof AdminContentRoute
+  '/admin/customers': typeof AdminCustomersRoute
   '/admin/team': typeof AdminTeamRoute
   '/admin/treatments': typeof AdminTreatmentsRoute
   '/book/$slug': typeof BookSlugRoute
@@ -212,6 +220,7 @@ export interface FileRoutesById {
   '/admin/admins': typeof AdminAdminsRoute
   '/admin/bookings': typeof AdminBookingsRoute
   '/admin/content': typeof AdminContentRoute
+  '/admin/customers': typeof AdminCustomersRoute
   '/admin/team': typeof AdminTeamRoute
   '/admin/treatments': typeof AdminTreatmentsRoute
   '/book/$slug': typeof BookSlugRoute
@@ -239,6 +248,7 @@ export interface FileRouteTypes {
     | '/admin/admins'
     | '/admin/bookings'
     | '/admin/content'
+    | '/admin/customers'
     | '/admin/team'
     | '/admin/treatments'
     | '/book/$slug'
@@ -262,6 +272,7 @@ export interface FileRouteTypes {
     | '/admin/admins'
     | '/admin/bookings'
     | '/admin/content'
+    | '/admin/customers'
     | '/admin/team'
     | '/admin/treatments'
     | '/book/$slug'
@@ -287,6 +298,7 @@ export interface FileRouteTypes {
     | '/admin/admins'
     | '/admin/bookings'
     | '/admin/content'
+    | '/admin/customers'
     | '/admin/team'
     | '/admin/treatments'
     | '/book/$slug'
@@ -446,6 +458,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminTeamRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/customers': {
+      id: '/admin/customers'
+      path: '/customers'
+      fullPath: '/admin/customers'
+      preLoaderRoute: typeof AdminCustomersRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/content': {
       id: '/admin/content'
       path: '/content'
@@ -488,6 +507,7 @@ interface AdminRouteChildren {
   AdminAdminsRoute: typeof AdminAdminsRoute
   AdminBookingsRoute: typeof AdminBookingsRoute
   AdminContentRoute: typeof AdminContentRoute
+  AdminCustomersRoute: typeof AdminCustomersRoute
   AdminTeamRoute: typeof AdminTeamRoute
   AdminTreatmentsRoute: typeof AdminTreatmentsRoute
   AdminIndexRoute: typeof AdminIndexRoute
@@ -497,6 +517,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminAdminsRoute: AdminAdminsRoute,
   AdminBookingsRoute: AdminBookingsRoute,
   AdminContentRoute: AdminContentRoute,
+  AdminCustomersRoute: AdminCustomersRoute,
   AdminTeamRoute: AdminTeamRoute,
   AdminTreatmentsRoute: AdminTreatmentsRoute,
   AdminIndexRoute: AdminIndexRoute,

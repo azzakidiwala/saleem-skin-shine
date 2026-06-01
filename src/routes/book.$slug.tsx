@@ -13,7 +13,20 @@ import { getTreatment, treatments } from "@/data/treatments";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 
+type BookSearch = {
+  email?: string;
+  first?: string;
+  surname?: string;
+  mobile?: string;
+};
+
 export const Route = createFileRoute("/book/$slug")({
+  validateSearch: (s: Record<string, unknown>): BookSearch => ({
+    email: typeof s.email === "string" ? s.email : undefined,
+    first: typeof s.first === "string" ? s.first : undefined,
+    surname: typeof s.surname === "string" ? s.surname : undefined,
+    mobile: typeof s.mobile === "string" ? s.mobile : undefined,
+  }),
   loader: ({ params }) => {
     const treatment = getTreatment(params.slug);
     if (!treatment) throw notFound();
@@ -74,6 +87,7 @@ function toIsoDate(d: Date) {
 
 function BookingPage() {
   const { treatment: t } = Route.useLoaderData();
+  const prefill = Route.useSearch();
   const navigate = useNavigate();
 
   const [step, setStep] = useState<1 | 2 | 3>(1);
@@ -82,10 +96,11 @@ function BookingPage() {
   const [bookedTimes, setBookedTimes] = useState<string[]>([]);
   const [loadingTimes, setLoadingTimes] = useState(false);
 
-  const [firstName, setFirstName] = useState("");
-  const [surname, setSurname] = useState("");
-  const [email, setEmail] = useState("");
-  const [mobile, setMobile] = useState("");
+  const [firstName, setFirstName] = useState(prefill.first ?? "");
+  const [surname, setSurname] = useState(prefill.surname ?? "");
+  const [email, setEmail] = useState(prefill.email ?? "");
+  const [mobile, setMobile] = useState(prefill.mobile ?? "");
+  const [returningName, setReturningName] = useState<string | null>(null);
 
   const [submitting, setSubmitting] = useState(false);
 
@@ -115,6 +130,23 @@ function BookingPage() {
       setLoadingTimes(false);
     })();
   }, [date]);
+
+  // Lookup returning customer by email (debounced)
+  useEffect(() => {
+    const trimmed = email.trim();
+    if (!/\S+@\S+\.\S+/.test(trimmed)) { setReturningName(null); return; }
+    const handle = setTimeout(async () => {
+      const { data } = await supabase.rpc("lookup_customer_by_email", { p_email: trimmed });
+      const found = Array.isArray(data) && data.length > 0 ? data[0]?.first_name : null;
+      if (found) {
+        setReturningName(found);
+        setFirstName((cur: string) => cur.trim().length === 0 ? found : cur);
+      } else {
+        setReturningName(null);
+      }
+    }, 400);
+    return () => clearTimeout(handle);
+  }, [email]);
 
   const availableTimes = ALL_TIMES.filter((s) => !bookedTimes.includes(s));
 
@@ -315,6 +347,12 @@ function BookingPage() {
               {step === 2 && (
                 <div className="bg-card border border-border p-6 md:p-8">
                   <h2 className="text-lg font-semibold text-foreground mb-6">Your details</h2>
+                  {returningName && (
+                    <div className="mb-6 border border-gold/40 bg-gold/5 text-foreground px-4 py-3 text-sm">
+                      <span className="text-gold tracking-[0.2em] uppercase text-[10px] mr-2">Welcome back</span>
+                      Thank you for returning, {returningName}! We've kept your details — feel free to update them below.
+                    </div>
+                  )}
                   <div className="grid md:grid-cols-2 gap-5">
                     <div>
                       <Label htmlFor="firstName">First name *</Label>
