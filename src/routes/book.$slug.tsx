@@ -503,7 +503,51 @@ function BookingPage() {
                       <div className="text-muted-foreground text-xs uppercase tracking-wider">Price</div>
                       <div className="text-2xl text-gold font-medium">{t.price}</div>
                     </div>
+                    {appliedVoucher && (
+                      <div className="sm:col-span-2 flex items-center justify-between text-sm">
+                        <div className="text-muted-foreground text-xs uppercase tracking-wider">Voucher {appliedVoucher.code}</div>
+                        <div className="text-foreground">
+                          −£{(appliedVoucher.discount_pennies / 100).toFixed(2).replace(/\.00$/, "")}
+                        </div>
+                      </div>
+                    )}
                   </div>
+
+                  {/* Voucher input */}
+                  <div className="border-t border-border mt-6 pt-6">
+                    <Label className="text-xs uppercase tracking-wider text-muted-foreground">Discount code</Label>
+                    {appliedVoucher ? (
+                      <div className="flex items-center justify-between mt-2 px-3 py-2 border border-gold/40 bg-gold/5">
+                        <span className="font-mono text-sm">{appliedVoucher.code} applied</span>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => { setAppliedVoucher(null); setVoucherInput(""); }}
+                        >
+                          Remove
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="flex gap-2 mt-2">
+                        <Input
+                          value={voucherInput}
+                          onChange={(e) => setVoucherInput(e.target.value.toUpperCase())}
+                          placeholder="Enter voucher code"
+                          maxLength={32}
+                        />
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={applyVoucher}
+                          disabled={voucherChecking || !voucherInput.trim()}
+                        >
+                          {voucherChecking ? <Loader2 className="h-4 w-4 animate-spin" /> : "Apply"}
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+
 
                   <div className="border-t border-border mt-6 pt-6 text-sm space-y-1 text-muted-foreground">
                     <div><span className="text-foreground font-semibold">Name:</span> {firstName} {surname}</div>
