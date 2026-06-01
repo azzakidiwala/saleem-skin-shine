@@ -87,6 +87,7 @@ function toIsoDate(d: Date) {
 
 function BookingPage() {
   const { treatment: t } = Route.useLoaderData();
+  const prefill = Route.useSearch();
   const navigate = useNavigate();
 
   const [step, setStep] = useState<1 | 2 | 3>(1);
@@ -95,10 +96,11 @@ function BookingPage() {
   const [bookedTimes, setBookedTimes] = useState<string[]>([]);
   const [loadingTimes, setLoadingTimes] = useState(false);
 
-  const [firstName, setFirstName] = useState("");
-  const [surname, setSurname] = useState("");
-  const [email, setEmail] = useState("");
-  const [mobile, setMobile] = useState("");
+  const [firstName, setFirstName] = useState(prefill.first ?? "");
+  const [surname, setSurname] = useState(prefill.surname ?? "");
+  const [email, setEmail] = useState(prefill.email ?? "");
+  const [mobile, setMobile] = useState(prefill.mobile ?? "");
+  const [returningName, setReturningName] = useState<string | null>(null);
 
   const [submitting, setSubmitting] = useState(false);
 
