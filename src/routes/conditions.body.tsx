@@ -18,6 +18,7 @@ export const Route = createFileRoute("/conditions/body")({
       area="Body"
       intro="Targeted treatments for the body — from stubborn fat and cellulite to loose skin and spider veins — designed around your goals."
       conditions={bodyConditions}
+      contentKey="conditions.body"
     />
   ),
 });
