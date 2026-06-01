@@ -35,8 +35,11 @@ type Voucher = {
   used_count: number;
   is_active: boolean;
   notes: string;
+  treatment_slug: string | null;
   created_at: string;
 };
+
+type TreatmentOption = { slug: string; name: string };
 
 type Settings = {
   signup_enabled: boolean;
