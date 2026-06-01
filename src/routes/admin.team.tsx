@@ -16,6 +16,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Plus, Trash2, Pencil } from "lucide-react";
 import { uploadSiteImage } from "@/lib/admin/storage";
+import { resolveTeamImage } from "@/lib/content/assets";
 
 export const Route = createFileRoute("/admin/team")({
   component: TeamPage,
@@ -129,7 +130,7 @@ function TeamPage() {
             {isLoading && <TableRow><TableCell colSpan={6} className="text-center py-8 text-muted-foreground">Loading…</TableCell></TableRow>}
             {(data ?? []).map((r) => (
               <TableRow key={r.id}>
-                <TableCell>{r.image_url && <img src={r.image_url} alt="" className="h-10 w-10 rounded-full object-cover" />}</TableCell>
+                <TableCell><img src={resolveTeamImage(r.name, r.image_url)} alt={r.name} className="h-10 w-10 rounded-full object-cover" /></TableCell>
                 <TableCell className="font-medium">{r.name}</TableCell>
                 <TableCell>{r.role}</TableCell>
                 <TableCell>{r.sort_order}</TableCell>
