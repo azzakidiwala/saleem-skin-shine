@@ -6,7 +6,7 @@ import { toast } from "sonner";
 
 type Promo = { code: string; discount_pennies: number; expires_at: string | null };
 
-const DISMISS_KEY = "promo-popup-dismissed";
+
 
 export function PromoPopup() {
   const [open, setOpen] = useState(false);
