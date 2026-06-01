@@ -13,7 +13,20 @@ import { getTreatment, treatments } from "@/data/treatments";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 
+type BookSearch = {
+  email?: string;
+  first?: string;
+  surname?: string;
+  mobile?: string;
+};
+
 export const Route = createFileRoute("/book/$slug")({
+  validateSearch: (s: Record<string, unknown>): BookSearch => ({
+    email: typeof s.email === "string" ? s.email : undefined,
+    first: typeof s.first === "string" ? s.first : undefined,
+    surname: typeof s.surname === "string" ? s.surname : undefined,
+    mobile: typeof s.mobile === "string" ? s.mobile : undefined,
+  }),
   loader: ({ params }) => {
     const treatment = getTreatment(params.slug);
     if (!treatment) throw notFound();
