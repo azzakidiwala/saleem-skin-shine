@@ -11,6 +11,8 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { getTreatment, treatments } from "@/data/treatments";
 import { supabase } from "@/integrations/supabase/client";
+import { useServerFn } from "@tanstack/react-start";
+import { validateVoucher, redeemVoucherForBooking } from "@/lib/vouchers.functions";
 import { cn } from "@/lib/utils";
 
 type BookSearch = {
@@ -103,6 +105,33 @@ function BookingPage() {
   const [returningName, setReturningName] = useState<string | null>(null);
 
   const [submitting, setSubmitting] = useState(false);
+
+  // Voucher state
+  const validateVoucherFn = useServerFn(validateVoucher);
+  const redeemVoucherFn = useServerFn(redeemVoucherForBooking);
+  const [voucherInput, setVoucherInput] = useState("");
+  const [appliedVoucher, setAppliedVoucher] = useState<{ code: string; discount_pennies: number } | null>(null);
+  const [voucherChecking, setVoucherChecking] = useState(false);
+
+  async function applyVoucher() {
+    const code = voucherInput.trim();
+    if (!code) return;
+    setVoucherChecking(true);
+    try {
+      const res = await validateVoucherFn({ data: { code, email: email.trim() || undefined } });
+      if (res.valid) {
+        setAppliedVoucher({ code: res.code, discount_pennies: res.discount_pennies });
+        toast.success("Voucher applied");
+      } else {
+        setAppliedVoucher(null);
+        toast.error(res.reason);
+      }
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setVoucherChecking(false);
+    }
+  }
 
   const today = useMemo(() => {
     const d = new Date();
