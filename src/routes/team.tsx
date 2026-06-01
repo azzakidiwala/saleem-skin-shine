@@ -92,7 +92,8 @@ function TeamPage() {
                     </div>
                   </div>
                 </article>
-              ))}
+                );
+              })}
             </div>
             <div className="text-center mt-16">
               <p className="text-muted-foreground mb-6">Discover the treatments our specialists provide</p>
