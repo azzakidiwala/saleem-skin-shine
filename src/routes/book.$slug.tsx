@@ -140,7 +140,7 @@ function BookingPage() {
       const found = Array.isArray(data) && data.length > 0 ? data[0]?.first_name : null;
       if (found) {
         setReturningName(found);
-        setFirstName((cur) => cur.trim().length === 0 ? found : cur);
+        setFirstName((cur: string) => cur.trim().length === 0 ? found : cur);
       } else {
         setReturningName(null);
       }
