@@ -15,7 +15,7 @@ type Issued = {
   expires_at: string;
 };
 
-export function SignupVoucher() {
+export function SignupVoucher({ variant = "section" }: { variant?: "section" | "compact" } = {}) {
   const request = useServerFn(requestSignupVoucher);
   const [firstName, setFirstName] = useState("");
   const [surname, setSurname] = useState("");
@@ -72,6 +72,81 @@ export function SignupVoucher() {
 
   const headline = settings?.signup_headline ?? "Get £10 off your first booking";
   const subtext = settings?.signup_subtext ?? "Drop your details and we'll generate a voucher code valid for 24 hours.";
+
+  // ============ COMPACT VARIANT (e.g. in footer) ============
+  if (variant === "compact") {
+    if (issued) {
+      const pounds = (issued.discount_pennies / 100).toFixed(2).replace(/\.00$/, "");
+      return (
+        <div className="text-sm">
+          <div className="flex items-center gap-2 mb-2">
+            <Check className="h-4 w-4 text-gold" />
+            <span className="text-gold font-semibold">£{pounds} off unlocked</span>
+          </div>
+          <div className="flex items-center gap-2 border border-dashed border-gold/60 px-3 py-2 bg-background/5">
+            <span className="font-mono tracking-[0.2em] text-primary-foreground text-sm flex-1">{issued.code}</span>
+            <Button
+              type="button"
+              size="icon"
+              variant="ghost"
+              className="h-7 w-7 text-primary-foreground hover:text-gold hover:bg-transparent"
+              onClick={() => {
+                navigator.clipboard.writeText(issued.code);
+                toast.success("Copied");
+              }}
+            >
+              <Copy className="h-3.5 w-3.5" />
+            </Button>
+          </div>
+        </div>
+      );
+    }
+    return (
+      <form onSubmit={handleSubmit} className="space-y-2">
+        <div className="grid grid-cols-2 gap-2">
+          <Input
+            placeholder="First name"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            maxLength={100}
+            className="h-9 bg-background/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50 text-sm"
+          />
+          <Input
+            placeholder="Surname"
+            value={surname}
+            onChange={(e) => setSurname(e.target.value)}
+            maxLength={100}
+            className="h-9 bg-background/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50 text-sm"
+          />
+        </div>
+        <Input
+          type="email"
+          placeholder="Email address"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          maxLength={255}
+          className="h-9 bg-background/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50 text-sm"
+        />
+        <Input
+          type="tel"
+          placeholder="Mobile"
+          value={mobile}
+          onChange={(e) => setMobile(e.target.value)}
+          maxLength={20}
+          className="h-9 bg-background/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50 text-sm"
+        />
+        <Button
+          type="submit"
+          disabled={!valid || submitting}
+          className="w-full bg-gold text-gold-foreground hover:bg-gold/90 rounded-none text-[10px] tracking-[0.25em] uppercase h-9"
+        >
+          {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Claim voucher"}
+        </Button>
+      </form>
+    );
+  }
+
+  // ============ FULL SECTION VARIANT ============
 
   if (issued) {
     const pounds = (issued.discount_pennies / 100).toFixed(2).replace(/\.00$/, "");

@@ -1,12 +1,13 @@
-import { MapPin, Phone, Mail, Clock } from "lucide-react";
+import { MapPin, Phone, Mail, Clock, Gift } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import logo from "@/assets/logo.png";
 import { WhatsAppIcon, whatsappHref } from "@/components/site/WhatsAppButton";
+import { SignupVoucher } from "@/components/site/SignupVoucher";
 
 export function Footer() {
   return (
     <footer className="bg-deep-green text-primary-foreground">
-      <div className="container mx-auto px-6 py-20 grid md:grid-cols-2 lg:grid-cols-4 gap-12">
+      <div className="container mx-auto px-6 py-20 grid md:grid-cols-2 lg:grid-cols-5 gap-12">
         <div>
           <img src={logo} alt="Saleem Skin" className="h-20 w-auto mb-4 brightness-0 invert opacity-90" />
           <p className="text-sm text-primary-foreground/70 leading-relaxed">
@@ -39,6 +40,13 @@ export function Footer() {
             <li className="flex justify-between"><span>Saturday</span><span>10:00 – 17:00</span></li>
             <li className="flex justify-between"><span>Sunday</span><span>Closed</span></li>
           </ul>
+        </div>
+        <div>
+          <h4 className="text-xs tracking-[0.25em] uppercase text-gold mb-5 font-semibold flex items-center gap-2"><Gift className="h-3.5 w-3.5" /> £10 Welcome Offer</h4>
+          <p className="text-xs text-primary-foreground/70 mb-4">
+            New customers get £10 off their first booking. Drop your details to claim your code.
+          </p>
+          <SignupVoucher variant="compact" />
         </div>
       </div>
       <div className="border-t border-primary-foreground/10">

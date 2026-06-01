@@ -11,6 +11,7 @@ import {
 
 import { Toaster } from "@/components/ui/sonner";
 import { ComingSoon } from "@/components/site/ComingSoon";
+import { PromoPopup } from "@/components/site/PromoPopup";
 import { useAuthSession } from "@/lib/admin/auth";
 
 import appCss from "../styles.css?url";
@@ -144,5 +145,10 @@ function SiteGate() {
   }
 
   if (!session) return <ComingSoon />;
-  return <Outlet />;
+  return (
+    <>
+      <Outlet />
+      <PromoPopup />
+    </>
+  );
 }

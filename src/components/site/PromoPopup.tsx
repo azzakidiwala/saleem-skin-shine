@@ -1,0 +1,108 @@
+import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Sparkles, Copy, X, Check } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+
+type Promo = { code: string; discount_pennies: number; expires_at: string | null };
+
+const DISMISS_KEY = "promo-popup-dismissed";
+
+export function PromoPopup() {
+  const [visible, setVisible] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const { data: promo } = useQuery({
+    queryKey: ["active-promos"],
+    queryFn: async () => {
+      const { data } = await supabase.rpc("get_active_promos");
+      const list = (data ?? []) as Promo[];
+      return list.length > 0 ? list[0] : null;
+    },
+    staleTime: 60_000,
+  });
+
+  // Show after delay if not dismissed for this code
+  useEffect(() => {
+    if (!promo) return;
+    if (typeof window === "undefined") return;
+    const dismissed = window.localStorage.getItem(DISMISS_KEY);
+    if (dismissed === promo.code) return;
+    const t = window.setTimeout(() => setVisible(true), 1500);
+    return () => window.clearTimeout(t);
+  }, [promo]);
+
+  if (!promo || !visible) return null;
+
+  const pounds = (promo.discount_pennies / 100).toFixed(2).replace(/\.00$/, "");
+
+  function dismiss() {
+    if (typeof window !== "undefined" && promo) {
+      window.localStorage.setItem(DISMISS_KEY, promo.code);
+    }
+    setVisible(false);
+  }
+
+  async function copyCode() {
+    try {
+      await navigator.clipboard.writeText(promo!.code);
+      setCopied(true);
+      toast.success("Code copied");
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast.error("Could not copy code");
+    }
+  }
+
+  return (
+    <div
+      className="fixed bottom-4 right-4 z-50 w-[320px] max-w-[calc(100vw-2rem)] animate-in slide-in-from-bottom-4 fade-in"
+      role="dialog"
+      aria-label="Discount code available"
+    >
+      <div className="relative bg-deep-green text-primary-foreground shadow-2xl border border-gold/30">
+        <button
+          type="button"
+          onClick={dismiss}
+          aria-label="Dismiss"
+          className="absolute top-2 right-2 p-1 text-primary-foreground/60 hover:text-gold transition-colors"
+        >
+          <X className="h-4 w-4" />
+        </button>
+        <div className="p-5">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="h-8 w-8 rounded-full bg-gold/15 flex items-center justify-center">
+              <Sparkles className="h-4 w-4 text-gold" />
+            </div>
+            <span className="text-[10px] tracking-[0.25em] uppercase text-gold font-semibold">
+              Limited offer
+            </span>
+          </div>
+          <h3 className="font-serif text-xl leading-tight mb-1">
+            £{pounds} off your booking
+          </h3>
+          <p className="text-xs text-primary-foreground/70 mb-3">
+            Use this code at checkout when you book any treatment.
+          </p>
+          <button
+            type="button"
+            onClick={copyCode}
+            className="w-full flex items-center justify-between gap-2 border-2 border-dashed border-gold/60 bg-background/5 px-3 py-2.5 hover:bg-background/10 transition-colors"
+          >
+            <span className="font-mono text-sm tracking-[0.2em]">{promo.code}</span>
+            {copied ? (
+              <Check className="h-4 w-4 text-gold" />
+            ) : (
+              <Copy className="h-4 w-4 text-gold" />
+            )}
+          </button>
+          {promo.expires_at && (
+            <p className="text-[10px] text-primary-foreground/50 mt-2 text-center">
+              Expires {new Date(promo.expires_at).toLocaleDateString("en-GB")}
+            </p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
