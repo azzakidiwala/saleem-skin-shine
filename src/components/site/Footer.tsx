@@ -41,6 +41,13 @@ export function Footer() {
             <li className="flex justify-between"><span>Sunday</span><span>Closed</span></li>
           </ul>
         </div>
+        <div>
+          <h4 className="text-xs tracking-[0.25em] uppercase text-gold mb-5 font-semibold flex items-center gap-2"><Gift className="h-3.5 w-3.5" /> £10 Welcome Offer</h4>
+          <p className="text-xs text-primary-foreground/70 mb-4">
+            New customers get £10 off their first booking. Drop your details to claim your code.
+          </p>
+          <SignupVoucher variant="compact" />
+        </div>
       </div>
       <div className="border-t border-primary-foreground/10">
         <div className="container mx-auto px-6 py-5 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-primary-foreground/60">
