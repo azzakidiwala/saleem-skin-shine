@@ -145,5 +145,10 @@ function SiteGate() {
   }
 
   if (!session) return <ComingSoon />;
-  return <Outlet />;
+  return (
+    <>
+      <Outlet />
+      <PromoPopup />
+    </>
+  );
 }
