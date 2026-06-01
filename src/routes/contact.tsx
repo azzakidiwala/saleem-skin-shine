@@ -36,6 +36,7 @@ const contactSchema = z.object({
 });
 
 function ContactPage() {
+  const { data: content } = useSiteContent();
   const [form, setForm] = useState({ firstName: "", surname: "", mobile: "", email: "", message: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
