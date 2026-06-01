@@ -1,43 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import * as LucideIcons from "lucide-react";
 import { Stethoscope, GraduationCap, Award, Sparkles, Gem, Flower2 } from "lucide-react";
 import { AnnouncementBar } from "@/components/site/AnnouncementBar";
 import { Header } from "@/components/site/Header";
 import { CTA } from "@/components/site/CTA";
 import { Footer } from "@/components/site/Footer";
-import { useSiteContent, getString } from "@/lib/content/queries";
-import drSaleem from "@/assets/team-dr-saleem.jpg";
-import rnSaleem from "@/assets/team-rn-saleem.jpg";
-import hSaleem from "@/assets/team-h-saleem.jpg";
-
-const team = [
-  {
-    name: "Dr. Saleem",
-    icon: Stethoscope,
-    role: "Medical Director & Lead Aesthetic Physician",
-    image: drSaleem,
-    bio: "Dr. Saleem is the founder and medical director of Saleem Skin. With extensive expertise in aesthetic medicine, he is passionate about delivering natural, beautiful results tailored to every patient. His clinical precision and warm approach have earned Saleem Skin its award-winning reputation.",
-    creds: "MBBS · Aesthetic Medicine Certified · Level 7 Injectables",
-    tags: ["Anti-Ageing", "Skin Rejuvenation", "Facial Aesthetics"],
-  },
-  {
-    name: "RN Saleem",
-    icon: Stethoscope,
-    role: "Registered Nurse & Aesthetic Practitioner",
-    image: rnSaleem,
-    bio: "RN Saleem combines a strong foundation in nursing with advanced aesthetic training to provide safe, effective and beautifully delivered treatments. Known for a gentle touch and exceptional patient care, RN Saleem is a trusted member of the Saleem Skin family.",
-    creds: "RGN · BSc Nursing · PGDip Aesthetic Medicine",
-    tags: ["Dermal Fillers", "Anti-Wrinkle Injections", "Skin Boosters"],
-  },
-  {
-    name: "H. Saleem",
-    icon: Sparkles,
-    role: "Skin Therapist & Wellness Specialist",
-    image: hSaleem,
-    bio: "H. Saleem brings a holistic approach to skin health and wellness at Saleem Skin. Specialising in advanced facials including HydraFacial and AlumierMD treatments, H. Saleem is dedicated to helping every client achieve glowing, healthy skin.",
-    creds: "VTCT Level 4 Aesthetics · HydraFacial Certified · AlumierMD Certified",
-    tags: ["HydraFacial", "AlumierMD Peels", "Wellness Treatments"],
-  },
-];
+import { useSiteContent, getString, useTeam } from "@/lib/content/queries";
 
 const badges = [
   { icon: Award, label: "Best Aesthetics Clinic North 2025" },
