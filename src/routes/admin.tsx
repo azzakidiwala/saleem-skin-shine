@@ -2,7 +2,7 @@ import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tan
 import { useEffect } from "react";
 import { useIsAdmin, signOut } from "@/lib/admin/auth";
 import { Button } from "@/components/ui/button";
-import { LayoutDashboard, CalendarDays, Sparkles, Users, UserSquare, FileText, Shield, LogOut, ExternalLink } from "lucide-react";
+import { LayoutDashboard, CalendarDays, Sparkles, Users, UserSquare, FileText, Shield, LogOut, ExternalLink, Tag } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/admin")({
@@ -13,6 +13,7 @@ const nav: Array<{ to: string; label: string; icon: typeof LayoutDashboard; exac
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { to: "/admin/bookings", label: "Bookings", icon: CalendarDays },
   { to: "/admin/customers", label: "Customers", icon: UserSquare },
+  { to: "/admin/discounts", label: "Discounts", icon: Tag },
   { to: "/admin/treatments", label: "Treatments", icon: Sparkles },
   { to: "/admin/team", label: "Team", icon: Users },
   { to: "/admin/content", label: "Site Content", icon: FileText },
