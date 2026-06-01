@@ -15,7 +15,7 @@ type Issued = {
   expires_at: string;
 };
 
-export function SignupVoucher() {
+export function SignupVoucher({ variant = "section" }: { variant?: "section" | "compact" } = {}) {
   const request = useServerFn(requestSignupVoucher);
   const [firstName, setFirstName] = useState("");
   const [surname, setSurname] = useState("");
