@@ -4,7 +4,7 @@ import { Sparkles, Copy, Check, ChevronUp } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
-type Promo = { code: string; discount_pennies: number; expires_at: string | null };
+type Promo = { code: string; discount_pennies: number; expires_at: string | null; treatment_slug: string | null };
 
 
 
@@ -21,6 +21,20 @@ export function PromoPopup() {
       return list.length > 0 ? list[0] : null;
     },
     staleTime: 60_000,
+  });
+
+  const { data: treatmentName } = useQuery({
+    queryKey: ["promo-treatment-name", promo?.treatment_slug],
+    enabled: !!promo?.treatment_slug,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("treatments")
+        .select("name")
+        .eq("slug", promo!.treatment_slug!)
+        .maybeSingle();
+      return data?.name ?? null;
+    },
+    staleTime: 5 * 60_000,
   });
 
   // Show after delay, then auto-minimize after 5s
@@ -111,7 +125,9 @@ export function PromoPopup() {
             £{pounds} off your booking
           </h3>
           <p className="text-xs text-primary-foreground/70 mb-3">
-            Use this code at checkout when you book any treatment.
+            {promo.treatment_slug
+              ? `Valid on ${treatmentName ?? "a selected treatment"} when you book online.`
+              : "Use this code at checkout when you book any treatment."}
           </p>
           <button
             type="button"

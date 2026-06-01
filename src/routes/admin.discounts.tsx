@@ -13,6 +13,9 @@ import {
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter,
 } from "@/components/ui/dialog";
+import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from "@/components/ui/select";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Plus, Trash2, Copy } from "lucide-react";
@@ -35,8 +38,11 @@ type Voucher = {
   used_count: number;
   is_active: boolean;
   notes: string;
+  treatment_slug: string | null;
   created_at: string;
 };
+
+type TreatmentOption = { slug: string; name: string };
 
 type Settings = {
   signup_enabled: boolean;
@@ -79,6 +85,21 @@ function DiscountsPage() {
     },
   });
 
+  const { data: treatmentOptions } = useQuery({
+    queryKey: ["admin", "treatments-options"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("treatments")
+        .select("slug, name")
+        .eq("is_active", true)
+        .order("name");
+      if (error) throw error;
+      return (data ?? []) as TreatmentOption[];
+    },
+  });
+
+  const treatmentNameBySlug = new Map((treatmentOptions ?? []).map((t) => [t.slug, t.name]));
+
   const toggleActive = useMutation({
     mutationFn: async ({ id, active }: { id: string; active: boolean }) => {
       const { error } = await supabase.from("voucher_codes").update({ is_active: active }).eq("id", id);
@@ -115,7 +136,7 @@ function DiscountsPage() {
           <h1 className="text-3xl font-semibold">Discounts</h1>
           <p className="text-muted-foreground mt-1">Manage signup vouchers and shareable promo codes.</p>
         </div>
-        <NewPromoDialog onCreated={() => qc.invalidateQueries({ queryKey: ["admin", "vouchers"] })} />
+        <NewPromoDialog treatments={treatmentOptions ?? []} onCreated={() => qc.invalidateQueries({ queryKey: ["admin", "vouchers"] })} />
       </div>
 
       {/* Signup voucher settings */}
@@ -142,6 +163,7 @@ function DiscountsPage() {
               <TableHead>Code</TableHead>
               <TableHead>Kind</TableHead>
               <TableHead>Discount</TableHead>
+              <TableHead>Treatment</TableHead>
               <TableHead>Recipient / Notes</TableHead>
               <TableHead>Usage</TableHead>
               <TableHead>Expires</TableHead>
@@ -150,8 +172,8 @@ function DiscountsPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {isLoading && <TableRow><TableCell colSpan={8} className="text-center py-8 text-muted-foreground">Loading…</TableCell></TableRow>}
-            {!isLoading && filtered.length === 0 && <TableRow><TableCell colSpan={8} className="text-center py-8 text-muted-foreground">No vouchers yet.</TableCell></TableRow>}
+            {isLoading && <TableRow><TableCell colSpan={9} className="text-center py-8 text-muted-foreground">Loading…</TableCell></TableRow>}
+            {!isLoading && filtered.length === 0 && <TableRow><TableCell colSpan={9} className="text-center py-8 text-muted-foreground">No vouchers yet.</TableCell></TableRow>}
             {filtered.map((v) => {
               const expired = v.expires_at ? new Date(v.expires_at) < new Date() : false;
               const usedUp = v.used_count >= v.max_uses;
@@ -167,6 +189,11 @@ function DiscountsPage() {
                   </TableCell>
                   <TableCell><Badge variant="outline" className="capitalize">{v.kind}</Badge></TableCell>
                   <TableCell>{formatPence(v.discount_pennies)}</TableCell>
+                  <TableCell className="text-sm">
+                    {v.treatment_slug
+                      ? <Badge variant="secondary">{treatmentNameBySlug.get(v.treatment_slug) ?? v.treatment_slug}</Badge>
+                      : <span className="text-muted-foreground">All treatments</span>}
+                  </TableCell>
                   <TableCell className="text-sm max-w-[260px]">
                     {v.kind === "signup" ? (
                       <>
@@ -259,13 +286,14 @@ function SettingsCard({ settings, onSave }: { settings: Settings; onSave: (patch
   );
 }
 
-function NewPromoDialog({ onCreated }: { onCreated: () => void }) {
+function NewPromoDialog({ treatments, onCreated }: { treatments: TreatmentOption[]; onCreated: () => void }) {
   const [open, setOpen] = useState(false);
   const [code, setCode] = useState("");
   const [amount, setAmount] = useState("10");
   const [maxUses, setMaxUses] = useState("100");
   const [expiresDays, setExpiresDays] = useState("30");
   const [notes, setNotes] = useState("");
+  const [treatmentSlug, setTreatmentSlug] = useState<string>("all");
   const [saving, setSaving] = useState(false);
 
   async function handleCreate() {
@@ -281,12 +309,13 @@ function NewPromoDialog({ onCreated }: { onCreated: () => void }) {
         max_uses: parseInt(maxUses || "1", 10),
         expires_at: expiresAt,
         notes: notes.trim(),
+        treatment_slug: treatmentSlug === "all" ? null : treatmentSlug,
         is_active: true,
       });
       if (error) throw error;
       toast.success("Promo code created");
       setOpen(false);
-      setCode(""); setAmount("10"); setMaxUses("100"); setExpiresDays("30"); setNotes("");
+      setCode(""); setAmount("10"); setMaxUses("100"); setExpiresDays("30"); setNotes(""); setTreatmentSlug("all");
       onCreated();
     } catch (e: any) {
       toast.error(e.message);
@@ -318,6 +347,23 @@ function NewPromoDialog({ onCreated }: { onCreated: () => void }) {
               <Label className="text-xs">Max uses</Label>
               <Input type="number" min={1} value={maxUses} onChange={(e) => setMaxUses(e.target.value)} />
             </div>
+          </div>
+          <div>
+            <Label className="text-xs">Applies to</Label>
+            <Select value={treatmentSlug} onValueChange={setTreatmentSlug}>
+              <SelectTrigger className="mt-1">
+                <SelectValue placeholder="Choose a treatment" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All treatments</SelectItem>
+                {treatments.map((t) => (
+                  <SelectItem key={t.slug} value={t.slug}>{t.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <p className="text-[11px] text-muted-foreground mt-1">
+              Restrict this code to a single treatment, or leave as "All treatments".
+            </p>
           </div>
           <div>
             <Label className="text-xs">Expires in (days, leave blank for never)</Label>

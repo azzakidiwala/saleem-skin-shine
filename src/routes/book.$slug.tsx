@@ -122,7 +122,7 @@ function BookingPage() {
     }
     setVoucherChecking(true);
     try {
-      const res = await validateVoucherFn({ data: { code, email: email.trim() || undefined } });
+      const res = await validateVoucherFn({ data: { code, email: email.trim() || undefined, treatment_slug: t.slug } });
       if (res.valid) {
         // Only one voucher allowed — keep the one with the bigger discount
         if (appliedVoucher && appliedVoucher.discount_pennies >= res.discount_pennies) {

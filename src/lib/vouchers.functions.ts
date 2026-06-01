@@ -114,12 +114,13 @@ export const validateVoucher = createServerFn({ method: "POST" })
     z.object({
       code: z.string().trim().min(1).max(64),
       email: z.string().trim().email().max(255).optional(),
+      treatment_slug: z.string().trim().min(1).max(100).optional(),
     }).parse(data),
   )
   .handler(async ({ data }) => {
     const { data: row } = await supabaseAdmin
       .from("voucher_codes")
-      .select("code, kind, discount_pennies, email, expires_at, max_uses, used_count, is_active")
+      .select("code, kind, discount_pennies, email, expires_at, max_uses, used_count, is_active, treatment_slug")
       .ilike("code", data.code)
       .maybeSingle();
     if (!row) return { valid: false as const, reason: "Voucher not found." };
@@ -136,10 +137,17 @@ export const validateVoucher = createServerFn({ method: "POST" })
     ) {
       return { valid: false as const, reason: "Voucher belongs to a different email address." };
     }
+    if (row.treatment_slug && row.treatment_slug !== data.treatment_slug) {
+      return {
+        valid: false as const,
+        reason: "This voucher only applies to a specific treatment.",
+      };
+    }
     return {
       valid: true as const,
       code: row.code,
       discount_pennies: row.discount_pennies,
+      treatment_slug: row.treatment_slug as string | null,
     };
   });
 
