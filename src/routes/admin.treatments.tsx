@@ -66,6 +66,42 @@ function slugify(s: string) {
   return s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
 
+function normalizePrice(s: string) {
+  const t = (s ?? "").trim();
+  if (!t) return "";
+  if (/^[£$€]/.test(t)) return t;
+  if (/^\d/.test(t)) return `£${t}`;
+  return t;
+}
+
+function normalizeDuration(s: string) {
+  const t = (s ?? "").trim();
+  if (!t) return "";
+  if (/^\d+$/.test(t)) return `${t} mins`;
+  return t;
+}
+
+async function renumberSortOrders(currentId: string) {
+  const { data, error } = await supabase
+    .from("treatments")
+    .select("id, sort_order")
+    .order("sort_order", { ascending: true });
+  if (error || !data) return;
+  const sorted = [...data].sort((a, b) => {
+    if (a.sort_order !== b.sort_order) return a.sort_order - b.sort_order;
+    if (a.id === currentId) return -1;
+    if (b.id === currentId) return 1;
+    return 0;
+  });
+  await Promise.all(
+    sorted.map((r, i) => {
+      const newOrder = (i + 1) * 10;
+      if (r.sort_order === newOrder) return Promise.resolve();
+      return supabase.from("treatments").update({ sort_order: newOrder }).eq("id", r.id);
+    })
+  );
+}
+
 function TreatmentsPage() {
   const qc = useQueryClient();
   const { data, isLoading } = useQuery({
@@ -81,15 +117,20 @@ function TreatmentsPage() {
     mutationFn: async (row: Row) => {
       const payload = { ...row };
       if (!payload.slug) payload.slug = slugify(payload.name);
+      payload.price = normalizePrice(payload.price);
+      payload.duration = normalizeDuration(payload.duration);
+      let savedId = payload.id;
       if (!payload.id) {
         const { id, ...insert } = payload;
-        const { error } = await supabase.from("treatments").insert(insert);
+        const { data: ins, error } = await supabase.from("treatments").insert(insert).select("id").single();
         if (error) throw error;
+        savedId = ins?.id ?? "";
       } else {
         const { id, ...update } = payload;
         const { error } = await supabase.from("treatments").update(update).eq("id", id);
         if (error) throw error;
       }
+      if (savedId) await renumberSortOrders(savedId);
     },
     onSuccess: () => { toast.success("Saved"); qc.invalidateQueries({ queryKey: ["admin", "treatments"] }); qc.invalidateQueries({ queryKey: ["treatments"] }); },
     onError: (e: any) => toast.error(e.message),
@@ -237,10 +278,10 @@ function EditorDialog({ trigger, initial, onSave }: { trigger: React.ReactNode; 
                 </div>
               )}
             </div>
-            <div className="space-y-2"><Label>Price</Label><Input value={row.price} onChange={(e) => update("price", e.target.value)} placeholder="£100" /></div>
+            <div className="space-y-2"><Label>Price</Label><Input value={row.price} onChange={(e) => update("price", e.target.value)} placeholder="100 (£ added automatically)" /></div>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-2"><Label>Duration</Label><Input value={row.duration} onChange={(e) => update("duration", e.target.value)} placeholder="60 min" /></div>
+            <div className="space-y-2"><Label>Duration</Label><Input value={row.duration} onChange={(e) => update("duration", e.target.value)} placeholder="30 (mins added automatically)" /></div>
             <div className="space-y-2"><Label>Sessions</Label><Input value={row.sessions} onChange={(e) => update("sessions", e.target.value)} placeholder="1 session" /></div>
           </div>
           <div className="space-y-2"><Label>Short description</Label><Textarea rows={2} value={row.description} onChange={(e) => update("description", e.target.value)} /></div>
