@@ -46,6 +46,7 @@ export type Database = {
           confirmed_at: string | null
           created_at: string
           customer_id: string | null
+          discount_pennies: number
           email: string
           first_name: string
           id: string
@@ -55,6 +56,7 @@ export type Database = {
           treatment_name: string
           treatment_price: string | null
           treatment_slug: string
+          voucher_code: string | null
         }
         Insert: {
           appointment_date: string
@@ -63,6 +65,7 @@ export type Database = {
           confirmed_at?: string | null
           created_at?: string
           customer_id?: string | null
+          discount_pennies?: number
           email: string
           first_name: string
           id?: string
@@ -72,6 +75,7 @@ export type Database = {
           treatment_name: string
           treatment_price?: string | null
           treatment_slug: string
+          voucher_code?: string | null
         }
         Update: {
           appointment_date?: string
@@ -80,6 +84,7 @@ export type Database = {
           confirmed_at?: string | null
           created_at?: string
           customer_id?: string | null
+          discount_pennies?: number
           email?: string
           first_name?: string
           id?: string
@@ -89,6 +94,7 @@ export type Database = {
           treatment_name?: string
           treatment_price?: string | null
           treatment_slug?: string
+          voucher_code?: string | null
         }
         Relationships: [
           {
@@ -129,6 +135,36 @@ export type Database = {
           mobile?: string
           notes?: string
           surname?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      discount_settings: {
+        Row: {
+          id: number
+          signup_discount_pennies: number
+          signup_enabled: boolean
+          signup_expiry_hours: number
+          signup_headline: string
+          signup_subtext: string
+          updated_at: string
+        }
+        Insert: {
+          id?: number
+          signup_discount_pennies?: number
+          signup_enabled?: boolean
+          signup_expiry_hours?: number
+          signup_headline?: string
+          signup_subtext?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: number
+          signup_discount_pennies?: number
+          signup_enabled?: boolean
+          signup_expiry_hours?: number
+          signup_headline?: string
+          signup_subtext?: string
           updated_at?: string
         }
         Relationships: []
@@ -391,6 +427,60 @@ export type Database = {
         }
         Relationships: []
       }
+      voucher_codes: {
+        Row: {
+          code: string
+          created_at: string
+          discount_pennies: number
+          email: string | null
+          expires_at: string | null
+          first_name: string | null
+          id: string
+          is_active: boolean
+          kind: string
+          max_uses: number
+          mobile: string | null
+          notes: string
+          surname: string | null
+          updated_at: string
+          used_count: number
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          discount_pennies?: number
+          email?: string | null
+          expires_at?: string | null
+          first_name?: string | null
+          id?: string
+          is_active?: boolean
+          kind: string
+          max_uses?: number
+          mobile?: string | null
+          notes?: string
+          surname?: string | null
+          updated_at?: string
+          used_count?: number
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          discount_pennies?: number
+          email?: string | null
+          expires_at?: string | null
+          first_name?: string | null
+          id?: string
+          is_active?: boolean
+          kind?: string
+          max_uses?: number
+          mobile?: string | null
+          notes?: string
+          surname?: string | null
+          updated_at?: string
+          used_count?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -439,6 +529,22 @@ export type Database = {
           msg_id: number
           read_ct: number
         }[]
+      }
+      redeem_voucher: {
+        Args: { p_code: string; p_email?: string }
+        Returns: {
+          code: string
+          discount_pennies: number
+          id: string
+        }[]
+      }
+      signup_voucher_exists_for_email: {
+        Args: { p_email: string }
+        Returns: boolean
+      }
+      signup_voucher_exists_for_identity: {
+        Args: { p_first: string; p_mobile: string; p_surname: string }
+        Returns: boolean
       }
     }
     Enums: {
