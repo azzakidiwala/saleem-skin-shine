@@ -66,10 +66,10 @@ function ContactPage() {
 
       <section className="bg-deep-green text-primary-foreground py-20">
         <div className="container mx-auto px-6 text-center">
-          <p className="text-gold text-xs tracking-[0.3em] uppercase mb-4">Get in Touch</p>
-          <h1 className="text-4xl md:text-5xl font-light tracking-tight">Contact Us</h1>
+          <p className="text-gold text-xs tracking-[0.3em] uppercase mb-4">{getString(content, "contact.eyebrow", "Get in Touch")}</p>
+          <h1 className="text-4xl md:text-5xl font-light tracking-tight">{getString(content, "contact.title", "Contact Us")}</h1>
           <p className="text-primary-foreground/80 max-w-xl mx-auto mt-4">
-            We'd love to hear from you. Reach out about treatments, consultations or to book your appointment.
+            {getString(content, "contact.subtitle", "We'd love to hear from you. Reach out about treatments, consultations or to book your appointment.")}
           </p>
         </div>
       </section>
