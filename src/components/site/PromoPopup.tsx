@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Sparkles, Copy, X, Check, ChevronUp } from "lucide-react";
+import { Sparkles, Copy, Check, ChevronUp } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 type Promo = { code: string; discount_pennies: number; expires_at: string | null };
 
-const DISMISS_KEY = "promo-popup-dismissed";
+
 
 export function PromoPopup() {
   const [open, setOpen] = useState(false);
@@ -23,12 +23,9 @@ export function PromoPopup() {
     staleTime: 60_000,
   });
 
-  // Show after delay if not dismissed for this code
+  // Show after delay
   useEffect(() => {
     if (!promo) return;
-    if (typeof window === "undefined") return;
-    const dismissed = window.localStorage.getItem(DISMISS_KEY);
-    if (dismissed === promo.code) return;
     const t = window.setTimeout(() => setOpen(true), 1500);
     return () => window.clearTimeout(t);
   }, [promo]);
@@ -36,14 +33,6 @@ export function PromoPopup() {
   if (!promo) return null;
 
   const pounds = (promo.discount_pennies / 100).toFixed(2).replace(/\.00$/, "");
-
-  function closePopup() {
-    if (typeof window !== "undefined" && promo) {
-      window.localStorage.setItem(DISMISS_KEY, promo.code);
-    }
-    setOpen(false);
-    setMinimized(false);
-  }
 
   function minimizePopup() {
     setOpen(false);
@@ -98,14 +87,6 @@ export function PromoPopup() {
             className="p-1 text-primary-foreground/60 hover:text-gold transition-colors"
           >
             <ChevronUp className="h-4 w-4" />
-          </button>
-          <button
-            type="button"
-            onClick={closePopup}
-            aria-label="Dismiss"
-            className="p-1 text-primary-foreground/60 hover:text-gold transition-colors"
-          >
-            <X className="h-4 w-4" />
           </button>
         </div>
         <div className="p-5">
