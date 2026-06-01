@@ -34,9 +34,12 @@ export const Route = createFileRoute("/faq")({
       { name: "description", content: "Frequently asked questions about HydraFacial and other treatments at Saleem Skin." },
       { property: "og:title", content: "FAQ — Saleem Skin" },
       { property: "og:description", content: "Answers to common questions about HydraFacial and our skin treatments." },
-      { tagName: "link", rel: "canonical", href: "https://saleemskin.co.uk/faq" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://saleemskin.co.uk/faq" },
+    ],
+    scripts: [
       {
-        tagName: "script",
         type: "application/ld+json",
         children: JSON.stringify({
           "@context": "https://schema.org",
