@@ -23,12 +23,9 @@ export function PromoPopup() {
     staleTime: 60_000,
   });
 
-  // Show after delay if not dismissed for this code
+  // Show after delay
   useEffect(() => {
     if (!promo) return;
-    if (typeof window === "undefined") return;
-    const dismissed = window.localStorage.getItem(DISMISS_KEY);
-    if (dismissed === promo.code) return;
     const t = window.setTimeout(() => setOpen(true), 1500);
     return () => window.clearTimeout(t);
   }, [promo]);
