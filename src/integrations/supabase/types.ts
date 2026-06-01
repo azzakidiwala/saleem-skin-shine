@@ -494,6 +494,14 @@ export type Database = {
         Args: { payload: Json; queue_name: string }
         Returns: number
       }
+      get_active_promos: {
+        Args: never
+        Returns: {
+          code: string
+          discount_pennies: number
+          expires_at: string
+        }[]
+      }
       get_booked_times: {
         Args: { p_date: string }
         Returns: {
