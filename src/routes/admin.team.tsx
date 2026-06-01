@@ -39,6 +39,27 @@ const empty: Row = {
   image_url: null, sort_order: 0, is_active: true,
 };
 
+async function renumberSortOrders(currentId: string) {
+  const { data, error } = await supabase
+    .from("team_members")
+    .select("id, sort_order")
+    .order("sort_order", { ascending: true });
+  if (error || !data) return;
+  const sorted = [...data].sort((a, b) => {
+    if (a.sort_order !== b.sort_order) return a.sort_order - b.sort_order;
+    if (a.id === currentId) return -1;
+    if (b.id === currentId) return 1;
+    return 0;
+  });
+  await Promise.all(
+    sorted.map((r, i) => {
+      const newOrder = (i + 1) * 10;
+      if (r.sort_order === newOrder) return Promise.resolve();
+      return supabase.from("team_members").update({ sort_order: newOrder }).eq("id", r.id);
+    })
+  );
+}
+
 function TeamPage() {
   const qc = useQueryClient();
   const { data, isLoading } = useQuery({
@@ -52,15 +73,18 @@ function TeamPage() {
 
   const save = useMutation({
     mutationFn: async (row: Row) => {
+      let savedId = row.id;
       if (!row.id) {
         const { id, ...insert } = row;
-        const { error } = await supabase.from("team_members").insert(insert);
+        const { data: ins, error } = await supabase.from("team_members").insert(insert).select("id").single();
         if (error) throw error;
+        savedId = ins?.id ?? "";
       } else {
         const { id, ...update } = row;
         const { error } = await supabase.from("team_members").update(update).eq("id", id);
         if (error) throw error;
       }
+      if (savedId) await renumberSortOrders(savedId);
     },
     onSuccess: () => { toast.success("Saved"); qc.invalidateQueries({ queryKey: ["admin", "team"] }); qc.invalidateQueries({ queryKey: ["team"] }); },
     onError: (e: any) => toast.error(e.message),
