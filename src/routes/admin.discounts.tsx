@@ -189,6 +189,11 @@ function DiscountsPage() {
                   </TableCell>
                   <TableCell><Badge variant="outline" className="capitalize">{v.kind}</Badge></TableCell>
                   <TableCell>{formatPence(v.discount_pennies)}</TableCell>
+                  <TableCell className="text-sm">
+                    {v.treatment_slug
+                      ? <Badge variant="secondary">{treatmentNameBySlug.get(v.treatment_slug) ?? v.treatment_slug}</Badge>
+                      : <span className="text-muted-foreground">All treatments</span>}
+                  </TableCell>
                   <TableCell className="text-sm max-w-[260px]">
                     {v.kind === "signup" ? (
                       <>
