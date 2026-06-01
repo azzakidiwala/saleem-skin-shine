@@ -37,14 +37,6 @@ export function PromoPopup() {
 
   const pounds = (promo.discount_pennies / 100).toFixed(2).replace(/\.00$/, "");
 
-  function closePopup() {
-    if (typeof window !== "undefined" && promo) {
-      window.localStorage.setItem(DISMISS_KEY, promo.code);
-    }
-    setOpen(false);
-    setMinimized(false);
-  }
-
   function minimizePopup() {
     setOpen(false);
     setMinimized(true);
