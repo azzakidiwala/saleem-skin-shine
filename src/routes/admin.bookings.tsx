@@ -117,9 +117,12 @@ function BookingsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-semibold">Bookings</h1>
-        <p className="text-muted-foreground mt-1">View, reschedule, or cancel appointments.</p>
+      <div className="flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <h1 className="text-3xl font-semibold">Bookings</h1>
+          <p className="text-muted-foreground mt-1">View, reschedule, or cancel appointments.</p>
+        </div>
+        <NewBookingDialog onCreated={() => qc.invalidateQueries({ queryKey: ["admin", "bookings"] })} />
       </div>
 
       <div className="flex flex-wrap gap-3 items-center">
