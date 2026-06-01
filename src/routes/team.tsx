@@ -1,43 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import * as LucideIcons from "lucide-react";
 import { Stethoscope, GraduationCap, Award, Sparkles, Gem, Flower2 } from "lucide-react";
 import { AnnouncementBar } from "@/components/site/AnnouncementBar";
 import { Header } from "@/components/site/Header";
 import { CTA } from "@/components/site/CTA";
 import { Footer } from "@/components/site/Footer";
-import { useSiteContent, getString } from "@/lib/content/queries";
-import drSaleem from "@/assets/team-dr-saleem.jpg";
-import rnSaleem from "@/assets/team-rn-saleem.jpg";
-import hSaleem from "@/assets/team-h-saleem.jpg";
-
-const team = [
-  {
-    name: "Dr. Saleem",
-    icon: Stethoscope,
-    role: "Medical Director & Lead Aesthetic Physician",
-    image: drSaleem,
-    bio: "Dr. Saleem is the founder and medical director of Saleem Skin. With extensive expertise in aesthetic medicine, he is passionate about delivering natural, beautiful results tailored to every patient. His clinical precision and warm approach have earned Saleem Skin its award-winning reputation.",
-    creds: "MBBS · Aesthetic Medicine Certified · Level 7 Injectables",
-    tags: ["Anti-Ageing", "Skin Rejuvenation", "Facial Aesthetics"],
-  },
-  {
-    name: "RN Saleem",
-    icon: Stethoscope,
-    role: "Registered Nurse & Aesthetic Practitioner",
-    image: rnSaleem,
-    bio: "RN Saleem combines a strong foundation in nursing with advanced aesthetic training to provide safe, effective and beautifully delivered treatments. Known for a gentle touch and exceptional patient care, RN Saleem is a trusted member of the Saleem Skin family.",
-    creds: "RGN · BSc Nursing · PGDip Aesthetic Medicine",
-    tags: ["Dermal Fillers", "Anti-Wrinkle Injections", "Skin Boosters"],
-  },
-  {
-    name: "H. Saleem",
-    icon: Sparkles,
-    role: "Skin Therapist & Wellness Specialist",
-    image: hSaleem,
-    bio: "H. Saleem brings a holistic approach to skin health and wellness at Saleem Skin. Specialising in advanced facials including HydraFacial and AlumierMD treatments, H. Saleem is dedicated to helping every client achieve glowing, healthy skin.",
-    creds: "VTCT Level 4 Aesthetics · HydraFacial Certified · AlumierMD Certified",
-    tags: ["HydraFacial", "AlumierMD Peels", "Wellness Treatments"],
-  },
-];
+import { useSiteContent, getString, useTeam } from "@/lib/content/queries";
 
 const badges = [
   { icon: Award, label: "Best Aesthetics Clinic North 2025" },
@@ -62,6 +30,7 @@ export const Route = createFileRoute("/team")({
 
 function TeamPage() {
   const { data: content } = useSiteContent();
+  const { data: team = [] } = useTeam();
   return (
     <div className="min-h-screen bg-background">
       <AnnouncementBar />
@@ -90,7 +59,9 @@ function TeamPage() {
         <section className="pb-20 md:pb-28 bg-background">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {team.map(({ name, role, bio, creds, tags, image, icon: Icon }) => (
+              {team.map(({ name, role, bio, credentials: creds, tags, image, icon }) => {
+                const Icon = (LucideIcons as any)[icon] ?? Stethoscope;
+                return (
                 <article key={name} className="flex flex-col">
                   <div className="aspect-[4/5] overflow-hidden bg-secondary mb-6">
                     <img src={image} alt={name} loading="lazy" width={768} height={896} className="w-full h-full object-cover" />
@@ -110,6 +81,7 @@ function TeamPage() {
                     <span>{creds}</span>
                   </div>
                   <div className="flex items-start gap-2">
+
                     <Award className="h-4 w-4 text-gold mt-2 shrink-0" />
                     <div className="flex flex-wrap gap-2">
                       {tags.map(tag => (
@@ -120,7 +92,8 @@ function TeamPage() {
                     </div>
                   </div>
                 </article>
-              ))}
+                );
+              })}
             </div>
             <div className="text-center mt-16">
               <p className="text-muted-foreground mb-6">Discover the treatments our specialists provide</p>
