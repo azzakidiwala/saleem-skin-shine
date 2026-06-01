@@ -131,6 +131,23 @@ function BookingPage() {
     })();
   }, [date]);
 
+  // Lookup returning customer by email (debounced)
+  useEffect(() => {
+    const trimmed = email.trim();
+    if (!/\S+@\S+\.\S+/.test(trimmed)) { setReturningName(null); return; }
+    const handle = setTimeout(async () => {
+      const { data } = await supabase.rpc("lookup_customer_by_email", { p_email: trimmed });
+      const found = Array.isArray(data) && data.length > 0 ? data[0]?.first_name : null;
+      if (found) {
+        setReturningName(found);
+        setFirstName((cur) => cur.trim().length === 0 ? found : cur);
+      } else {
+        setReturningName(null);
+      }
+    }, 400);
+    return () => clearTimeout(handle);
+  }, [email]);
+
   const availableTimes = ALL_TIMES.filter((s) => !bookedTimes.includes(s));
 
   const detailsValid =
