@@ -88,14 +88,6 @@ export function PromoPopup() {
           >
             <ChevronUp className="h-4 w-4" />
           </button>
-          <button
-            type="button"
-            onClick={closePopup}
-            aria-label="Dismiss"
-            className="p-1 text-primary-foreground/60 hover:text-gold transition-colors"
-          >
-            <X className="h-4 w-4" />
-          </button>
         </div>
         <div className="p-5">
           <div className="flex items-center gap-2 mb-2">
