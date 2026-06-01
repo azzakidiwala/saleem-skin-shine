@@ -207,6 +207,19 @@ function BookingPage() {
         .single();
       if (error) throw error;
 
+      // Redeem voucher (non-blocking on failure — booking is already saved)
+      if (appliedVoucher) {
+        try {
+          await redeemVoucherFn({
+            data: { code: appliedVoucher.code, booking_id: inserted.id, email: email.trim() },
+          });
+        } catch (e) {
+          console.error("Voucher redeem failed", e);
+          toast.warning("Voucher could not be applied to this booking.");
+        }
+      }
+
+
       // Send emails (non-blocking failure)
       const { error: fnErr } = await supabase.functions.invoke("send-booking-emails", {
         body: {
