@@ -4,6 +4,7 @@ import { AnnouncementBar } from "@/components/site/AnnouncementBar";
 import { Header } from "@/components/site/Header";
 import { CTA } from "@/components/site/CTA";
 import { Footer } from "@/components/site/Footer";
+import { useSiteContent, getString } from "@/lib/content/queries";
 import drSaleem from "@/assets/team-dr-saleem.jpg";
 import rnSaleem from "@/assets/team-rn-saleem.jpg";
 import hSaleem from "@/assets/team-h-saleem.jpg";
