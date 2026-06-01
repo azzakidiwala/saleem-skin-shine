@@ -286,13 +286,14 @@ function SettingsCard({ settings, onSave }: { settings: Settings; onSave: (patch
   );
 }
 
-function NewPromoDialog({ onCreated }: { onCreated: () => void }) {
+function NewPromoDialog({ treatments, onCreated }: { treatments: TreatmentOption[]; onCreated: () => void }) {
   const [open, setOpen] = useState(false);
   const [code, setCode] = useState("");
   const [amount, setAmount] = useState("10");
   const [maxUses, setMaxUses] = useState("100");
   const [expiresDays, setExpiresDays] = useState("30");
   const [notes, setNotes] = useState("");
+  const [treatmentSlug, setTreatmentSlug] = useState<string>("all");
   const [saving, setSaving] = useState(false);
 
   async function handleCreate() {
@@ -308,12 +309,13 @@ function NewPromoDialog({ onCreated }: { onCreated: () => void }) {
         max_uses: parseInt(maxUses || "1", 10),
         expires_at: expiresAt,
         notes: notes.trim(),
+        treatment_slug: treatmentSlug === "all" ? null : treatmentSlug,
         is_active: true,
       });
       if (error) throw error;
       toast.success("Promo code created");
       setOpen(false);
-      setCode(""); setAmount("10"); setMaxUses("100"); setExpiresDays("30"); setNotes("");
+      setCode(""); setAmount("10"); setMaxUses("100"); setExpiresDays("30"); setNotes(""); setTreatmentSlug("all");
       onCreated();
     } catch (e: any) {
       toast.error(e.message);
@@ -345,6 +347,23 @@ function NewPromoDialog({ onCreated }: { onCreated: () => void }) {
               <Label className="text-xs">Max uses</Label>
               <Input type="number" min={1} value={maxUses} onChange={(e) => setMaxUses(e.target.value)} />
             </div>
+          </div>
+          <div>
+            <Label className="text-xs">Applies to</Label>
+            <Select value={treatmentSlug} onValueChange={setTreatmentSlug}>
+              <SelectTrigger className="mt-1">
+                <SelectValue placeholder="Choose a treatment" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All treatments</SelectItem>
+                {treatments.map((t) => (
+                  <SelectItem key={t.slug} value={t.slug}>{t.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <p className="text-[11px] text-muted-foreground mt-1">
+              Restrict this code to a single treatment, or leave as "All treatments".
+            </p>
           </div>
           <div>
             <Label className="text-xs">Expires in (days, leave blank for never)</Label>
