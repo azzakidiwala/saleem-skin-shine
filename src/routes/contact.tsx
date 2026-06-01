@@ -115,15 +115,15 @@ function ContactPage() {
             <ul className="grid sm:grid-cols-3 gap-4 text-sm max-w-2xl mx-auto">
               <li className="flex justify-between sm:flex-col sm:items-center sm:text-center gap-1 border-b sm:border-b-0 sm:border-r border-border pb-3 sm:pb-0 sm:pr-4 last:border-0">
                 <span className="text-xs tracking-[0.2em] uppercase text-muted-foreground">Mon – Fri</span>
-                <span className="font-medium">9:00 – 19:00</span>
+                <span className="font-medium">{getString(content, "contact.hours_weekday", "9:00 – 19:00")}</span>
               </li>
               <li className="flex justify-between sm:flex-col sm:items-center sm:text-center gap-1 border-b sm:border-b-0 sm:border-r border-border pb-3 sm:pb-0 sm:pr-4 last:border-0">
                 <span className="text-xs tracking-[0.2em] uppercase text-muted-foreground">Saturday</span>
-                <span className="font-medium">10:00 – 17:00</span>
+                <span className="font-medium">{getString(content, "contact.hours_saturday", "10:00 – 17:00")}</span>
               </li>
               <li className="flex justify-between sm:flex-col sm:items-center sm:text-center gap-1">
                 <span className="text-xs tracking-[0.2em] uppercase text-muted-foreground">Sunday</span>
-                <span className="font-medium text-muted-foreground">Closed</span>
+                <span className="font-medium text-muted-foreground">{getString(content, "contact.hours_sunday", "Closed")}</span>
               </li>
             </ul>
           </div>
