@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Sparkles, Copy, X, Check } from "lucide-react";
+import { Sparkles, Copy, X, Check, ChevronUp } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -9,7 +9,8 @@ type Promo = { code: string; discount_pennies: number; expires_at: string | null
 const DISMISS_KEY = "promo-popup-dismissed";
 
 export function PromoPopup() {
-  const [visible, setVisible] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [minimized, setMinimized] = useState(false);
   const [copied, setCopied] = useState(false);
 
   const { data: promo } = useQuery({
@@ -28,19 +29,30 @@ export function PromoPopup() {
     if (typeof window === "undefined") return;
     const dismissed = window.localStorage.getItem(DISMISS_KEY);
     if (dismissed === promo.code) return;
-    const t = window.setTimeout(() => setVisible(true), 1500);
+    const t = window.setTimeout(() => setOpen(true), 1500);
     return () => window.clearTimeout(t);
   }, [promo]);
 
-  if (!promo || !visible) return null;
+  if (!promo) return null;
 
   const pounds = (promo.discount_pennies / 100).toFixed(2).replace(/\.00$/, "");
 
-  function dismiss() {
+  function closePopup() {
     if (typeof window !== "undefined" && promo) {
       window.localStorage.setItem(DISMISS_KEY, promo.code);
     }
-    setVisible(false);
+    setOpen(false);
+    setMinimized(false);
+  }
+
+  function minimizePopup() {
+    setOpen(false);
+    setMinimized(true);
+  }
+
+  function expandPopup() {
+    setOpen(true);
+    setMinimized(false);
   }
 
   async function copyCode() {
@@ -54,6 +66,23 @@ export function PromoPopup() {
     }
   }
 
+  // Minimized tab
+  if (minimized) {
+    return (
+      <button
+        type="button"
+        onClick={expandPopup}
+        className="fixed bottom-4 right-4 z-50 flex items-center gap-2 bg-deep-green text-primary-foreground shadow-2xl border border-gold/30 px-4 py-2.5 animate-in slide-in-from-bottom-4 fade-in hover:bg-deep-green/90 transition-colors"
+      >
+        <Sparkles className="h-4 w-4 text-gold" />
+        <span className="text-xs font-medium">Click for discount code</span>
+        <ChevronUp className="h-3 w-3 text-gold" />
+      </button>
+    );
+  }
+
+  if (!open) return null;
+
   return (
     <div
       className="fixed bottom-4 right-4 z-50 w-[320px] max-w-[calc(100vw-2rem)] animate-in slide-in-from-bottom-4 fade-in"
@@ -61,14 +90,24 @@ export function PromoPopup() {
       aria-label="Discount code available"
     >
       <div className="relative bg-deep-green text-primary-foreground shadow-2xl border border-gold/30">
-        <button
-          type="button"
-          onClick={dismiss}
-          aria-label="Dismiss"
-          className="absolute top-2 right-2 p-1 text-primary-foreground/60 hover:text-gold transition-colors"
-        >
-          <X className="h-4 w-4" />
-        </button>
+        <div className="flex items-center justify-end gap-1 absolute top-2 right-2">
+          <button
+            type="button"
+            onClick={minimizePopup}
+            aria-label="Minimize"
+            className="p-1 text-primary-foreground/60 hover:text-gold transition-colors"
+          >
+            <ChevronUp className="h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            onClick={closePopup}
+            aria-label="Dismiss"
+            className="p-1 text-primary-foreground/60 hover:text-gold transition-colors"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
         <div className="p-5">
           <div className="flex items-center gap-2 mb-2">
             <div className="h-8 w-8 rounded-full bg-gold/15 flex items-center justify-center">
