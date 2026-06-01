@@ -43,6 +43,8 @@ type Booking = {
   status: string;
   confirmed_at: string | null;
   created_at: string;
+  voucher_code: string | null;
+  discount_pennies: number | null;
 };
 
 const STATUSES = ["pending", "confirmed", "completed", "cancelled"];
@@ -177,6 +179,12 @@ function BookingsPage() {
                 <TableCell className="text-sm">
                   {b.treatment_name}
                   {b.treatment_price && <div className="text-muted-foreground">{b.treatment_price}</div>}
+                  {b.voucher_code && (
+                    <div className="mt-1 inline-flex items-center gap-1 text-[10px] font-mono px-1.5 py-0.5 rounded border border-gold/40 bg-gold/5 text-gold">
+                      🎟 {b.voucher_code}
+                      {b.discount_pennies ? ` (-£${(b.discount_pennies / 100).toFixed(2).replace(/\.00$/, "")})` : ""}
+                    </div>
+                  )}
                 </TableCell>
                 <TableCell>
                   <Select value={b.status} onValueChange={(v) => updateStatus.mutate({ id: b.id, status: v })}>
