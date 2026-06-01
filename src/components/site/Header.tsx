@@ -51,12 +51,13 @@ export function Header() {
             </Link>
           </div>
           <div className="flex justify-end">
-            <a
-              href="#book"
+            <Link
+              to="/book/$slug"
+              params={{ slug: "new-consultation" }}
               className="hidden md:inline-flex items-center justify-center bg-gold text-gold-foreground px-6 py-3 text-xs tracking-[0.2em] font-semibold uppercase hover:bg-gold/90 transition-colors"
             >
               Book Consultation
-            </a>
+            </Link>
           </div>
         </div>
         <nav className="hidden md:flex items-center justify-center gap-12 border-t border-border py-4 text-xs tracking-[0.25em] uppercase font-medium">
@@ -119,7 +120,7 @@ export function Header() {
             <WhatsAppButton className="w-full py-3 text-xs tracking-[0.2em] uppercase font-semibold" label="Chat on WhatsApp">
               WhatsApp
             </WhatsAppButton>
-            <a href="#book" className="block bg-gold text-gold-foreground text-center py-3 text-xs tracking-[0.2em] uppercase font-semibold">Book Consultation</a>
+            <Link to="/book/$slug" params={{ slug: "new-consultation" }} className="block bg-gold text-gold-foreground text-center py-3 text-xs tracking-[0.2em] uppercase font-semibold">Book Consultation</Link>
           </div>
         )}
       </div>
