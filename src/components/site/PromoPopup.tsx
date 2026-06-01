@@ -125,7 +125,9 @@ export function PromoPopup() {
             £{pounds} off your booking
           </h3>
           <p className="text-xs text-primary-foreground/70 mb-3">
-            Use this code at checkout when you book any treatment.
+            {promo.treatment_slug
+              ? `Valid on ${treatmentName ?? "a selected treatment"} when you book online.`
+              : "Use this code at checkout when you book any treatment."}
           </p>
           <button
             type="button"
