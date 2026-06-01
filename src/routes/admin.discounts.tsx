@@ -136,7 +136,7 @@ function DiscountsPage() {
           <h1 className="text-3xl font-semibold">Discounts</h1>
           <p className="text-muted-foreground mt-1">Manage signup vouchers and shareable promo codes.</p>
         </div>
-        <NewPromoDialog onCreated={() => qc.invalidateQueries({ queryKey: ["admin", "vouchers"] })} />
+        <NewPromoDialog treatments={treatmentOptions ?? []} onCreated={() => qc.invalidateQueries({ queryKey: ["admin", "vouchers"] })} />
       </div>
 
       {/* Signup voucher settings */}
