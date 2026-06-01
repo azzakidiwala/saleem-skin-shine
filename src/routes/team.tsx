@@ -59,7 +59,9 @@ function TeamPage() {
         <section className="pb-20 md:pb-28 bg-background">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {team.map(({ name, role, bio, creds, tags, image, icon: Icon }) => (
+              {team.map(({ name, role, bio, credentials: creds, tags, image, icon }) => {
+                const Icon = (LucideIcons as any)[icon] ?? Stethoscope;
+                return (
                 <article key={name} className="flex flex-col">
                   <div className="aspect-[4/5] overflow-hidden bg-secondary mb-6">
                     <img src={image} alt={name} loading="lazy" width={768} height={896} className="w-full h-full object-cover" />
@@ -79,6 +81,7 @@ function TeamPage() {
                     <span>{creds}</span>
                   </div>
                   <div className="flex items-start gap-2">
+
                     <Award className="h-4 w-4 text-gold mt-2 shrink-0" />
                     <div className="flex flex-wrap gap-2">
                       {tags.map(tag => (
