@@ -442,6 +442,7 @@ export type Database = {
           mobile: string | null
           notes: string
           surname: string | null
+          treatment_slug: string | null
           updated_at: string
           used_count: number
         }
@@ -459,6 +460,7 @@ export type Database = {
           mobile?: string | null
           notes?: string
           surname?: string | null
+          treatment_slug?: string | null
           updated_at?: string
           used_count?: number
         }
@@ -476,6 +478,7 @@ export type Database = {
           mobile?: string | null
           notes?: string
           surname?: string | null
+          treatment_slug?: string | null
           updated_at?: string
           used_count?: number
         }
@@ -500,6 +503,7 @@ export type Database = {
           code: string
           discount_pennies: number
           expires_at: string
+          treatment_slug: string
         }[]
       }
       get_booked_times: {
