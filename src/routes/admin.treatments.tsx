@@ -278,10 +278,10 @@ function EditorDialog({ trigger, initial, onSave }: { trigger: React.ReactNode; 
                 </div>
               )}
             </div>
-            <div className="space-y-2"><Label>Price</Label><Input value={row.price} onChange={(e) => update("price", e.target.value)} placeholder="£100" /></div>
+            <div className="space-y-2"><Label>Price</Label><Input value={row.price} onChange={(e) => update("price", e.target.value)} placeholder="100 (£ added automatically)" /></div>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-2"><Label>Duration</Label><Input value={row.duration} onChange={(e) => update("duration", e.target.value)} placeholder="60 min" /></div>
+            <div className="space-y-2"><Label>Duration</Label><Input value={row.duration} onChange={(e) => update("duration", e.target.value)} placeholder="30 (mins added automatically)" /></div>
             <div className="space-y-2"><Label>Sessions</Label><Input value={row.sessions} onChange={(e) => update("sessions", e.target.value)} placeholder="1 session" /></div>
           </div>
           <div className="space-y-2"><Label>Short description</Label><Textarea rows={2} value={row.description} onChange={(e) => update("description", e.target.value)} /></div>
