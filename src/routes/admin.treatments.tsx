@@ -177,7 +177,7 @@ function TreatmentsPage() {
             {isLoading && <TableRow><TableCell colSpan={7} className="text-center py-8 text-muted-foreground">Loading…</TableCell></TableRow>}
             {(data ?? []).map((r) => (
               <TableRow key={r.id}>
-                <TableCell>{r.image_url && <img src={r.image_url} alt="" className="h-10 w-10 rounded object-cover" />}</TableCell>
+                <TableCell><img src={resolveTreatmentImage(r.slug, r.image_url)} alt="" className="h-10 w-10 rounded object-cover" /></TableCell>
                 <TableCell className="font-medium">
                   {r.name}
                   <div className="text-xs text-muted-foreground">{r.slug}</div>
