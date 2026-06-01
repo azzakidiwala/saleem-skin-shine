@@ -61,6 +61,7 @@ export const Route = createFileRoute("/team")({
 });
 
 function TeamPage() {
+  const { data: content } = useSiteContent();
   return (
     <div className="min-h-screen bg-background">
       <AnnouncementBar />
@@ -69,10 +70,10 @@ function TeamPage() {
         {/* Intro */}
         <section className="py-20 md:py-28 bg-background text-center">
           <div className="container mx-auto px-4">
-            <div className="text-gold text-[11px] tracking-[0.35em] mb-5">OUR SPECIALISTS</div>
-            <h1 className="font-serif text-5xl md:text-6xl text-primary mb-6">Meet the Team</h1>
+            <div className="text-gold text-[11px] tracking-[0.35em] mb-5">{getString(content, "team.eyebrow", "OUR SPECIALISTS")}</div>
+            <h1 className="font-serif text-5xl md:text-6xl text-primary mb-6">{getString(content, "team.title", "Meet the Team")}</h1>
             <p className="text-muted-foreground max-w-2xl mx-auto leading-relaxed mb-10">
-              Our award-winning team of aesthetic practitioners and skin therapists are dedicated to helping you achieve your best skin, health and wellness.
+              {getString(content, "team.intro", "Our award-winning team of aesthetic practitioners and skin therapists are dedicated to helping you achieve your best skin, health and wellness.")}
             </p>
             <div className="flex flex-wrap justify-center gap-3 max-w-3xl mx-auto">
               {badges.map(({ icon: Icon, label }) => (
