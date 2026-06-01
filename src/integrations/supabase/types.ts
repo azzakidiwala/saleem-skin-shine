@@ -45,6 +45,7 @@ export type Database = {
           confirmation_token: string | null
           confirmed_at: string | null
           created_at: string
+          customer_id: string | null
           email: string
           first_name: string
           id: string
@@ -61,6 +62,7 @@ export type Database = {
           confirmation_token?: string | null
           confirmed_at?: string | null
           created_at?: string
+          customer_id?: string | null
           email: string
           first_name: string
           id?: string
@@ -77,6 +79,7 @@ export type Database = {
           confirmation_token?: string | null
           confirmed_at?: string | null
           created_at?: string
+          customer_id?: string | null
           email?: string
           first_name?: string
           id?: string
@@ -86,6 +89,47 @@ export type Database = {
           treatment_name?: string
           treatment_price?: string | null
           treatment_slug?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      customers: {
+        Row: {
+          created_at: string
+          email: string
+          first_name: string
+          id: string
+          mobile: string
+          notes: string
+          surname: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          first_name?: string
+          id?: string
+          mobile?: string
+          notes?: string
+          surname?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          first_name?: string
+          id?: string
+          mobile?: string
+          notes?: string
+          surname?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -372,6 +416,12 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      lookup_customer_by_email: {
+        Args: { p_email: string }
+        Returns: {
+          first_name: string
+        }[]
       }
       move_to_dlq: {
         Args: {
