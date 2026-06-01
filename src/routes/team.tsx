@@ -30,6 +30,7 @@ export const Route = createFileRoute("/team")({
 
 function TeamPage() {
   const { data: content } = useSiteContent();
+  const { data: team = [] } = useTeam();
   return (
     <div className="min-h-screen bg-background">
       <AnnouncementBar />
