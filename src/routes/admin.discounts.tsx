@@ -85,6 +85,21 @@ function DiscountsPage() {
     },
   });
 
+  const { data: treatmentOptions } = useQuery({
+    queryKey: ["admin", "treatments-options"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("treatments")
+        .select("slug, name")
+        .eq("is_active", true)
+        .order("name");
+      if (error) throw error;
+      return (data ?? []) as TreatmentOption[];
+    },
+  });
+
+  const treatmentNameBySlug = new Map((treatmentOptions ?? []).map((t) => [t.slug, t.name]));
+
   const toggleActive = useMutation({
     mutationFn: async ({ id, active }: { id: string; active: boolean }) => {
       const { error } = await supabase.from("voucher_codes").update({ is_active: active }).eq("id", id);
