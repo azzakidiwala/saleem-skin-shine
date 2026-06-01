@@ -116,14 +116,32 @@ function BookingPage() {
   async function applyVoucher() {
     const code = voucherInput.trim();
     if (!code) return;
+    if (appliedVoucher && code.toUpperCase() === appliedVoucher.code.toUpperCase()) {
+      toast.info("This voucher is already applied.");
+      return;
+    }
     setVoucherChecking(true);
     try {
       const res = await validateVoucherFn({ data: { code, email: email.trim() || undefined } });
       if (res.valid) {
-        setAppliedVoucher({ code: res.code, discount_pennies: res.discount_pennies });
-        toast.success("Voucher applied");
+        // Only one voucher allowed — keep the one with the bigger discount
+        if (appliedVoucher && appliedVoucher.discount_pennies >= res.discount_pennies) {
+          toast.info(
+            `Keeping ${appliedVoucher.code} — it gives a bigger discount than ${res.code}.`,
+          );
+          setVoucherInput("");
+        } else {
+          if (appliedVoucher) {
+            toast.success(
+              `Switched to ${res.code} — it gives a bigger discount than ${appliedVoucher.code}.`,
+            );
+          } else {
+            toast.success("Voucher applied");
+          }
+          setAppliedVoucher({ code: res.code, discount_pennies: res.discount_pennies });
+          setVoucherInput("");
+        }
       } else {
-        setAppliedVoucher(null);
         toast.error(res.reason);
       }
     } catch (e) {
