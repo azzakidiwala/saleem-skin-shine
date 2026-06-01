@@ -163,6 +163,7 @@ function DiscountsPage() {
               <TableHead>Code</TableHead>
               <TableHead>Kind</TableHead>
               <TableHead>Discount</TableHead>
+              <TableHead>Treatment</TableHead>
               <TableHead>Recipient / Notes</TableHead>
               <TableHead>Usage</TableHead>
               <TableHead>Expires</TableHead>
@@ -171,8 +172,8 @@ function DiscountsPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {isLoading && <TableRow><TableCell colSpan={8} className="text-center py-8 text-muted-foreground">Loading…</TableCell></TableRow>}
-            {!isLoading && filtered.length === 0 && <TableRow><TableCell colSpan={8} className="text-center py-8 text-muted-foreground">No vouchers yet.</TableCell></TableRow>}
+            {isLoading && <TableRow><TableCell colSpan={9} className="text-center py-8 text-muted-foreground">Loading…</TableCell></TableRow>}
+            {!isLoading && filtered.length === 0 && <TableRow><TableCell colSpan={9} className="text-center py-8 text-muted-foreground">No vouchers yet.</TableCell></TableRow>}
             {filtered.map((v) => {
               const expired = v.expires_at ? new Date(v.expires_at) < new Date() : false;
               const usedUp = v.used_count >= v.max_uses;
