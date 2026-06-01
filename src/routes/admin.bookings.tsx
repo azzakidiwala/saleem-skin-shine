@@ -15,10 +15,15 @@ import {
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-import { Trash2, Pencil } from "lucide-react";
+import { Trash2, Pencil, Plus, Loader2, CalendarIcon } from "lucide-react";
 import { updateBookingStatus } from "@/lib/admin/bookings.functions";
+import { treatments } from "@/data/treatments";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
 
 export const Route = createFileRoute("/admin/bookings")({
   component: BookingsPage,
