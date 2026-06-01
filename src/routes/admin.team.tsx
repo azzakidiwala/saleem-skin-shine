@@ -157,6 +157,7 @@ function EditorDialog({ trigger, initial, onSave }: { trigger: React.ReactNode; 
   const [open, setOpen] = useState(false);
   const [row, setRow] = useState<Row>(initial);
   const [uploading, setUploading] = useState(false);
+  const [tagInput, setTagInput] = useState(initial.tags.join(", "));
 
   function update<K extends keyof Row>(k: K, v: Row[K]) { setRow((r) => ({ ...r, [k]: v })); }
 
@@ -171,8 +172,18 @@ function EditorDialog({ trigger, initial, onSave }: { trigger: React.ReactNode; 
     finally { setUploading(false); }
   }
 
+  function parseTags() {
+    update("tags", tagInput.split(",").map((x) => x.trim()).filter(Boolean));
+  }
+
   return (
-    <Dialog open={open} onOpenChange={(o) => { setOpen(o); if (o) setRow(initial); }}>
+    <Dialog open={open} onOpenChange={(o) => {
+      setOpen(o);
+      if (o) {
+        setRow(initial);
+        setTagInput(initial.tags.join(", "));
+      }
+    }}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto">
         <DialogHeader><DialogTitle>{initial.id ? "Edit team member" : "New team member"}</DialogTitle></DialogHeader>
@@ -184,7 +195,7 @@ function EditorDialog({ trigger, initial, onSave }: { trigger: React.ReactNode; 
           <div className="space-y-2"><Label>Credentials</Label><Input value={row.credentials} onChange={(e) => update("credentials", e.target.value)} /></div>
           <div className="space-y-2"><Label>Bio</Label><Textarea rows={4} value={row.bio} onChange={(e) => update("bio", e.target.value)} /></div>
           <div className="space-y-2"><Label>Tags (comma separated)</Label>
-            <Input value={row.tags.join(", ")} onChange={(e) => update("tags", e.target.value.split(",").map((x) => x.trim()).filter(Boolean))} />
+            <Input value={tagInput} onChange={(e) => setTagInput(e.target.value)} onBlur={parseTags} />
           </div>
           <div className="space-y-2"><Label>Icon name (lucide)</Label><Input value={row.icon} onChange={(e) => update("icon", e.target.value)} /></div>
           <div className="space-y-2">
@@ -200,7 +211,11 @@ function EditorDialog({ trigger, initial, onSave }: { trigger: React.ReactNode; 
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-          <Button onClick={async () => { await onSave(row); setOpen(false); }} disabled={uploading || !row.name}>Save</Button>
+          <Button onClick={async () => {
+            parseTags();
+            await onSave({ ...row, tags: tagInput.split(",").map((x) => x.trim()).filter(Boolean) });
+            setOpen(false);
+          }} disabled={uploading || !row.name}>Save</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
