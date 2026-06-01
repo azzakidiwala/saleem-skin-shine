@@ -18,6 +18,7 @@ export const Route = createFileRoute("/conditions/face")({
       area="Face"
       intro="From acne to dark circles, our Skin Health Practitioners assess each concern and design a bespoke treatment plan tailored to your skin."
       conditions={faceConditions}
+      contentKey="conditions.face"
     />
   ),
 });

@@ -5,14 +5,26 @@ import { Header } from "@/components/site/Header";
 import { CTA } from "@/components/site/CTA";
 import { Footer } from "@/components/site/Footer";
 import type { Condition } from "@/data/conditions";
+import { useSiteContent, getString } from "@/lib/content/queries";
 
 type Props = {
   area: string;
   intro: string;
   conditions: Condition[];
+  /** Content key prefix, e.g. "conditions.face" — used to override area/intro from site_content */
+  contentKey?: string;
 };
 
-export function ConditionsPage({ area, intro, conditions }: Props) {
+export function ConditionsPage({ area, intro, conditions, contentKey }: Props) {
+  const { data: content } = useSiteContent();
+  const eyebrow = contentKey
+    ? getString(content, `${contentKey}.eyebrow`, `CONDITIONS · ${area.toUpperCase()}`)
+    : `CONDITIONS · ${area.toUpperCase()}`;
+  const title = contentKey
+    ? getString(content, `${contentKey}.title`, `${area} Conditions`)
+    : `${area} Conditions`;
+  const introText = contentKey ? getString(content, `${contentKey}.intro`, intro) : intro;
+
   return (
     <div className="min-h-screen bg-background">
       <AnnouncementBar />
@@ -20,9 +32,9 @@ export function ConditionsPage({ area, intro, conditions }: Props) {
       <main>
         <section className="py-20 md:py-28 bg-background text-center">
           <div className="container mx-auto px-4">
-            <div className="text-gold text-[11px] tracking-[0.35em] mb-5">CONDITIONS · {area.toUpperCase()}</div>
-            <h1 className="font-serif text-5xl md:text-6xl text-primary mb-6">{area} Conditions</h1>
-            <p className="text-muted-foreground max-w-2xl mx-auto leading-relaxed">{intro}</p>
+            <div className="text-gold text-[11px] tracking-[0.35em] mb-5">{eyebrow}</div>
+            <h1 className="font-serif text-5xl md:text-6xl text-primary mb-6">{title}</h1>
+            <p className="text-muted-foreground max-w-2xl mx-auto leading-relaxed">{introText}</p>
           </div>
         </section>
 

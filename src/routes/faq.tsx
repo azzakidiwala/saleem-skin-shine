@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
+import { useSiteContent, getString } from "@/lib/content/queries";
 
 const faqs = [
   {
@@ -53,15 +54,16 @@ export const Route = createFileRoute("/faq")({
 });
 
 function FAQPage() {
+  const { data: content } = useSiteContent();
   return (
     <div className="min-h-screen bg-background">
       <Header />
       <main className="container mx-auto px-4 py-16 md:py-24">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-12">
-            <div className="text-gold text-[11px] tracking-[0.3em] mb-3">SUPPORT</div>
-            <h1 className="text-4xl md:text-5xl font-serif mb-4">Frequently Asked Questions</h1>
-            <p className="text-muted-foreground">Everything you need to know before your treatment.</p>
+            <div className="text-gold text-[11px] tracking-[0.3em] mb-3">{getString(content, "faq.eyebrow", "SUPPORT")}</div>
+            <h1 className="text-4xl md:text-5xl font-serif mb-4">{getString(content, "faq.title", "Frequently Asked Questions")}</h1>
+            <p className="text-muted-foreground">{getString(content, "faq.subtitle", "Everything you need to know before your treatment.")}</p>
           </div>
           <Accordion type="single" collapsible className="w-full">
             {faqs.map((f, i) => (

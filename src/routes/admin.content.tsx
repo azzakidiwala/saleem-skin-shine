@@ -7,8 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { AlertTriangle, ExternalLink, MapPin, Maximize2 } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { AlertTriangle, ChevronRight, ArrowLeft, FileText } from "lucide-react";
 import { uploadSiteImage } from "@/lib/admin/storage";
 
 export const Route = createFileRoute("/admin/content")({
@@ -17,38 +16,35 @@ export const Route = createFileRoute("/admin/content")({
 
 type Row = { key: string; value: any; label: string; group_name: string };
 
+type PageDef = { id: string; label: string; description: string; groups: string[] };
+
+const PAGES: PageDef[] = [
+  { id: "home", label: "Home Page", description: "Hero, About, Call to Action and Announcement bar.", groups: ["hero", "about", "cta", "announcement"] },
+  { id: "team", label: "Meet the Team", description: "Intro shown above the team grid.", groups: ["team"] },
+  { id: "conditions_face", label: "Conditions — Face", description: "Title and intro of the Face Conditions page.", groups: ["conditions_face"] },
+  { id: "conditions_body", label: "Conditions — Body", description: "Title and intro of the Body Conditions page.", groups: ["conditions_body"] },
+  { id: "conditions_skin", label: "Conditions — Skin", description: "Title and intro of the Skin Conditions page.", groups: ["conditions_skin"] },
+  { id: "faq", label: "FAQ", description: "Header text on the FAQ page.", groups: ["faq"] },
+  { id: "contact", label: "Contact", description: "Header text, address and opening hours.", groups: ["contact"] },
+];
+
 const GROUP_LABEL: Record<string, string> = {
   hero: "Homepage Hero",
   about: "About Section",
   cta: "Call to Action / Contact",
   announcement: "Announcement Bar",
-};
-
-const FIELD_HINT: Record<string, { where: string; href: string }> = {
-  "hero.eyebrow":        { where: "Homepage hero — small badge above the title", href: "/#c-hero-eyebrow" },
-  "hero.title_line1":    { where: "Homepage hero — first line of the headline",  href: "/#c-hero-title-line1" },
-  "hero.title_emphasis": { where: "Homepage hero — emphasised word in headline", href: "/#c-hero-title-emphasis" },
-  "hero.title_line2":    { where: "Homepage hero — second line of the headline", href: "/#c-hero-title-line2" },
-  "hero.subtitle":       { where: "Homepage hero — subtitle under the headline", href: "/#c-hero-subtitle" },
-  "hero.image_url":      { where: "Homepage hero — background image",            href: "/#c-hero-image" },
-  "about.eyebrow":       { where: "Homepage About section — small label",        href: "/#c-about-eyebrow" },
-  "about.title":         { where: "Homepage About section — section title",      href: "/#c-about-title" },
-  "about.body":          { where: "Homepage About section — paragraph text",     href: "/#c-about-body" },
-  "about.years":         { where: "Homepage About section — years badge",        href: "/#c-about-years" },
-  "about.image_url":     { where: "Homepage About section — image",              href: "/#c-about-image" },
-  "cta.eyebrow":         { where: "Contact / CTA section — small label",         href: "/#c-cta-eyebrow" },
-  "cta.title_line1":     { where: "Contact / CTA section — title line 1",        href: "/#c-cta-title-line1" },
-  "cta.title_emphasis":  { where: "Contact / CTA section — emphasised word",     href: "/#c-cta-title-emphasis" },
-  "cta.title_line2":     { where: "Contact / CTA section — title line 2",        href: "/#c-cta-title-line2" },
-  "cta.body":            { where: "Contact / CTA section — paragraph text",      href: "/#c-cta-body" },
-  "cta.phone":           { where: "Used for the call link site-wide",            href: "/#c-cta-phone" },
-  "cta.phone_display":   { where: "Phone number shown to visitors",              href: "/#c-cta-phone" },
-  "cta.email":           { where: "Email shown to visitors",                     href: "/#c-cta-email" },
-  "announcement.messages": { where: "Top of every page — rotating banner",       href: "/#c-announcement-messages" },
+  team: "Meet the Team",
+  conditions_face: "Face Conditions",
+  conditions_body: "Body Conditions",
+  conditions_skin: "Skin Conditions",
+  faq: "FAQ",
+  contact: "Contact",
 };
 
 function ContentPage() {
   const qc = useQueryClient();
+  const [selectedPage, setSelectedPage] = useState<string | null>(null);
+
   const { data, isLoading } = useQuery({
     queryKey: ["admin", "content"],
     queryFn: async () => {
@@ -72,7 +68,6 @@ function ContentPage() {
       let value = draft[key];
       if (Array.isArray(value)) value = value.map((x) => (typeof x === "string" ? x.trim() : x)).filter(Boolean);
       else if (typeof value === "string" && value.includes("\n")) {
-        // safety net for array fields still held as raw string
         const orig = (data ?? []).find((r) => r.key === key);
         if (Array.isArray(orig?.value)) value = value.split("\n").map((x) => x.trim()).filter(Boolean);
       }
@@ -85,15 +80,58 @@ function ContentPage() {
 
   if (isLoading) return <div className="text-muted-foreground">Loading…</div>;
 
-  const grouped = (data ?? []).reduce<Record<string, Row[]>>((acc, r) => {
+  const rowsByGroup = (data ?? []).reduce<Record<string, Row[]>>((acc, r) => {
     (acc[r.group_name] ||= []).push(r); return acc;
   }, {});
+
+  // Page list view
+  if (!selectedPage) {
+    return (
+      <div className="space-y-8 max-w-3xl">
+        <div>
+          <h1 className="text-3xl font-semibold">Site Content</h1>
+          <p className="text-muted-foreground mt-1">Choose a page to edit its text and images.</p>
+        </div>
+
+        <div className="grid gap-3">
+          {PAGES.map((p) => {
+            const count = p.groups.reduce((n, g) => n + (rowsByGroup[g]?.length ?? 0), 0);
+            return (
+              <button
+                key={p.id}
+                onClick={() => setSelectedPage(p.id)}
+                className="flex items-center justify-between gap-4 rounded-lg border bg-card p-5 text-left hover:border-primary/50 hover:bg-muted/30 transition-colors"
+              >
+                <div className="flex items-start gap-3">
+                  <FileText className="h-5 w-5 text-muted-foreground mt-0.5 shrink-0" />
+                  <div>
+                    <div className="font-medium">{p.label}</div>
+                    <div className="text-sm text-muted-foreground">{p.description}</div>
+                    <div className="text-xs text-muted-foreground mt-1">{count} editable field{count === 1 ? "" : "s"}</div>
+                  </div>
+                </div>
+                <ChevronRight className="h-5 w-5 text-muted-foreground shrink-0" />
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
+  const page = PAGES.find((p) => p.id === selectedPage)!;
 
   return (
     <div className="space-y-8 max-w-3xl">
       <div>
-        <h1 className="text-3xl font-semibold">Site Content</h1>
-        <p className="text-muted-foreground mt-1">Edit text and images shown across the public site.</p>
+        <button
+          onClick={() => setSelectedPage(null)}
+          className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-3"
+        >
+          <ArrowLeft className="h-4 w-4" /> All pages
+        </button>
+        <h1 className="text-3xl font-semibold">{page.label}</h1>
+        <p className="text-muted-foreground mt-1">{page.description}</p>
       </div>
 
       <div role="alert" className="flex gap-3 rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm">
@@ -101,25 +139,31 @@ function ContentPage() {
         <div className="space-y-1">
           <p className="font-semibold text-destructive">Changes go live immediately</p>
           <p className="text-foreground/80">
-            Anything you save here updates the public website right away and cannot be undone. Please double-check spelling, links, and images before clicking Save.
+            Anything you save here updates the public website right away. Please double-check spelling, links, and images before clicking Save.
           </p>
         </div>
       </div>
 
-      {Object.entries(grouped).map(([group, rows]) => (
-        <section key={group} className="rounded-lg border bg-card p-6 space-y-5">
-          <h2 className="text-xl font-semibold">{GROUP_LABEL[group] ?? group}</h2>
-          {rows.map((r) => (
-            <Field
-              key={r.key}
-              row={r}
-              value={draft[r.key]}
-              onChange={(v) => setDraft((d) => ({ ...d, [r.key]: v }))}
-              onSave={() => save.mutateAsync(r.key)}
-            />
-          ))}
-        </section>
-      ))}
+      {page.groups.map((group) => {
+        const rows = rowsByGroup[group];
+        if (!rows || rows.length === 0) return null;
+        return (
+          <section key={group} className="rounded-lg border bg-card p-6 space-y-5">
+            {page.groups.length > 1 && (
+              <h2 className="text-xl font-semibold">{GROUP_LABEL[group] ?? group}</h2>
+            )}
+            {rows.map((r) => (
+              <Field
+                key={r.key}
+                row={r}
+                value={draft[r.key]}
+                onChange={(v) => setDraft((d) => ({ ...d, [r.key]: v }))}
+                onSave={() => save.mutateAsync(r.key)}
+              />
+            ))}
+          </section>
+        );
+      })}
     </div>
   );
 }
@@ -140,29 +184,9 @@ function Field({ row, value, onChange, onSave }: { row: Row; value: any; onChang
     finally { setUploading(false); }
   }
 
-  const hint = FIELD_HINT[row.key];
-
   return (
     <div className="space-y-2 rounded-md border bg-background/40 p-4">
-      <div className="flex items-start justify-between gap-4">
-        <Label>{row.label}</Label>
-        {hint && (
-          <a
-            href={hint.href}
-            target="_blank"
-            rel="noreferrer"
-            className="shrink-0 inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
-          >
-            View on site <ExternalLink className="h-3 w-3" />
-          </a>
-        )}
-      </div>
-      {hint && (
-        <p className="flex items-start gap-1.5 text-xs text-muted-foreground">
-          <MapPin className="h-3 w-3 mt-0.5 shrink-0" />
-          <span>{hint.where}</span>
-        </p>
-      )}
+      <Label>{row.label}</Label>
       {isImage ? (
         <div className="space-y-2">
           {value && <img src={value} alt="" className="h-32 rounded border object-cover" />}
@@ -185,79 +209,9 @@ function Field({ row, value, onChange, onSave }: { row: Row; value: any; onChang
       ) : (
         <Input value={value ?? ""} onChange={(e) => onChange(e.target.value)} />
       )}
-      {hint && <SectionPreview href={hint.href} label={row.label} />}
       <div className="flex justify-end">
         <Button size="sm" onClick={onSave} disabled={uploading}>Save</Button>
       </div>
-    </div>
-  );
-}
-
-function SectionPreview({ href, label }: { href: string; label: string }) {
-  // Cache-bust on each mount so the preview reflects the latest saved content
-  const [cacheKey] = useState(() => Date.now());
-  const src = `${href}${href.includes("?") ? "&" : "?"}_t=${cacheKey}`;
-
-  return (
-    <div className="rounded border border-dashed bg-muted/30 p-2 space-y-2">
-      <div className="flex items-center justify-between">
-        <p className="text-[10px] uppercase tracking-wide text-muted-foreground">Live preview</p>
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button type="button" variant="ghost" size="sm" className="h-6 px-2 text-xs">
-              <Maximize2 className="h-3 w-3 mr-1" /> Expand
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-5xl w-[95vw] p-0 overflow-hidden">
-            <DialogHeader className="px-4 py-3 border-b">
-              <DialogTitle className="text-sm font-medium">Preview — {label}</DialogTitle>
-            </DialogHeader>
-            <div className="bg-muted/30">
-              <iframe
-                src={src}
-                title={`Preview of ${label}`}
-                className="w-full h-[75vh] bg-background border-0"
-              />
-            </div>
-          </DialogContent>
-        </Dialog>
-      </div>
-      <Dialog>
-        <DialogTrigger asChild>
-          <button
-            type="button"
-            className="block w-full overflow-hidden rounded border bg-background relative group"
-            style={{ height: 180 }}
-            aria-label={`Expand preview of ${label}`}
-          >
-            <iframe
-              src={src}
-              title={`Thumbnail of ${label}`}
-              tabIndex={-1}
-              className="border-0 pointer-events-none"
-              style={{
-                width: 1280,
-                height: 800,
-                transform: "scale(0.35)",
-                transformOrigin: "top left",
-              }}
-            />
-            <span className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/5 transition-colors" />
-          </button>
-        </DialogTrigger>
-        <DialogContent className="max-w-5xl w-[95vw] p-0 overflow-hidden">
-          <DialogHeader className="px-4 py-3 border-b">
-            <DialogTitle className="text-sm font-medium">Preview — {label}</DialogTitle>
-          </DialogHeader>
-          <div className="bg-muted/30">
-            <iframe
-              src={src}
-              title={`Expanded preview of ${label}`}
-              className="w-full h-[75vh] bg-background border-0"
-            />
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

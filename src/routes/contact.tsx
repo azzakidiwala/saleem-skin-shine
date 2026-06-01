@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { useSiteContent, getString } from "@/lib/content/queries";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -35,6 +36,7 @@ const contactSchema = z.object({
 });
 
 function ContactPage() {
+  const { data: content } = useSiteContent();
   const [form, setForm] = useState({ firstName: "", surname: "", mobile: "", email: "", message: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -64,10 +66,10 @@ function ContactPage() {
 
       <section className="bg-deep-green text-primary-foreground py-20">
         <div className="container mx-auto px-6 text-center">
-          <p className="text-gold text-xs tracking-[0.3em] uppercase mb-4">Get in Touch</p>
-          <h1 className="text-4xl md:text-5xl font-light tracking-tight">Contact Us</h1>
+          <p className="text-gold text-xs tracking-[0.3em] uppercase mb-4">{getString(content, "contact.eyebrow", "Get in Touch")}</p>
+          <h1 className="text-4xl md:text-5xl font-light tracking-tight">{getString(content, "contact.title", "Contact Us")}</h1>
           <p className="text-primary-foreground/80 max-w-xl mx-auto mt-4">
-            We'd love to hear from you. Reach out about treatments, consultations or to book your appointment.
+            {getString(content, "contact.subtitle", "We'd love to hear from you. Reach out about treatments, consultations or to book your appointment.")}
           </p>
         </div>
       </section>
@@ -83,7 +85,7 @@ function ContactPage() {
             <div className="bg-card border border-border p-6 flex flex-col items-center text-center gap-3">
               <MapPin className="h-6 w-6 text-gold" />
               <div className="text-xs tracking-[0.25em] uppercase text-muted-foreground">Address</div>
-              <div>123 Wellness Avenue,<br />Manchester, M1 2AB</div>
+              <div className="whitespace-pre-line">{getString(content, "contact.address", "123 Wellness Avenue,\nManchester, M1 2AB")}</div>
             </div>
             <div className="bg-card border border-border p-6 flex flex-col items-center text-center gap-3">
               <Phone className="h-6 w-6 text-gold" />
@@ -113,15 +115,15 @@ function ContactPage() {
             <ul className="grid sm:grid-cols-3 gap-4 text-sm max-w-2xl mx-auto">
               <li className="flex justify-between sm:flex-col sm:items-center sm:text-center gap-1 border-b sm:border-b-0 sm:border-r border-border pb-3 sm:pb-0 sm:pr-4 last:border-0">
                 <span className="text-xs tracking-[0.2em] uppercase text-muted-foreground">Mon – Fri</span>
-                <span className="font-medium">9:00 – 19:00</span>
+                <span className="font-medium">{getString(content, "contact.hours_weekday", "9:00 – 19:00")}</span>
               </li>
               <li className="flex justify-between sm:flex-col sm:items-center sm:text-center gap-1 border-b sm:border-b-0 sm:border-r border-border pb-3 sm:pb-0 sm:pr-4 last:border-0">
                 <span className="text-xs tracking-[0.2em] uppercase text-muted-foreground">Saturday</span>
-                <span className="font-medium">10:00 – 17:00</span>
+                <span className="font-medium">{getString(content, "contact.hours_saturday", "10:00 – 17:00")}</span>
               </li>
               <li className="flex justify-between sm:flex-col sm:items-center sm:text-center gap-1">
                 <span className="text-xs tracking-[0.2em] uppercase text-muted-foreground">Sunday</span>
-                <span className="font-medium text-muted-foreground">Closed</span>
+                <span className="font-medium text-muted-foreground">{getString(content, "contact.hours_sunday", "Closed")}</span>
               </li>
             </ul>
           </div>
