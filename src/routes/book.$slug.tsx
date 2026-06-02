@@ -30,8 +30,8 @@ export const Route = createFileRoute("/book/$slug")({
     surname: typeof s.surname === "string" ? s.surname : undefined,
     mobile: typeof s.mobile === "string" ? s.mobile : undefined,
   }),
-  loader: ({ params }) => {
-    const treatment = getTreatment(params.slug);
+  loader: async ({ params }) => {
+    const treatment = await fetchTreatmentBySlug(params.slug);
     if (!treatment) throw notFound();
     return { treatment };
   },
