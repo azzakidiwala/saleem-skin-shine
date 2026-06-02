@@ -9,7 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { getTreatment, treatments } from "@/data/treatments";
+import { fetchTreatmentBySlug } from "@/lib/content/queries";
+import { treatments } from "@/data/treatments";
 import { supabase } from "@/integrations/supabase/client";
 import { useServerFn } from "@tanstack/react-start";
 import { validateVoucher, redeemVoucherForBooking } from "@/lib/vouchers.functions";
@@ -29,8 +30,8 @@ export const Route = createFileRoute("/book/$slug")({
     surname: typeof s.surname === "string" ? s.surname : undefined,
     mobile: typeof s.mobile === "string" ? s.mobile : undefined,
   }),
-  loader: ({ params }) => {
-    const treatment = getTreatment(params.slug);
+  loader: async ({ params }) => {
+    const treatment = await fetchTreatmentBySlug(params.slug);
     if (!treatment) throw notFound();
     return { treatment };
   },
