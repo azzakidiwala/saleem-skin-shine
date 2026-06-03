@@ -100,11 +100,30 @@ export const requestSignupVoucher = createServerFn({ method: "POST" })
         .select("code, discount_pennies, expires_at")
         .single();
       if (!error && inserted) {
+        // Send the voucher code by email — never return it to the client.
+        try {
+          await sendTransactionalEmailInternal({
+            templateName: "signup-voucher",
+            recipientEmail: data.email,
+            idempotencyKey: `signup-voucher-${inserted.code}`,
+            templateData: {
+              firstName: data.first_name,
+              code: inserted.code,
+              discountPennies: inserted.discount_pennies,
+              expiresAt: inserted.expires_at,
+            },
+          });
+        } catch (e) {
+          console.error("Failed to send signup voucher email", e);
+          return {
+            status: "email_failed" as const,
+            message:
+              "We couldn't send your voucher email right now. Please try again in a moment.",
+          };
+        }
         return {
           status: "issued" as const,
-          code: inserted.code,
-          discount_pennies: inserted.discount_pennies,
-          expires_at: inserted.expires_at,
+          message: "Voucher sent — check your email.",
         };
       }
       if (error && !error.message.toLowerCase().includes("duplicate")) {
