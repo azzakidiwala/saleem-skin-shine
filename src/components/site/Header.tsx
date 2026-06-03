@@ -3,21 +3,7 @@ import { Phone, ChevronDown, Menu } from "lucide-react";
 import { useState } from "react";
 import logo from "@/assets/logo.png";
 import { WhatsAppButton, WhatsAppIcon, whatsappHref } from "@/components/site/WhatsAppButton";
-
-const treatments = [
-  "New Consultation",
-  "Deluxe HydraFacial",
-  "Wet Diamond HydraFacial",
-  "Promoitalia Lip Booster",
-  "TrapTox",
-  "Jawline Slimming Anti-Wrinkle Treatment",
-  "VTECH Microneedling with LED Face Mask",
-  "PRP Hair & Scalp Treatment",
-  "PRP Facial (Vampire Facial)",
-  "Hay Fever Treatment",
-  "Vitamin B12 Injection (Single)",
-  "Vitamin B12 Injection (Course of 6)",
-];
+import { useTreatments } from "@/lib/content/queries";
 
 export function Header() {
   const [open, setOpen] = useState(false);
