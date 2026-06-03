@@ -100,6 +100,7 @@ export function SignupVoucher({ variant = "section" }: { variant?: "section" | "
           </div>
           <p className="text-primary-foreground/70 text-xs">
             Check <span className="text-primary-foreground">{sentToEmail}</span> for your discount code.
+            Don't forget to check your junk or spam folder.
           </p>
         </div>
       );
