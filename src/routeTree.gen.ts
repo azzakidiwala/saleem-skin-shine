@@ -21,6 +21,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as TreatmentsIndexRouteImport } from './routes/treatments.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as TreatmentsSlugRouteImport } from './routes/treatments.$slug'
+import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
 import { Route as ConditionsSkinRouteImport } from './routes/conditions.skin'
 import { Route as ConditionsFaceRouteImport } from './routes/conditions.face'
 import { Route as ConditionsBodyRouteImport } from './routes/conditions.body'
@@ -32,7 +33,10 @@ import { Route as AdminCustomersRouteImport } from './routes/admin.customers'
 import { Route as AdminContentRouteImport } from './routes/admin.content'
 import { Route as AdminBookingsRouteImport } from './routes/admin.bookings'
 import { Route as AdminAdminsRouteImport } from './routes/admin.admins'
+import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
 import { Route as ApiPublicConfirmBookingRouteImport } from './routes/api/public/confirm-booking'
+import { Route as LovableEmailTransactionalSendRouteImport } from './routes/lovable/email/transactional/send'
+import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
 
 const TreatmentsRoute = TreatmentsRouteImport.update({
@@ -95,6 +99,11 @@ const TreatmentsSlugRoute = TreatmentsSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => TreatmentsRoute,
 } as any)
+const EmailUnsubscribeRoute = EmailUnsubscribeRouteImport.update({
+  id: '/email/unsubscribe',
+  path: '/email/unsubscribe',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ConditionsSkinRoute = ConditionsSkinRouteImport.update({
   id: '/conditions/skin',
   path: '/conditions/skin',
@@ -150,11 +159,28 @@ const AdminAdminsRoute = AdminAdminsRouteImport.update({
   path: '/admins',
   getParentRoute: () => AdminRoute,
 } as any)
+const LovableEmailSuppressionRoute = LovableEmailSuppressionRouteImport.update({
+  id: '/lovable/email/suppression',
+  path: '/lovable/email/suppression',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicConfirmBookingRoute = ApiPublicConfirmBookingRouteImport.update({
   id: '/api/public/confirm-booking',
   path: '/api/public/confirm-booking',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LovableEmailTransactionalSendRoute =
+  LovableEmailTransactionalSendRouteImport.update({
+    id: '/lovable/email/transactional/send',
+    path: '/lovable/email/transactional/send',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const LovableEmailTransactionalPreviewRoute =
+  LovableEmailTransactionalPreviewRouteImport.update({
+    id: '/lovable/email/transactional/preview',
+    path: '/lovable/email/transactional/preview',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const LovableEmailQueueProcessRoute =
   LovableEmailQueueProcessRouteImport.update({
     id: '/lovable/email/queue/process',
@@ -183,11 +209,15 @@ export interface FileRoutesByFullPath {
   '/conditions/body': typeof ConditionsBodyRoute
   '/conditions/face': typeof ConditionsFaceRoute
   '/conditions/skin': typeof ConditionsSkinRoute
+  '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/treatments/$slug': typeof TreatmentsSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/treatments/': typeof TreatmentsIndexRoute
   '/api/public/confirm-booking': typeof ApiPublicConfirmBookingRoute
+  '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
+  '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
+  '/lovable/email/transactional/send': typeof LovableEmailTransactionalSendRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -208,11 +238,15 @@ export interface FileRoutesByTo {
   '/conditions/body': typeof ConditionsBodyRoute
   '/conditions/face': typeof ConditionsFaceRoute
   '/conditions/skin': typeof ConditionsSkinRoute
+  '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/treatments/$slug': typeof TreatmentsSlugRoute
   '/admin': typeof AdminIndexRoute
   '/treatments': typeof TreatmentsIndexRoute
   '/api/public/confirm-booking': typeof ApiPublicConfirmBookingRoute
+  '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
+  '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
+  '/lovable/email/transactional/send': typeof LovableEmailTransactionalSendRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -236,11 +270,15 @@ export interface FileRoutesById {
   '/conditions/body': typeof ConditionsBodyRoute
   '/conditions/face': typeof ConditionsFaceRoute
   '/conditions/skin': typeof ConditionsSkinRoute
+  '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/treatments/$slug': typeof TreatmentsSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/treatments/': typeof TreatmentsIndexRoute
   '/api/public/confirm-booking': typeof ApiPublicConfirmBookingRoute
+  '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
+  '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
+  '/lovable/email/transactional/send': typeof LovableEmailTransactionalSendRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -265,11 +303,15 @@ export interface FileRouteTypes {
     | '/conditions/body'
     | '/conditions/face'
     | '/conditions/skin'
+    | '/email/unsubscribe'
     | '/treatments/$slug'
     | '/admin/'
     | '/treatments/'
     | '/api/public/confirm-booking'
+    | '/lovable/email/suppression'
     | '/lovable/email/queue/process'
+    | '/lovable/email/transactional/preview'
+    | '/lovable/email/transactional/send'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -290,11 +332,15 @@ export interface FileRouteTypes {
     | '/conditions/body'
     | '/conditions/face'
     | '/conditions/skin'
+    | '/email/unsubscribe'
     | '/treatments/$slug'
     | '/admin'
     | '/treatments'
     | '/api/public/confirm-booking'
+    | '/lovable/email/suppression'
     | '/lovable/email/queue/process'
+    | '/lovable/email/transactional/preview'
+    | '/lovable/email/transactional/send'
   id:
     | '__root__'
     | '/'
@@ -317,11 +363,15 @@ export interface FileRouteTypes {
     | '/conditions/body'
     | '/conditions/face'
     | '/conditions/skin'
+    | '/email/unsubscribe'
     | '/treatments/$slug'
     | '/admin/'
     | '/treatments/'
     | '/api/public/confirm-booking'
+    | '/lovable/email/suppression'
     | '/lovable/email/queue/process'
+    | '/lovable/email/transactional/preview'
+    | '/lovable/email/transactional/send'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -338,8 +388,12 @@ export interface RootRouteChildren {
   ConditionsBodyRoute: typeof ConditionsBodyRoute
   ConditionsFaceRoute: typeof ConditionsFaceRoute
   ConditionsSkinRoute: typeof ConditionsSkinRoute
+  EmailUnsubscribeRoute: typeof EmailUnsubscribeRoute
   ApiPublicConfirmBookingRoute: typeof ApiPublicConfirmBookingRoute
+  LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
   LovableEmailQueueProcessRoute: typeof LovableEmailQueueProcessRoute
+  LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
+  LovableEmailTransactionalSendRoute: typeof LovableEmailTransactionalSendRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -428,6 +482,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TreatmentsSlugRouteImport
       parentRoute: typeof TreatmentsRoute
     }
+    '/email/unsubscribe': {
+      id: '/email/unsubscribe'
+      path: '/email/unsubscribe'
+      fullPath: '/email/unsubscribe'
+      preLoaderRoute: typeof EmailUnsubscribeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/conditions/skin': {
       id: '/conditions/skin'
       path: '/conditions/skin'
@@ -505,11 +566,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAdminsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/lovable/email/suppression': {
+      id: '/lovable/email/suppression'
+      path: '/lovable/email/suppression'
+      fullPath: '/lovable/email/suppression'
+      preLoaderRoute: typeof LovableEmailSuppressionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/confirm-booking': {
       id: '/api/public/confirm-booking'
       path: '/api/public/confirm-booking'
       fullPath: '/api/public/confirm-booking'
       preLoaderRoute: typeof ApiPublicConfirmBookingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lovable/email/transactional/send': {
+      id: '/lovable/email/transactional/send'
+      path: '/lovable/email/transactional/send'
+      fullPath: '/lovable/email/transactional/send'
+      preLoaderRoute: typeof LovableEmailTransactionalSendRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lovable/email/transactional/preview': {
+      id: '/lovable/email/transactional/preview'
+      path: '/lovable/email/transactional/preview'
+      fullPath: '/lovable/email/transactional/preview'
+      preLoaderRoute: typeof LovableEmailTransactionalPreviewRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/lovable/email/queue/process': {
@@ -574,8 +656,12 @@ const rootRouteChildren: RootRouteChildren = {
   ConditionsBodyRoute: ConditionsBodyRoute,
   ConditionsFaceRoute: ConditionsFaceRoute,
   ConditionsSkinRoute: ConditionsSkinRoute,
+  EmailUnsubscribeRoute: EmailUnsubscribeRoute,
   ApiPublicConfirmBookingRoute: ApiPublicConfirmBookingRoute,
+  LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
   LovableEmailQueueProcessRoute: LovableEmailQueueProcessRoute,
+  LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
+  LovableEmailTransactionalSendRoute: LovableEmailTransactionalSendRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
