@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as TreatmentsRouteImport } from './routes/treatments'
 import { Route as TeamRouteImport } from './routes/team'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
@@ -39,6 +40,11 @@ import { Route as LovableEmailTransactionalSendRouteImport } from './routes/lova
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
 
+const UnsubscribeRoute = UnsubscribeRouteImport.update({
+  id: '/unsubscribe',
+  path: '/unsubscribe',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TreatmentsRoute = TreatmentsRouteImport.update({
   id: '/treatments',
   path: '/treatments',
@@ -198,6 +204,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/team': typeof TeamRoute
   '/treatments': typeof TreatmentsRouteWithChildren
+  '/unsubscribe': typeof UnsubscribeRoute
   '/admin/admins': typeof AdminAdminsRoute
   '/admin/bookings': typeof AdminBookingsRoute
   '/admin/content': typeof AdminContentRoute
@@ -227,6 +234,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/team': typeof TeamRoute
+  '/unsubscribe': typeof UnsubscribeRoute
   '/admin/admins': typeof AdminAdminsRoute
   '/admin/bookings': typeof AdminBookingsRoute
   '/admin/content': typeof AdminContentRoute
@@ -259,6 +267,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/team': typeof TeamRoute
   '/treatments': typeof TreatmentsRouteWithChildren
+  '/unsubscribe': typeof UnsubscribeRoute
   '/admin/admins': typeof AdminAdminsRoute
   '/admin/bookings': typeof AdminBookingsRoute
   '/admin/content': typeof AdminContentRoute
@@ -292,6 +301,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/team'
     | '/treatments'
+    | '/unsubscribe'
     | '/admin/admins'
     | '/admin/bookings'
     | '/admin/content'
@@ -321,6 +331,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/sitemap.xml'
     | '/team'
+    | '/unsubscribe'
     | '/admin/admins'
     | '/admin/bookings'
     | '/admin/content'
@@ -352,6 +363,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/team'
     | '/treatments'
+    | '/unsubscribe'
     | '/admin/admins'
     | '/admin/bookings'
     | '/admin/content'
@@ -384,6 +396,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TeamRoute: typeof TeamRoute
   TreatmentsRoute: typeof TreatmentsRouteWithChildren
+  UnsubscribeRoute: typeof UnsubscribeRoute
   BookSlugRoute: typeof BookSlugRoute
   ConditionsBodyRoute: typeof ConditionsBodyRoute
   ConditionsFaceRoute: typeof ConditionsFaceRoute
@@ -398,6 +411,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/unsubscribe': {
+      id: '/unsubscribe'
+      path: '/unsubscribe'
+      fullPath: '/unsubscribe'
+      preLoaderRoute: typeof UnsubscribeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/treatments': {
       id: '/treatments'
       path: '/treatments'
@@ -652,6 +672,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TeamRoute: TeamRoute,
   TreatmentsRoute: TreatmentsRouteWithChildren,
+  UnsubscribeRoute: UnsubscribeRoute,
   BookSlugRoute: BookSlugRoute,
   ConditionsBodyRoute: ConditionsBodyRoute,
   ConditionsFaceRoute: ConditionsFaceRoute,
