@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { sendTransactionalEmailInternal } from "@/lib/email/send-internal.server";
 import { z } from "zod";
 
 function generateCode(prefix = "SS") {
@@ -12,8 +13,14 @@ function generateCode(prefix = "SS") {
 const requestSchema = z.object({
   first_name: z.string().trim().min(1).max(100),
   surname: z.string().trim().min(1).max(100),
-  email: z.string().trim().email().max(255),
-  mobile: z.string().trim().min(5).max(30),
+  email: z.string().trim().toLowerCase().email().max(255),
+  mobile: z
+    .string()
+    .trim()
+    .max(30)
+    .refine((v) => v.replace(/\D/g, "").length === 11, {
+      message: "Mobile number must be 11 digits",
+    }),
 });
 
 export const requestSignupVoucher = createServerFn({ method: "POST" })
