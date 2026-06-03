@@ -75,7 +75,7 @@ export function SignupVoucher({ variant = "section" }: { variant?: "section" | "
       });
       if (res.status === "issued") {
         setSentToEmail(email.trim());
-        toast.success("Voucher sent!", { description: `Check ${email.trim()}` });
+        toast.success("Voucher sent!", { description: `Check ${email.trim()} — don't forget your junk folder!` });
       } else {
         toast.error(res.message);
       }
