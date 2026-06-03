@@ -3,24 +3,11 @@ import { Phone, ChevronDown, Menu } from "lucide-react";
 import { useState } from "react";
 import logo from "@/assets/logo.png";
 import { WhatsAppButton, WhatsAppIcon, whatsappHref } from "@/components/site/WhatsAppButton";
-
-const treatments = [
-  "New Consultation",
-  "Deluxe HydraFacial",
-  "Wet Diamond HydraFacial",
-  "Promoitalia Lip Booster",
-  "TrapTox",
-  "Jawline Slimming Anti-Wrinkle Treatment",
-  "VTECH Microneedling with LED Face Mask",
-  "PRP Hair & Scalp Treatment",
-  "PRP Facial (Vampire Facial)",
-  "Hay Fever Treatment",
-  "Vitamin B12 Injection (Single)",
-  "Vitamin B12 Injection (Course of 6)",
-];
+import { useTreatments } from "@/lib/content/queries";
 
 export function Header() {
   const [open, setOpen] = useState(false);
+  const { data: treatments = [] } = useTreatments();
   return (
     <header className="bg-background border-b border-border">
       <div className="container mx-auto px-4">
@@ -71,9 +58,9 @@ export function Header() {
                 <div className="text-gold text-[11px] tracking-[0.3em] mb-4">TREATMENTS</div>
                 <div className="grid grid-cols-2 gap-x-6 gap-y-2">
                   {treatments.map(t => (
-                    <Link key={t} to="/treatments" className="flex items-start gap-2 py-1.5 text-[12px] tracking-[0.05em] normal-case font-normal text-foreground hover:text-gold transition-colors">
+                    <Link key={t.slug} to="/treatments/$slug" params={{ slug: t.slug }} className="flex items-start gap-2 py-1.5 text-[12px] tracking-[0.05em] normal-case font-normal text-foreground hover:text-gold transition-colors">
                       <span className="text-gold mt-1.5">•</span>
-                      <span>{t}</span>
+                      <span>{t.name}</span>
                     </Link>
                   ))}
                 </div>
