@@ -15,7 +15,7 @@ import {
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { useState } from "react";
+import { useState, Fragment } from "react";
 import { toast } from "sonner";
 import { Trash2, Pencil, CalendarPlus, ChevronDown, ChevronRight } from "lucide-react";
 import { useTreatments } from "@/lib/content/queries";
