@@ -141,10 +141,10 @@ function Dashboard() {
         </div>
         <div className="w-full h-72">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={monthly}>
+            <LineChart data={monthly} margin={{ top: 10, right: 16, left: 0, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
               <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" fontSize={12} />
-              <YAxis yAxisId="left" stroke="hsl(var(--muted-foreground))" fontSize={12} />
+              <YAxis yAxisId="left" stroke="hsl(var(--muted-foreground))" fontSize={12} allowDecimals={false} />
               <YAxis yAxisId="right" orientation="right" stroke="hsl(var(--muted-foreground))" fontSize={12} />
               <Tooltip
                 contentStyle={{
@@ -158,9 +158,9 @@ function Dashboard() {
                 }
               />
               <Legend wrapperStyle={{ fontSize: 12 }} />
-              <Bar yAxisId="left" dataKey="bookings" name="Bookings" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
-              <Bar yAxisId="right" dataKey="revenue" name="Revenue" fill="hsl(var(--accent-foreground))" radius={[4, 4, 0, 0]} />
-            </BarChart>
+              <Line yAxisId="left" type="monotone" dataKey="bookings" name="Bookings" stroke="hsl(var(--primary))" strokeWidth={2.5} dot={{ r: 3 }} activeDot={{ r: 5 }} />
+              <Line yAxisId="right" type="monotone" dataKey="revenue" name="Revenue" stroke="hsl(var(--accent-foreground))" strokeWidth={2.5} dot={{ r: 3 }} activeDot={{ r: 5 }} />
+            </LineChart>
           </ResponsiveContainer>
         </div>
       </div>
