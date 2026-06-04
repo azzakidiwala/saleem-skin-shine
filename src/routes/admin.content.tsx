@@ -194,6 +194,27 @@ function ContentPage() {
           </section>
         );
       })}
+
+      {page.id === "faq" && (
+        <section className="rounded-lg border bg-card p-6 space-y-4">
+          <FaqsEditor />
+        </section>
+      )}
+      {page.id === "conditions_face" && (
+        <section className="rounded-lg border bg-card p-6 space-y-4">
+          <ConditionsEditor area="face" />
+        </section>
+      )}
+      {page.id === "conditions_body" && (
+        <section className="rounded-lg border bg-card p-6 space-y-4">
+          <ConditionsEditor area="body" />
+        </section>
+      )}
+      {page.id === "conditions_skin" && (
+        <section className="rounded-lg border bg-card p-6 space-y-4">
+          <ConditionsEditor area="skin" />
+        </section>
+      )}
     </div>
   );
 }
