@@ -194,7 +194,7 @@ function CustomersPage() {
                       </TableCell>
                     </TableRow>
                   )}
-                </>
+                </Fragment>
               );
             })}
           </TableBody>
