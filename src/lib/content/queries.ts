@@ -140,6 +140,53 @@ export function useSiteContent() {
   return useQuery({ queryKey: ["site_content"], queryFn: fetchSiteContent });
 }
 
+export type DbCondition = {
+  id: string;
+  area: "face" | "body" | "skin";
+  name: string;
+  description: string;
+  treatments: string[];
+  sort_order: number;
+  is_active: boolean;
+};
+
+export async function fetchConditionsByArea(area: "face" | "body" | "skin"): Promise<DbCondition[]> {
+  const { data, error } = await supabase
+    .from("conditions")
+    .select("*")
+    .eq("area", area)
+    .eq("is_active", true)
+    .order("sort_order");
+  if (error) throw error;
+  return (data ?? []) as DbCondition[];
+}
+
+export function useConditionsByArea(area: "face" | "body" | "skin") {
+  return useQuery({ queryKey: ["conditions", area], queryFn: () => fetchConditionsByArea(area) });
+}
+
+export type DbFaq = {
+  id: string;
+  question: string;
+  answer: string;
+  sort_order: number;
+  is_active: boolean;
+};
+
+export async function fetchFaqs(): Promise<DbFaq[]> {
+  const { data, error } = await supabase
+    .from("faqs")
+    .select("*")
+    .eq("is_active", true)
+    .order("sort_order");
+  if (error) throw error;
+  return (data ?? []) as DbFaq[];
+}
+
+export function useFaqs() {
+  return useQuery({ queryKey: ["faqs"], queryFn: fetchFaqs });
+}
+
 // Helper for synchronous string with fallback
 export function getString(content: Record<string, any> | undefined, key: string, fallback: string): string {
   const v = content?.[key];
