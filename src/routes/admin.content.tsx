@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -7,8 +7,10 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { AlertTriangle, ChevronRight, ArrowLeft, FileText, ExternalLink, HelpCircle, Stethoscope } from "lucide-react";
+import { AlertTriangle, ChevronRight, ArrowLeft, FileText, ExternalLink } from "lucide-react";
 import { uploadSiteImage } from "@/lib/admin/storage";
+import { ConditionsEditor } from "@/components/admin/ConditionsEditor";
+import { FaqsEditor } from "@/components/admin/FaqsEditor";
 
 export const Route = createFileRoute("/admin/content")({
   component: ContentPage,
@@ -86,45 +88,14 @@ function ContentPage() {
 
   // Page list view
   if (!selectedPage) {
-    const shortcuts = [
-      { to: "/admin/conditions", label: "Conditions (Face / Body / Skin)", description: "Add, edit, remove or reorder conditions shown on the public conditions pages.", icon: Stethoscope },
-      { to: "/admin/faqs", label: "FAQs", description: "Add, edit, remove or reorder questions on the FAQ page.", icon: HelpCircle },
-    ] as const;
-
     return (
       <div className="space-y-8 max-w-3xl">
         <div>
           <h1 className="text-3xl font-semibold">Site Content</h1>
-          <p className="text-muted-foreground mt-1">Choose what to edit. The small arrow next to each item opens that page on the live site.</p>
+          <p className="text-muted-foreground mt-1">Choose a page to edit. Conditions and FAQ items are managed inside their pages.</p>
         </div>
 
         <div>
-          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">List editors</h2>
-          <div className="grid gap-3">
-            {shortcuts.map((s) => {
-              const Icon = s.icon;
-              return (
-                <Link
-                  key={s.to}
-                  to={s.to as any}
-                  className="flex items-center justify-between gap-4 rounded-lg border bg-card p-5 hover:border-primary/50 hover:bg-muted/30 transition-colors"
-                >
-                  <div className="flex items-start gap-3">
-                    <Icon className="h-5 w-5 text-muted-foreground mt-0.5 shrink-0" />
-                    <div>
-                      <div className="font-medium">{s.label}</div>
-                      <div className="text-sm text-muted-foreground">{s.description}</div>
-                    </div>
-                  </div>
-                  <ChevronRight className="h-5 w-5 text-muted-foreground shrink-0" />
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-
-        <div>
-          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">Page text & images</h2>
           <div className="grid gap-3">
             {PAGES.map((p) => {
               const count = p.groups.reduce((n, g) => n + (rowsByGroup[g]?.length ?? 0), 0);
@@ -223,6 +194,27 @@ function ContentPage() {
           </section>
         );
       })}
+
+      {page.id === "faq" && (
+        <section className="rounded-lg border bg-card p-6 space-y-4">
+          <FaqsEditor />
+        </section>
+      )}
+      {page.id === "conditions_face" && (
+        <section className="rounded-lg border bg-card p-6 space-y-4">
+          <ConditionsEditor area="face" />
+        </section>
+      )}
+      {page.id === "conditions_body" && (
+        <section className="rounded-lg border bg-card p-6 space-y-4">
+          <ConditionsEditor area="body" />
+        </section>
+      )}
+      {page.id === "conditions_skin" && (
+        <section className="rounded-lg border bg-card p-6 space-y-4">
+          <ConditionsEditor area="skin" />
+        </section>
+      )}
     </div>
   );
 }

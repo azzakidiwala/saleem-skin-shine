@@ -1,4 +1,3 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -8,9 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Plus, Trash2, ChevronUp, ChevronDown, ExternalLink } from "lucide-react";
-
-export const Route = createFileRoute("/admin/faqs")({ component: FaqsPage });
+import { Plus, Trash2, ChevronUp, ChevronDown } from "lucide-react";
 
 type Faq = {
   id: string;
@@ -20,7 +17,7 @@ type Faq = {
   is_active: boolean;
 };
 
-function FaqsPage() {
+export function FaqsEditor() {
   const qc = useQueryClient();
   const { data: faqs, isLoading } = useQuery({
     queryKey: ["admin", "faqs"],
@@ -49,28 +46,14 @@ function FaqsPage() {
   });
 
   return (
-    <div className="space-y-6 max-w-4xl">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <h1 className="text-3xl font-semibold">FAQs</h1>
-          <p className="text-muted-foreground mt-1">Add, edit, remove, and reorder questions shown on the public FAQ page.</p>
-        </div>
-        <a
-          href="/faq"
-          target="_blank"
-          rel="noreferrer"
-          className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
-        >
-          View on site <ExternalLink className="h-3.5 w-3.5" />
-        </a>
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <h3 className="text-lg font-semibold">Questions</h3>
+        <Button size="sm" onClick={() => add.mutate()} disabled={add.isPending}>
+          <Plus className="h-4 w-4 mr-2" /> Add question
+        </Button>
       </div>
-
-      <Button onClick={() => add.mutate()} disabled={add.isPending}>
-        <Plus className="h-4 w-4 mr-2" /> Add question
-      </Button>
-
-      {isLoading && <p className="text-muted-foreground">Loading…</p>}
-
+      {isLoading && <p className="text-muted-foreground text-sm">Loading…</p>}
       <div className="space-y-3">
         {(faqs ?? []).map((f, idx) => (
           <FaqRow
@@ -83,7 +66,7 @@ function FaqsPage() {
             onChanged={invalidate}
           />
         ))}
-        {faqs && faqs.length === 0 && <p className="text-muted-foreground text-sm">No questions yet. Click "Add question" to create one.</p>}
+        {faqs && faqs.length === 0 && <p className="text-muted-foreground text-sm">No questions yet.</p>}
       </div>
     </div>
   );
@@ -136,7 +119,7 @@ function FaqRow({
   }
 
   return (
-    <div className="rounded-lg border bg-card p-5 space-y-3">
+    <div className="rounded-md border bg-background/40 p-4 space-y-3">
       <div className="flex items-center gap-2 justify-between">
         <div className="flex items-center gap-1">
           <Button variant="ghost" size="icon" disabled={isFirst} onClick={() => swap(neighborAbove)} title="Move up"><ChevronUp className="h-4 w-4" /></Button>
@@ -156,7 +139,7 @@ function FaqRow({
       </div>
       <div className="space-y-2">
         <Label>Answer</Label>
-        <Textarea rows={4} value={answer} onChange={(e) => setAnswer(e.target.value)} />
+        <Textarea rows={3} value={answer} onChange={(e) => setAnswer(e.target.value)} />
       </div>
       <div className="flex justify-end">
         <Button size="sm" onClick={save} disabled={!dirty || saving}>Save</Button>
