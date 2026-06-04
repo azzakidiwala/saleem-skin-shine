@@ -4,8 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { CalendarDays, Sparkles, Users, UserRound, PoundSterling, TrendingUp, Clock } from "lucide-react";
 import {
   ResponsiveContainer,
-  BarChart,
-  Bar,
+  LineChart,
+  Line,
   XAxis,
   YAxis,
   Tooltip,
