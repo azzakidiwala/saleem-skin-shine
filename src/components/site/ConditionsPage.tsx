@@ -5,7 +5,7 @@ import { Header } from "@/components/site/Header";
 import { CTA } from "@/components/site/CTA";
 import { Footer } from "@/components/site/Footer";
 import type { Condition } from "@/data/conditions";
-import { useSiteContent, getString } from "@/lib/content/queries";
+import { useSiteContent, getString, useConditionsByArea } from "@/lib/content/queries";
 
 type Props = {
   area: string;
@@ -13,10 +13,14 @@ type Props = {
   conditions: Condition[];
   /** Content key prefix, e.g. "conditions.face" — used to override area/intro from site_content */
   contentKey?: string;
+  /** DB area key, e.g. "face" — when set, conditions are loaded from the database */
+  dbArea?: "face" | "body" | "skin";
 };
 
-export function ConditionsPage({ area, intro, conditions, contentKey }: Props) {
+export function ConditionsPage({ area, intro, conditions, contentKey, dbArea }: Props) {
   const { data: content } = useSiteContent();
+  const { data: dbConditions } = useConditionsByArea(dbArea ?? "face");
+
   const eyebrow = contentKey
     ? getString(content, `${contentKey}.eyebrow`, `CONDITIONS · ${area.toUpperCase()}`)
     : `CONDITIONS · ${area.toUpperCase()}`;
@@ -24,6 +28,10 @@ export function ConditionsPage({ area, intro, conditions, contentKey }: Props) {
     ? getString(content, `${contentKey}.title`, `${area} Conditions`)
     : `${area} Conditions`;
   const introText = contentKey ? getString(content, `${contentKey}.intro`, intro) : intro;
+
+  // Prefer DB conditions when present, fall back to static seed
+  const list: { name: string; description: string; treatments: string[] }[] =
+    dbArea && dbConditions && dbConditions.length > 0 ? dbConditions : conditions;
 
   return (
     <div className="min-h-screen bg-background">
@@ -41,26 +49,28 @@ export function ConditionsPage({ area, intro, conditions, contentKey }: Props) {
         <section className="pb-20 md:pb-28 bg-background">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-              {conditions.map((c) => (
+              {list.map((c) => (
                 <article key={c.name} className="border border-border bg-card p-8 flex flex-col">
                   <h2 className="font-serif text-2xl text-primary flex items-center gap-2 mb-4">
                     <Sparkles className="h-5 w-5 text-gold" />
                     {c.name}
                   </h2>
                   <p className="text-sm text-muted-foreground leading-relaxed mb-6">{c.description}</p>
-                  <div className="mt-auto">
-                    <div className="text-gold text-[11px] tracking-[0.25em] uppercase font-medium mb-3">
-                      Treatment Options
+                  {c.treatments.length > 0 && (
+                    <div className="mt-auto">
+                      <div className="text-gold text-[11px] tracking-[0.25em] uppercase font-medium mb-3">
+                        Treatment Options
+                      </div>
+                      <ul className="space-y-2">
+                        {c.treatments.map((t) => (
+                          <li key={t} className="flex items-start gap-2 text-sm text-foreground">
+                            <Check className="h-4 w-4 text-gold mt-0.5 shrink-0" />
+                            <span>{t}</span>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
-                    <ul className="space-y-2">
-                      {c.treatments.map((t) => (
-                        <li key={t} className="flex items-start gap-2 text-sm text-foreground">
-                          <Check className="h-4 w-4 text-gold mt-0.5 shrink-0" />
-                          <span>{t}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                  )}
                 </article>
               ))}
             </div>
