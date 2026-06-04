@@ -152,7 +152,7 @@ function CustomersPage() {
             {filtered.map((c) => {
               const isOpen = expandedId === c.id;
               return (
-                <>
+                <Fragment key={c.id}>
                   <TableRow
                     key={c.id}
                     className={cn("cursor-pointer hover:bg-muted/30", isOpen && "bg-muted/30")}
