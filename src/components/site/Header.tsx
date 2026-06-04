@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Phone, ChevronDown, Menu } from "lucide-react";
+import { Phone, ChevronDown, Menu, Search } from "lucide-react";
 import { useState } from "react";
 import logo from "@/assets/logo.png";
 import { WhatsAppButton, WhatsAppIcon, whatsappHref } from "@/components/site/WhatsAppButton";
