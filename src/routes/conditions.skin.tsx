@@ -19,6 +19,7 @@ export const Route = createFileRoute("/conditions/skin")({
       intro="From rosacea and hyperpigmentation to wrinkles and sun damage — bespoke skincare and clinical treatments to restore healthy, glowing skin."
       conditions={skinConditions}
       contentKey="conditions.skin"
+      dbArea="skin"
     />
   ),
 });

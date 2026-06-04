@@ -2,29 +2,10 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
-import { useSiteContent, getString } from "@/lib/content/queries";
+import { useSiteContent, getString, useFaqs } from "@/lib/content/queries";
 
-const faqs = [
-  {
-    q: "What do Hydrafacials do to your face?",
-    a: "HydraFacial deeply cleanses, exfoliates, extracts impurities, and hydrates the skin. It removes dead skin cells, unclogs pores, and infuses antioxidants and peptides, leaving your skin smoother. It can also target specific concerns such as acne, pigmentation, and uneven texture.",
-  },
-  {
-    q: "How long will HydraFacial results last?",
-    a: "Hydrafacial results are visible immediately after treatment, with skin appearing brighter, plumper, and more hydrated. For long-lasting benefits, it's recommended to have HydraFacial treatments regularly, depending on your skin type and concerns.",
-  },
-  {
-    q: "What are the side effects of Hydrafacial?",
-    a: "HydraFacial is generally safe with minimal side effects. Some patients may experience slight redness or sensitivity immediately after treatment, which typically subsides within a few hours. Those with a shellfish allergy should avoid this treatment due to certain ingredient formulations.",
-  },
-  {
-    q: "Does Hydrafacial help with wrinkles?",
-    a: "Yes, HydraFacial helps reduce the appearance of fine lines and wrinkles by hydrating the skin, stimulating collagen production, and improving overall skin elasticity and texture.",
-  },
-  {
-    q: "Are Hydrafacials safe?",
-    a: "Absolutely. HydraFacial is a non-invasive, gentle treatment suitable for most skin types. It's safe for regular use, has no downtime, and is performed by trained professionals to ensure optimal results.",
-  },
+const fallbackFaqs = [
+  { question: "What do Hydrafacials do to your face?", answer: "HydraFacial deeply cleanses, exfoliates, extracts impurities, and hydrates the skin." },
 ];
 
 export const Route = createFileRoute("/faq")({
@@ -35,29 +16,15 @@ export const Route = createFileRoute("/faq")({
       { property: "og:title", content: "FAQ — Saleem Skin" },
       { property: "og:description", content: "Answers to common questions about HydraFacial and our skin treatments." },
     ],
-    links: [
-      { rel: "canonical", href: "https://saleemskin.co.uk/faq" },
-    ],
-    scripts: [
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "FAQPage",
-          mainEntity: faqs.map(f => ({
-            "@type": "Question",
-            name: f.q,
-            acceptedAnswer: { "@type": "Answer", text: f.a },
-          })),
-        }),
-      },
-    ],
+    links: [{ rel: "canonical", href: "https://saleemskin.co.uk/faq" }],
   }),
   component: FAQPage,
 });
 
 function FAQPage() {
   const { data: content } = useSiteContent();
+  const { data: dbFaqs } = useFaqs();
+  const faqs = (dbFaqs && dbFaqs.length > 0 ? dbFaqs : fallbackFaqs).map(f => ({ q: f.question, a: f.answer }));
   return (
     <div className="min-h-screen bg-background">
       <Header />

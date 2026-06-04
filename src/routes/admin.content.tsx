@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { AlertTriangle, ChevronRight, ArrowLeft, FileText } from "lucide-react";
+import { AlertTriangle, ChevronRight, ArrowLeft, FileText, ExternalLink, HelpCircle, Stethoscope } from "lucide-react";
 import { uploadSiteImage } from "@/lib/admin/storage";
 
 export const Route = createFileRoute("/admin/content")({
@@ -16,16 +16,16 @@ export const Route = createFileRoute("/admin/content")({
 
 type Row = { key: string; value: any; label: string; group_name: string };
 
-type PageDef = { id: string; label: string; description: string; groups: string[] };
+type PageDef = { id: string; label: string; description: string; groups: string[]; href: string };
 
 const PAGES: PageDef[] = [
-  { id: "home", label: "Home Page", description: "Hero, About, Call to Action and Announcement bar.", groups: ["hero", "about", "cta", "announcement"] },
-  { id: "team", label: "Meet the Team", description: "Intro shown above the team grid.", groups: ["team"] },
-  { id: "conditions_face", label: "Conditions — Face", description: "Title and intro of the Face Conditions page.", groups: ["conditions_face"] },
-  { id: "conditions_body", label: "Conditions — Body", description: "Title and intro of the Body Conditions page.", groups: ["conditions_body"] },
-  { id: "conditions_skin", label: "Conditions — Skin", description: "Title and intro of the Skin Conditions page.", groups: ["conditions_skin"] },
-  { id: "faq", label: "FAQ", description: "Header text on the FAQ page.", groups: ["faq"] },
-  { id: "contact", label: "Contact", description: "Header text, address and opening hours.", groups: ["contact"] },
+  { id: "home", label: "Home Page", description: "Hero, About, Call to Action and Announcement bar.", groups: ["hero", "about", "cta", "announcement"], href: "/" },
+  { id: "team", label: "Meet the Team", description: "Intro shown above the team grid.", groups: ["team"], href: "/team" },
+  { id: "conditions_face", label: "Conditions — Face", description: "Title and intro of the Face Conditions page.", groups: ["conditions_face"], href: "/conditions/face" },
+  { id: "conditions_body", label: "Conditions — Body", description: "Title and intro of the Body Conditions page.", groups: ["conditions_body"], href: "/conditions/body" },
+  { id: "conditions_skin", label: "Conditions — Skin", description: "Title and intro of the Skin Conditions page.", groups: ["conditions_skin"], href: "/conditions/skin" },
+  { id: "faq", label: "FAQ", description: "Header text on the FAQ page.", groups: ["faq"], href: "/faq" },
+  { id: "contact", label: "Contact", description: "Header text, address and opening hours.", groups: ["contact"], href: "/contact" },
 ];
 
 const GROUP_LABEL: Record<string, string> = {
@@ -86,34 +86,80 @@ function ContentPage() {
 
   // Page list view
   if (!selectedPage) {
+    const shortcuts = [
+      { to: "/admin/conditions", label: "Conditions (Face / Body / Skin)", description: "Add, edit, remove or reorder conditions shown on the public conditions pages.", icon: Stethoscope },
+      { to: "/admin/faqs", label: "FAQs", description: "Add, edit, remove or reorder questions on the FAQ page.", icon: HelpCircle },
+    ] as const;
+
     return (
       <div className="space-y-8 max-w-3xl">
         <div>
           <h1 className="text-3xl font-semibold">Site Content</h1>
-          <p className="text-muted-foreground mt-1">Choose a page to edit its text and images.</p>
+          <p className="text-muted-foreground mt-1">Choose what to edit. The small arrow next to each item opens that page on the live site.</p>
         </div>
 
-        <div className="grid gap-3">
-          {PAGES.map((p) => {
-            const count = p.groups.reduce((n, g) => n + (rowsByGroup[g]?.length ?? 0), 0);
-            return (
-              <button
-                key={p.id}
-                onClick={() => setSelectedPage(p.id)}
-                className="flex items-center justify-between gap-4 rounded-lg border bg-card p-5 text-left hover:border-primary/50 hover:bg-muted/30 transition-colors"
-              >
-                <div className="flex items-start gap-3">
-                  <FileText className="h-5 w-5 text-muted-foreground mt-0.5 shrink-0" />
-                  <div>
-                    <div className="font-medium">{p.label}</div>
-                    <div className="text-sm text-muted-foreground">{p.description}</div>
-                    <div className="text-xs text-muted-foreground mt-1">{count} editable field{count === 1 ? "" : "s"}</div>
+        <div>
+          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">List editors</h2>
+          <div className="grid gap-3">
+            {shortcuts.map((s) => {
+              const Icon = s.icon;
+              return (
+                <Link
+                  key={s.to}
+                  to={s.to as any}
+                  className="flex items-center justify-between gap-4 rounded-lg border bg-card p-5 hover:border-primary/50 hover:bg-muted/30 transition-colors"
+                >
+                  <div className="flex items-start gap-3">
+                    <Icon className="h-5 w-5 text-muted-foreground mt-0.5 shrink-0" />
+                    <div>
+                      <div className="font-medium">{s.label}</div>
+                      <div className="text-sm text-muted-foreground">{s.description}</div>
+                    </div>
+                  </div>
+                  <ChevronRight className="h-5 w-5 text-muted-foreground shrink-0" />
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+
+        <div>
+          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">Page text & images</h2>
+          <div className="grid gap-3">
+            {PAGES.map((p) => {
+              const count = p.groups.reduce((n, g) => n + (rowsByGroup[g]?.length ?? 0), 0);
+              return (
+                <div
+                  key={p.id}
+                  className="flex items-center justify-between gap-2 rounded-lg border bg-card p-5 hover:border-primary/50 hover:bg-muted/30 transition-colors"
+                >
+                  <button onClick={() => setSelectedPage(p.id)} className="flex items-start gap-3 text-left flex-1 min-w-0">
+                    <FileText className="h-5 w-5 text-muted-foreground mt-0.5 shrink-0" />
+                    <div>
+                      <div className="font-medium">{p.label}</div>
+                      <div className="text-sm text-muted-foreground">{p.description}</div>
+                      <div className="text-xs text-muted-foreground mt-1">{count} editable field{count === 1 ? "" : "s"}</div>
+                    </div>
+                  </button>
+                  <div className="flex items-center gap-1 shrink-0">
+                    <a
+                      href={p.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      title="Open this page on the live site"
+                      className="inline-flex items-center gap-1 rounded-md px-2 py-1.5 text-xs text-muted-foreground hover:text-foreground hover:bg-muted"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      View <ExternalLink className="h-3.5 w-3.5" />
+                    </a>
+                    <button onClick={() => setSelectedPage(p.id)} className="p-1" title="Edit">
+                      <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                    </button>
                   </div>
                 </div>
-                <ChevronRight className="h-5 w-5 text-muted-foreground shrink-0" />
-              </button>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </div>
     );
@@ -130,8 +176,21 @@ function ContentPage() {
         >
           <ArrowLeft className="h-4 w-4" /> All pages
         </button>
-        <h1 className="text-3xl font-semibold">{page.label}</h1>
-        <p className="text-muted-foreground mt-1">{page.description}</p>
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h1 className="text-3xl font-semibold">{page.label}</h1>
+            <p className="text-muted-foreground mt-1">{page.description}</p>
+          </div>
+          <a
+            href={page.href}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground shrink-0 mt-2"
+            title="Open this page on the live site"
+          >
+            View on site <ExternalLink className="h-3.5 w-3.5" />
+          </a>
+        </div>
       </div>
 
       <div role="alert" className="flex gap-3 rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm">

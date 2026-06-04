@@ -10,15 +10,16 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogDescription,
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter,
 } from "@/components/ui/dialog";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { useState } from "react";
+import { useState, Fragment } from "react";
 import { toast } from "sonner";
-import { Trash2, Pencil, CalendarPlus, Eye } from "lucide-react";
+import { Trash2, Pencil, CalendarPlus, ChevronDown, ChevronRight } from "lucide-react";
 import { useTreatments } from "@/lib/content/queries";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/admin/customers")({
   component: CustomersPage,
@@ -55,6 +56,7 @@ function statusVariant(status: string): "default" | "secondary" | "destructive" 
 function CustomersPage() {
   const qc = useQueryClient();
   const [search, setSearch] = useState("");
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const { data: customers, isLoading } = useQuery({
     queryKey: ["admin", "customers"],
@@ -112,7 +114,7 @@ function CustomersPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-semibold">Customers</h1>
-        <p className="text-muted-foreground mt-1">Every person who has booked. Click a customer to view their bookings or book a new appointment for them.</p>
+        <p className="text-muted-foreground mt-1">Click a customer's row to expand their booking history and book a new appointment.</p>
       </div>
 
       <div className="flex flex-wrap gap-3 items-center">
@@ -131,6 +133,7 @@ function CustomersPage() {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead className="w-8"></TableHead>
               <TableHead>Name</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Mobile</TableHead>
@@ -141,41 +144,59 @@ function CustomersPage() {
           </TableHeader>
           <TableBody>
             {isLoading && (
-              <TableRow><TableCell colSpan={6} className="text-center py-8 text-muted-foreground">Loading…</TableCell></TableRow>
+              <TableRow><TableCell colSpan={7} className="text-center py-8 text-muted-foreground">Loading…</TableCell></TableRow>
             )}
             {!isLoading && filtered.length === 0 && (
-              <TableRow><TableCell colSpan={6} className="text-center py-8 text-muted-foreground">No customers yet.</TableCell></TableRow>
+              <TableRow><TableCell colSpan={7} className="text-center py-8 text-muted-foreground">No customers yet.</TableCell></TableRow>
             )}
-            {filtered.map((c) => (
-              <TableRow key={c.id}>
-                <TableCell className="font-medium">{c.first_name} {c.surname}</TableCell>
-                <TableCell className="text-sm">{c.email}</TableCell>
-                <TableCell className="text-sm text-muted-foreground">{c.mobile}</TableCell>
-                <TableCell>
-                  <Badge variant="secondary">{bookingCounts?.get(c.id) ?? 0}</Badge>
-                </TableCell>
-                <TableCell className="text-sm text-muted-foreground">
-                  {new Date(c.updated_at).toLocaleDateString("en-GB")}
-                </TableCell>
-                <TableCell className="text-right">
-                  <div className="flex justify-end gap-1">
-                    <CustomerDetailDialog customer={c} />
-                    <EditCustomerDialog customer={c} />
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => {
-                        if (confirm(`Delete ${c.first_name} ${c.surname}? Their bookings will be kept but unlinked.`)) {
-                          remove.mutate(c.id);
-                        }
-                      }}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
+            {filtered.map((c) => {
+              const isOpen = expandedId === c.id;
+              return (
+                <Fragment key={c.id}>
+                  <TableRow
+                    key={c.id}
+                    className={cn("cursor-pointer hover:bg-muted/30", isOpen && "bg-muted/30")}
+                    onClick={() => setExpandedId(isOpen ? null : c.id)}
+                  >
+                    <TableCell className="w-8">
+                      {isOpen ? <ChevronDown className="h-4 w-4 text-muted-foreground" /> : <ChevronRight className="h-4 w-4 text-muted-foreground" />}
+                    </TableCell>
+                    <TableCell className="font-medium">{c.first_name} {c.surname}</TableCell>
+                    <TableCell className="text-sm">{c.email}</TableCell>
+                    <TableCell className="text-sm text-muted-foreground">{c.mobile}</TableCell>
+                    <TableCell>
+                      <Badge variant="secondary">{bookingCounts?.get(c.id) ?? 0}</Badge>
+                    </TableCell>
+                    <TableCell className="text-sm text-muted-foreground">
+                      {new Date(c.updated_at).toLocaleDateString("en-GB")}
+                    </TableCell>
+                    <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
+                      <div className="flex justify-end gap-1">
+                        <EditCustomerDialog customer={c} />
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => {
+                            if (confirm(`Delete ${c.first_name} ${c.surname}? Their bookings will be kept but unlinked.`)) {
+                              remove.mutate(c.id);
+                            }
+                          }}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                  {isOpen && (
+                    <TableRow key={c.id + "-detail"} className="bg-muted/10 hover:bg-muted/10">
+                      <TableCell colSpan={7} className="p-0">
+                        <CustomerDetailPanel customer={c} />
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </Fragment>
+              );
+            })}
           </TableBody>
         </Table>
       </div>
@@ -183,9 +204,8 @@ function CustomersPage() {
   );
 }
 
-function CustomerDetailDialog({ customer }: { customer: Customer }) {
-  const [open, setOpen] = useState(false);
-  const { data: bookings } = useQuery({
+function CustomerDetailPanel({ customer }: { customer: Customer }) {
+  const { data: bookings, isLoading } = useQuery({
     queryKey: ["admin", "customers", customer.id, "bookings"],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -197,76 +217,61 @@ function CustomerDetailDialog({ customer }: { customer: Customer }) {
       if (error) throw error;
       return data as CustomerBooking[];
     },
-    enabled: open,
   });
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="ghost" size="icon" title="View details"><Eye className="h-4 w-4" /></Button>
-      </DialogTrigger>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>{customer.first_name} {customer.surname}</DialogTitle>
-          <DialogDescription>
-            {customer.email} · {customer.mobile}
-          </DialogDescription>
-        </DialogHeader>
-
-        {customer.notes && (
-          <div className="rounded-md border bg-muted/30 p-3 text-sm whitespace-pre-wrap">
-            {customer.notes}
-          </div>
-        )}
-
-        <div className="flex items-center justify-between mt-2">
-          <h3 className="text-sm font-semibold">Booking history ({bookings?.length ?? 0})</h3>
-          <NewBookingForCustomer customer={customer} />
+    <div className="p-5 space-y-4 border-l-4 border-primary/40">
+      {customer.notes && (
+        <div className="rounded-md border bg-card p-3 text-sm whitespace-pre-wrap">
+          <div className="text-xs uppercase tracking-wide text-muted-foreground font-semibold mb-1">Notes</div>
+          {customer.notes}
         </div>
+      )}
 
-        <div className="rounded-md border overflow-hidden">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Date / Time</TableHead>
-                <TableHead>Treatment</TableHead>
-                <TableHead>Status</TableHead>
+      <div className="flex items-center justify-between">
+        <h3 className="text-sm font-semibold">Booking history ({bookings?.length ?? 0})</h3>
+        <NewBookingForCustomer customer={customer} />
+      </div>
+
+      <div className="rounded-md border overflow-hidden bg-card">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Date / Time</TableHead>
+              <TableHead>Treatment</TableHead>
+              <TableHead>Status</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {isLoading && (
+              <TableRow><TableCell colSpan={3} className="text-center py-4 text-muted-foreground text-sm">Loading…</TableCell></TableRow>
+            )}
+            {!isLoading && (!bookings || bookings.length === 0) && (
+              <TableRow><TableCell colSpan={3} className="text-center py-6 text-muted-foreground text-sm">No bookings yet.</TableCell></TableRow>
+            )}
+            {(bookings ?? []).map((b) => (
+              <TableRow key={b.id}>
+                <TableCell className="font-medium whitespace-nowrap text-sm">
+                  {b.appointment_date}
+                  <div className="text-xs text-muted-foreground">{b.appointment_time}</div>
+                </TableCell>
+                <TableCell className="text-sm">
+                  {b.treatment_name}
+                  {b.treatment_price && <div className="text-xs text-muted-foreground">{b.treatment_price}</div>}
+                </TableCell>
+                <TableCell>
+                  <Badge variant={statusVariant(b.status)} className="capitalize">{b.status}</Badge>
+                </TableCell>
               </TableRow>
-            </TableHeader>
-            <TableBody>
-              {(!bookings || bookings.length === 0) && (
-                <TableRow><TableCell colSpan={3} className="text-center py-6 text-muted-foreground text-sm">No bookings yet.</TableCell></TableRow>
-              )}
-              {(bookings ?? []).map((b) => (
-                <TableRow key={b.id}>
-                  <TableCell className="font-medium whitespace-nowrap text-sm">
-                    {b.appointment_date}
-                    <div className="text-xs text-muted-foreground">{b.appointment_time}</div>
-                  </TableCell>
-                  <TableCell className="text-sm">
-                    {b.treatment_name}
-                    {b.treatment_price && <div className="text-xs text-muted-foreground">{b.treatment_price}</div>}
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant={statusVariant(b.status)} className="capitalize">{b.status}</Badge>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
 
-        <DialogFooter>
-          <Button variant="outline" onClick={() => setOpen(false)}>Close</Button>
-          <Link
-            to="/admin/bookings"
-            className="text-sm text-muted-foreground hover:text-foreground self-center"
-          >
-            Manage in bookings →
-          </Link>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+      <div className="text-right">
+        <Link to="/admin/bookings" className="text-sm text-primary hover:underline">Manage in bookings →</Link>
+      </div>
+    </div>
   );
 }
 
@@ -285,7 +290,6 @@ function NewBookingForCustomer({ customer }: { customer: Customer }) {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>New booking for {customer.first_name} {customer.surname}</DialogTitle>
-          <DialogDescription>Pick a treatment — the booking form will open with their details pre-filled.</DialogDescription>
         </DialogHeader>
         <div className="space-y-3">
           <Label>Treatment</Label>
