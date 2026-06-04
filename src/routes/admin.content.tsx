@@ -86,34 +86,80 @@ function ContentPage() {
 
   // Page list view
   if (!selectedPage) {
+    const shortcuts = [
+      { to: "/admin/conditions", label: "Conditions (Face / Body / Skin)", description: "Add, edit, remove or reorder conditions shown on the public conditions pages.", icon: Stethoscope },
+      { to: "/admin/faqs", label: "FAQs", description: "Add, edit, remove or reorder questions on the FAQ page.", icon: HelpCircle },
+    ] as const;
+
     return (
       <div className="space-y-8 max-w-3xl">
         <div>
           <h1 className="text-3xl font-semibold">Site Content</h1>
-          <p className="text-muted-foreground mt-1">Choose a page to edit its text and images.</p>
+          <p className="text-muted-foreground mt-1">Choose what to edit. The small arrow next to each item opens that page on the live site.</p>
         </div>
 
-        <div className="grid gap-3">
-          {PAGES.map((p) => {
-            const count = p.groups.reduce((n, g) => n + (rowsByGroup[g]?.length ?? 0), 0);
-            return (
-              <button
-                key={p.id}
-                onClick={() => setSelectedPage(p.id)}
-                className="flex items-center justify-between gap-4 rounded-lg border bg-card p-5 text-left hover:border-primary/50 hover:bg-muted/30 transition-colors"
-              >
-                <div className="flex items-start gap-3">
-                  <FileText className="h-5 w-5 text-muted-foreground mt-0.5 shrink-0" />
-                  <div>
-                    <div className="font-medium">{p.label}</div>
-                    <div className="text-sm text-muted-foreground">{p.description}</div>
-                    <div className="text-xs text-muted-foreground mt-1">{count} editable field{count === 1 ? "" : "s"}</div>
+        <div>
+          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">List editors</h2>
+          <div className="grid gap-3">
+            {shortcuts.map((s) => {
+              const Icon = s.icon;
+              return (
+                <Link
+                  key={s.to}
+                  to={s.to as any}
+                  className="flex items-center justify-between gap-4 rounded-lg border bg-card p-5 hover:border-primary/50 hover:bg-muted/30 transition-colors"
+                >
+                  <div className="flex items-start gap-3">
+                    <Icon className="h-5 w-5 text-muted-foreground mt-0.5 shrink-0" />
+                    <div>
+                      <div className="font-medium">{s.label}</div>
+                      <div className="text-sm text-muted-foreground">{s.description}</div>
+                    </div>
+                  </div>
+                  <ChevronRight className="h-5 w-5 text-muted-foreground shrink-0" />
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+
+        <div>
+          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">Page text & images</h2>
+          <div className="grid gap-3">
+            {PAGES.map((p) => {
+              const count = p.groups.reduce((n, g) => n + (rowsByGroup[g]?.length ?? 0), 0);
+              return (
+                <div
+                  key={p.id}
+                  className="flex items-center justify-between gap-2 rounded-lg border bg-card p-5 hover:border-primary/50 hover:bg-muted/30 transition-colors"
+                >
+                  <button onClick={() => setSelectedPage(p.id)} className="flex items-start gap-3 text-left flex-1 min-w-0">
+                    <FileText className="h-5 w-5 text-muted-foreground mt-0.5 shrink-0" />
+                    <div>
+                      <div className="font-medium">{p.label}</div>
+                      <div className="text-sm text-muted-foreground">{p.description}</div>
+                      <div className="text-xs text-muted-foreground mt-1">{count} editable field{count === 1 ? "" : "s"}</div>
+                    </div>
+                  </button>
+                  <div className="flex items-center gap-1 shrink-0">
+                    <a
+                      href={p.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      title="Open this page on the live site"
+                      className="inline-flex items-center gap-1 rounded-md px-2 py-1.5 text-xs text-muted-foreground hover:text-foreground hover:bg-muted"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      View <ExternalLink className="h-3.5 w-3.5" />
+                    </a>
+                    <button onClick={() => setSelectedPage(p.id)} className="p-1" title="Edit">
+                      <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                    </button>
                   </div>
                 </div>
-                <ChevronRight className="h-5 w-5 text-muted-foreground shrink-0" />
-              </button>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </div>
     );
