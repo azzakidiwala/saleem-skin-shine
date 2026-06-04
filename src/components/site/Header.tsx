@@ -38,9 +38,9 @@ export function Header() {
               <span>Search</span>
             </button>
             <span className="h-4 w-px bg-border" aria-hidden="true" />
-            <a href="tel:07503959285" className="flex items-center gap-2 text-primary font-medium tracking-wide">
-              <Phone className="h-4 w-4" />
-              <span>07503 959285</span>
+            <a href="tel:07503959285" className="flex items-center gap-2 text-primary font-medium tracking-wide whitespace-nowrap">
+              <Phone className="h-4 w-4 shrink-0" />
+              <span className="whitespace-nowrap">07503 959285</span>
             </a>
             <span className="h-4 w-px bg-border" aria-hidden="true" />
             <a
