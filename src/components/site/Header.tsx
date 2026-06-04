@@ -12,15 +12,32 @@ export function Header() {
     <header className="bg-background border-b border-border">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-3 items-center py-5">
-          <button onClick={() => setOpen(o => !o)} className="md:hidden text-primary">
-            <Menu className="h-6 w-6" />
-          </button>
-          <div className="flex md:justify-start justify-center col-span-2 md:col-span-1">
+          <div className="flex items-center gap-4">
+            <button onClick={() => setOpen(o => !o)} className="md:hidden text-primary">
+              <Menu className="h-6 w-6" />
+            </button>
+            <Link
+              to="/book/$slug"
+              params={{ slug: "new-consultation" }}
+              className="hidden md:inline-flex items-center justify-center bg-gold text-gold-foreground px-6 py-3 text-xs tracking-[0.2em] font-semibold uppercase hover:bg-gold/90 transition-colors"
+            >
+              Book Consultation
+            </Link>
+          </div>
+          <div className="flex justify-center">
             <Link to="/" className="block">
               <img src={logo} alt="Saleem Skin" className="h-[104px] w-auto" />
             </Link>
           </div>
-          <div className="hidden md:flex items-center justify-end gap-5 col-span-2">
+          <div className="hidden md:flex items-center justify-end gap-5">
+            <button
+              aria-label="Search"
+              className="group inline-flex items-center gap-2 text-primary hover:text-gold transition-colors text-[11px] tracking-[0.25em] uppercase font-medium"
+            >
+              <Search className="h-4 w-4 text-gold transition-transform group-hover:scale-110" />
+              <span>Search</span>
+            </button>
+            <span className="h-4 w-px bg-border" aria-hidden="true" />
             <a href="tel:07503959285" className="flex items-center gap-2 text-primary font-medium tracking-wide">
               <Phone className="h-4 w-4" />
               <span>07503 959285</span>
@@ -36,13 +53,6 @@ export function Header() {
               <WhatsAppIcon className="h-4 w-4 text-gold transition-transform group-hover:scale-110" />
               <span>WhatsApp</span>
             </a>
-            <Link
-              to="/book/$slug"
-              params={{ slug: "new-consultation" }}
-              className="inline-flex items-center justify-center bg-gold text-gold-foreground px-6 py-3 text-xs tracking-[0.2em] font-semibold uppercase hover:bg-gold/90 transition-colors"
-            >
-              Book Consultation
-            </Link>
           </div>
         </div>
         <nav className="hidden md:flex items-center justify-center gap-12 border-t border-border py-4 text-xs tracking-[0.25em] uppercase font-medium">
