@@ -29,9 +29,11 @@ import { Route as ConditionsBodyRouteImport } from './routes/conditions.body'
 import { Route as BookSlugRouteImport } from './routes/book.$slug'
 import { Route as AdminTreatmentsRouteImport } from './routes/admin.treatments'
 import { Route as AdminTeamRouteImport } from './routes/admin.team'
+import { Route as AdminFaqsRouteImport } from './routes/admin.faqs'
 import { Route as AdminDiscountsRouteImport } from './routes/admin.discounts'
 import { Route as AdminCustomersRouteImport } from './routes/admin.customers'
 import { Route as AdminContentRouteImport } from './routes/admin.content'
+import { Route as AdminConditionsRouteImport } from './routes/admin.conditions'
 import { Route as AdminBookingsRouteImport } from './routes/admin.bookings'
 import { Route as AdminAdminsRouteImport } from './routes/admin.admins'
 import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
@@ -140,6 +142,11 @@ const AdminTeamRoute = AdminTeamRouteImport.update({
   path: '/team',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminFaqsRoute = AdminFaqsRouteImport.update({
+  id: '/faqs',
+  path: '/faqs',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminDiscountsRoute = AdminDiscountsRouteImport.update({
   id: '/discounts',
   path: '/discounts',
@@ -153,6 +160,11 @@ const AdminCustomersRoute = AdminCustomersRouteImport.update({
 const AdminContentRoute = AdminContentRouteImport.update({
   id: '/content',
   path: '/content',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminConditionsRoute = AdminConditionsRouteImport.update({
+  id: '/conditions',
+  path: '/conditions',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminBookingsRoute = AdminBookingsRouteImport.update({
@@ -207,9 +219,11 @@ export interface FileRoutesByFullPath {
   '/unsubscribe': typeof UnsubscribeRoute
   '/admin/admins': typeof AdminAdminsRoute
   '/admin/bookings': typeof AdminBookingsRoute
+  '/admin/conditions': typeof AdminConditionsRoute
   '/admin/content': typeof AdminContentRoute
   '/admin/customers': typeof AdminCustomersRoute
   '/admin/discounts': typeof AdminDiscountsRoute
+  '/admin/faqs': typeof AdminFaqsRoute
   '/admin/team': typeof AdminTeamRoute
   '/admin/treatments': typeof AdminTreatmentsRoute
   '/book/$slug': typeof BookSlugRoute
@@ -237,9 +251,11 @@ export interface FileRoutesByTo {
   '/unsubscribe': typeof UnsubscribeRoute
   '/admin/admins': typeof AdminAdminsRoute
   '/admin/bookings': typeof AdminBookingsRoute
+  '/admin/conditions': typeof AdminConditionsRoute
   '/admin/content': typeof AdminContentRoute
   '/admin/customers': typeof AdminCustomersRoute
   '/admin/discounts': typeof AdminDiscountsRoute
+  '/admin/faqs': typeof AdminFaqsRoute
   '/admin/team': typeof AdminTeamRoute
   '/admin/treatments': typeof AdminTreatmentsRoute
   '/book/$slug': typeof BookSlugRoute
@@ -270,9 +286,11 @@ export interface FileRoutesById {
   '/unsubscribe': typeof UnsubscribeRoute
   '/admin/admins': typeof AdminAdminsRoute
   '/admin/bookings': typeof AdminBookingsRoute
+  '/admin/conditions': typeof AdminConditionsRoute
   '/admin/content': typeof AdminContentRoute
   '/admin/customers': typeof AdminCustomersRoute
   '/admin/discounts': typeof AdminDiscountsRoute
+  '/admin/faqs': typeof AdminFaqsRoute
   '/admin/team': typeof AdminTeamRoute
   '/admin/treatments': typeof AdminTreatmentsRoute
   '/book/$slug': typeof BookSlugRoute
@@ -304,9 +322,11 @@ export interface FileRouteTypes {
     | '/unsubscribe'
     | '/admin/admins'
     | '/admin/bookings'
+    | '/admin/conditions'
     | '/admin/content'
     | '/admin/customers'
     | '/admin/discounts'
+    | '/admin/faqs'
     | '/admin/team'
     | '/admin/treatments'
     | '/book/$slug'
@@ -334,9 +354,11 @@ export interface FileRouteTypes {
     | '/unsubscribe'
     | '/admin/admins'
     | '/admin/bookings'
+    | '/admin/conditions'
     | '/admin/content'
     | '/admin/customers'
     | '/admin/discounts'
+    | '/admin/faqs'
     | '/admin/team'
     | '/admin/treatments'
     | '/book/$slug'
@@ -366,9 +388,11 @@ export interface FileRouteTypes {
     | '/unsubscribe'
     | '/admin/admins'
     | '/admin/bookings'
+    | '/admin/conditions'
     | '/admin/content'
     | '/admin/customers'
     | '/admin/discounts'
+    | '/admin/faqs'
     | '/admin/team'
     | '/admin/treatments'
     | '/book/$slug'
@@ -551,6 +575,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminTeamRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/faqs': {
+      id: '/admin/faqs'
+      path: '/faqs'
+      fullPath: '/admin/faqs'
+      preLoaderRoute: typeof AdminFaqsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/discounts': {
       id: '/admin/discounts'
       path: '/discounts'
@@ -570,6 +601,13 @@ declare module '@tanstack/react-router' {
       path: '/content'
       fullPath: '/admin/content'
       preLoaderRoute: typeof AdminContentRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/conditions': {
+      id: '/admin/conditions'
+      path: '/conditions'
+      fullPath: '/admin/conditions'
+      preLoaderRoute: typeof AdminConditionsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/bookings': {
@@ -627,9 +665,11 @@ declare module '@tanstack/react-router' {
 interface AdminRouteChildren {
   AdminAdminsRoute: typeof AdminAdminsRoute
   AdminBookingsRoute: typeof AdminBookingsRoute
+  AdminConditionsRoute: typeof AdminConditionsRoute
   AdminContentRoute: typeof AdminContentRoute
   AdminCustomersRoute: typeof AdminCustomersRoute
   AdminDiscountsRoute: typeof AdminDiscountsRoute
+  AdminFaqsRoute: typeof AdminFaqsRoute
   AdminTeamRoute: typeof AdminTeamRoute
   AdminTreatmentsRoute: typeof AdminTreatmentsRoute
   AdminIndexRoute: typeof AdminIndexRoute
@@ -638,9 +678,11 @@ interface AdminRouteChildren {
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAdminsRoute: AdminAdminsRoute,
   AdminBookingsRoute: AdminBookingsRoute,
+  AdminConditionsRoute: AdminConditionsRoute,
   AdminContentRoute: AdminContentRoute,
   AdminCustomersRoute: AdminCustomersRoute,
   AdminDiscountsRoute: AdminDiscountsRoute,
+  AdminFaqsRoute: AdminFaqsRoute,
   AdminTeamRoute: AdminTeamRoute,
   AdminTreatmentsRoute: AdminTreatmentsRoute,
   AdminIndexRoute: AdminIndexRoute,

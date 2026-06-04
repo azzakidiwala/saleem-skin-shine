@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { AlertTriangle, ChevronRight, ArrowLeft, FileText } from "lucide-react";
+import { AlertTriangle, ChevronRight, ArrowLeft, FileText, ExternalLink, HelpCircle, Stethoscope } from "lucide-react";
 import { uploadSiteImage } from "@/lib/admin/storage";
 
 export const Route = createFileRoute("/admin/content")({
@@ -16,16 +16,16 @@ export const Route = createFileRoute("/admin/content")({
 
 type Row = { key: string; value: any; label: string; group_name: string };
 
-type PageDef = { id: string; label: string; description: string; groups: string[] };
+type PageDef = { id: string; label: string; description: string; groups: string[]; href: string };
 
 const PAGES: PageDef[] = [
-  { id: "home", label: "Home Page", description: "Hero, About, Call to Action and Announcement bar.", groups: ["hero", "about", "cta", "announcement"] },
-  { id: "team", label: "Meet the Team", description: "Intro shown above the team grid.", groups: ["team"] },
-  { id: "conditions_face", label: "Conditions — Face", description: "Title and intro of the Face Conditions page.", groups: ["conditions_face"] },
-  { id: "conditions_body", label: "Conditions — Body", description: "Title and intro of the Body Conditions page.", groups: ["conditions_body"] },
-  { id: "conditions_skin", label: "Conditions — Skin", description: "Title and intro of the Skin Conditions page.", groups: ["conditions_skin"] },
-  { id: "faq", label: "FAQ", description: "Header text on the FAQ page.", groups: ["faq"] },
-  { id: "contact", label: "Contact", description: "Header text, address and opening hours.", groups: ["contact"] },
+  { id: "home", label: "Home Page", description: "Hero, About, Call to Action and Announcement bar.", groups: ["hero", "about", "cta", "announcement"], href: "/" },
+  { id: "team", label: "Meet the Team", description: "Intro shown above the team grid.", groups: ["team"], href: "/team" },
+  { id: "conditions_face", label: "Conditions — Face", description: "Title and intro of the Face Conditions page.", groups: ["conditions_face"], href: "/conditions/face" },
+  { id: "conditions_body", label: "Conditions — Body", description: "Title and intro of the Body Conditions page.", groups: ["conditions_body"], href: "/conditions/body" },
+  { id: "conditions_skin", label: "Conditions — Skin", description: "Title and intro of the Skin Conditions page.", groups: ["conditions_skin"], href: "/conditions/skin" },
+  { id: "faq", label: "FAQ", description: "Header text on the FAQ page.", groups: ["faq"], href: "/faq" },
+  { id: "contact", label: "Contact", description: "Header text, address and opening hours.", groups: ["contact"], href: "/contact" },
 ];
 
 const GROUP_LABEL: Record<string, string> = {
