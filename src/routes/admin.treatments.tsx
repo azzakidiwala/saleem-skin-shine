@@ -16,9 +16,10 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Plus, Trash2, Pencil } from "lucide-react";
+import { Plus, Trash2, Pencil, GripVertical } from "lucide-react";
+
 import { uploadSiteImage } from "@/lib/admin/storage";
 import { treatmentCategories } from "@/lib/content/queries";
 import { resolveTreatmentImage } from "@/lib/content/assets";
