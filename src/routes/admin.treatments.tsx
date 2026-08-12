@@ -103,6 +103,17 @@ async function renumberSortOrders(currentId: string) {
   );
 }
 
+// New treatments go after the last treatment in their category; a brand-new
+// category goes to the very bottom of the list.
+async function computeInsertOrder(category: string) {
+  const { data, error } = await supabase.from("treatments").select("category, sort_order");
+  if (error || !data || data.length === 0) return 10;
+  const globalMax = Math.max(...data.map((r) => r.sort_order ?? 0));
+  const inCat = data.filter((r) => (r.category ?? "").toLowerCase() === category.toLowerCase());
+  if (inCat.length === 0) return globalMax + 10;
+  return Math.max(...inCat.map((r) => r.sort_order ?? 0)) + 1;
+}
+
 function TreatmentsPage() {
   const qc = useQueryClient();
   const { data, isLoading } = useQuery({
@@ -114,6 +125,38 @@ function TreatmentsPage() {
     },
   });
 
+  const [rows, setRows] = useState<Row[]>([]);
+  const [dragId, setDragId] = useState<string | null>(null);
+  useEffect(() => { setRows(data ?? []); }, [data]);
+
+  const reorder = useMutation({
+    mutationFn: async (list: Row[]) => {
+      await Promise.all(
+        list.map((r, i) => {
+          const newOrder = (i + 1) * 10;
+          if (r.sort_order === newOrder) return Promise.resolve();
+          return supabase.from("treatments").update({ sort_order: newOrder }).eq("id", r.id);
+        })
+      );
+    },
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ["admin", "treatments"] }); qc.invalidateQueries({ queryKey: ["treatments"] }); },
+    onError: (e: any) => toast.error(e.message),
+  });
+
+  function onDropRow(targetId: string) {
+    if (!dragId || dragId === targetId) { setDragId(null); return; }
+    const from = rows.findIndex((r) => r.id === dragId);
+    const to = rows.findIndex((r) => r.id === targetId);
+    if (from < 0 || to < 0) { setDragId(null); return; }
+    const next = [...rows];
+    const [moved] = next.splice(from, 1);
+    next.splice(to, 0, moved);
+    const renumbered = next.map((r, i) => ({ ...r, sort_order: (i + 1) * 10 }));
+    setRows(renumbered);
+    setDragId(null);
+    reorder.mutate(renumbered);
+  }
+
   const save = useMutation({
     mutationFn: async (row: Row) => {
       const payload = { ...row };
@@ -123,6 +166,7 @@ function TreatmentsPage() {
       let savedId = payload.id;
       if (!payload.id) {
         const { id, ...insert } = payload;
+        insert.sort_order = await computeInsertOrder(insert.category);
         const { data: ins, error } = await supabase.from("treatments").insert(insert).select("id").single();
         if (error) throw error;
         savedId = ins?.id ?? "";
@@ -136,6 +180,7 @@ function TreatmentsPage() {
     onSuccess: () => { toast.success("Saved"); qc.invalidateQueries({ queryKey: ["admin", "treatments"] }); qc.invalidateQueries({ queryKey: ["treatments"] }); },
     onError: (e: any) => toast.error(e.message),
   });
+
 
   const remove = useMutation({
     mutationFn: async (id: string) => {
