@@ -162,22 +162,22 @@ export function SignupVoucher({ variant = "section" }: { variant?: "section" | "
     );
   }
 
-  // ============ FULL SECTION VARIANT ============
+  // ============ FULL SECTION VARIANT (compact bottom-of-page banner) ============
 
   if (sentToEmail) {
     return (
-      <section className="py-16 bg-card border-y border-border">
+      <section className="py-8 bg-card border-y border-border">
         <div className="container mx-auto px-6 max-w-2xl text-center">
-          <div className="mx-auto h-14 w-14 rounded-full bg-gold/10 flex items-center justify-center mb-5">
-            <Mail className="h-7 w-7 text-gold" />
+          <div className="mx-auto h-10 w-10 rounded-full bg-gold/10 flex items-center justify-center mb-3">
+            <Mail className="h-5 w-5 text-gold" />
           </div>
-          <h2 className="font-serif text-3xl md:text-4xl text-primary mb-3">
+          <h2 className="font-serif text-2xl text-primary mb-2">
             Check your inbox
           </h2>
-          <p className="text-muted-foreground mb-2">
+          <p className="text-muted-foreground text-sm mb-1">
             We've just emailed your voucher code to
           </p>
-          <p className="text-foreground font-medium mb-6">{sentToEmail}</p>
+          <p className="text-foreground font-medium mb-4">{sentToEmail}</p>
           <p className="text-xs text-muted-foreground">
             Don't see it? Check your spam folder. The code is valid for 24 hours and can only be used once.
           </p>
@@ -187,67 +187,74 @@ export function SignupVoucher({ variant = "section" }: { variant?: "section" | "
   }
 
   return (
-    <section className="py-16 bg-card border-y border-border">
-      <div className="container mx-auto px-6 max-w-3xl">
-        <div className="text-center mb-8">
-          <div className="mx-auto h-14 w-14 rounded-full bg-gold/10 flex items-center justify-center mb-5">
-            <Gift className="h-7 w-7 text-gold" />
+    <section className="py-8 bg-card border-y border-border">
+      <div className="container mx-auto px-6 max-w-5xl">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+          <div className="flex items-start gap-4 lg:max-w-sm">
+            <div className="shrink-0 h-10 w-10 rounded-full bg-gold/10 flex items-center justify-center">
+              <Gift className="h-5 w-5 text-gold" />
+            </div>
+            <div>
+              <h2 className="font-serif text-2xl text-primary mb-1">{headline}</h2>
+              <p className="text-sm text-muted-foreground">{subtext}</p>
+            </div>
           </div>
-          <h2 className="font-serif text-3xl md:text-4xl text-primary mb-3">{headline}</h2>
-          <p className="text-muted-foreground">{subtext}</p>
+
+          <form onSubmit={handleSubmit} className="flex-1 max-w-2xl" noValidate>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 items-end">
+              <div>
+                <Label htmlFor="sv-first" className="text-xs">First name</Label>
+                <Input id="sv-first" value={firstName} onChange={(e) => setFirstName(e.target.value)} maxLength={100} className="mt-1 h-10" />
+              </div>
+              <div>
+                <Label htmlFor="sv-surname" className="text-xs">Surname</Label>
+                <Input id="sv-surname" value={surname} onChange={(e) => setSurname(e.target.value)} maxLength={100} className="mt-1 h-10" />
+              </div>
+              <div>
+                <Label htmlFor="sv-email" className="text-xs">Email</Label>
+                <Input
+                  id="sv-email"
+                  type="email"
+                  inputMode="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  onBlur={() => setTouched((t) => ({ ...t, email: true }))}
+                  maxLength={255}
+                  aria-invalid={!!emailError}
+                  className="mt-1 h-10"
+                />
+                {emailError && <p className="text-xs text-destructive mt-1">{emailError}</p>}
+              </div>
+              <div>
+                <Label htmlFor="sv-mobile" className="text-xs">Mobile</Label>
+                <Input
+                  id="sv-mobile"
+                  type="tel"
+                  inputMode="numeric"
+                  value={mobile}
+                  onChange={(e) => setMobile(e.target.value)}
+                  onBlur={() => setTouched((t) => ({ ...t, mobile: true }))}
+                  maxLength={20}
+                  aria-invalid={!!mobileError}
+                  className="mt-1 h-10"
+                />
+                {mobileError && <p className="text-xs text-destructive mt-1">{mobileError}</p>}
+              </div>
+              <div className="sm:col-span-2 lg:col-span-4">
+                <Button
+                  type="submit"
+                  disabled={!valid || submitting}
+                  className="w-full bg-gold text-gold-foreground hover:bg-gold/90 rounded-none px-8 h-10 text-xs tracking-[0.25em] uppercase"
+                >
+                  {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Email me my voucher"}
+                </Button>
+              </div>
+            </div>
+            <p className="text-[11px] text-muted-foreground text-center mt-3">
+              One voucher per person. By submitting you agree to receive your discount code by email.
+            </p>
+          </form>
         </div>
-        <form onSubmit={handleSubmit} className="grid sm:grid-cols-2 gap-4" noValidate>
-          <div>
-            <Label htmlFor="sv-first">First name</Label>
-            <Input id="sv-first" value={firstName} onChange={(e) => setFirstName(e.target.value)} maxLength={100} className="mt-1" />
-          </div>
-          <div>
-            <Label htmlFor="sv-surname">Surname</Label>
-            <Input id="sv-surname" value={surname} onChange={(e) => setSurname(e.target.value)} maxLength={100} className="mt-1" />
-          </div>
-          <div>
-            <Label htmlFor="sv-email">Email</Label>
-            <Input
-              id="sv-email"
-              type="email"
-              inputMode="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              onBlur={() => setTouched((t) => ({ ...t, email: true }))}
-              maxLength={255}
-              aria-invalid={!!emailError}
-              className="mt-1"
-            />
-            {emailError && <p className="text-xs text-destructive mt-1">{emailError}</p>}
-          </div>
-          <div>
-            <Label htmlFor="sv-mobile">Mobile (11 digits)</Label>
-            <Input
-              id="sv-mobile"
-              type="tel"
-              inputMode="numeric"
-              value={mobile}
-              onChange={(e) => setMobile(e.target.value)}
-              onBlur={() => setTouched((t) => ({ ...t, mobile: true }))}
-              maxLength={20}
-              aria-invalid={!!mobileError}
-              className="mt-1"
-            />
-            {mobileError && <p className="text-xs text-destructive mt-1">{mobileError}</p>}
-          </div>
-          <div className="sm:col-span-2 flex justify-center mt-2">
-            <Button
-              type="submit"
-              disabled={!valid || submitting}
-              className="bg-gold text-gold-foreground hover:bg-gold/90 rounded-none px-10 py-6 text-xs tracking-[0.25em] uppercase"
-            >
-              {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Email me my voucher"}
-            </Button>
-          </div>
-        </form>
-        <p className="text-xs text-muted-foreground text-center mt-4">
-          One voucher per person. By submitting you agree to receive your discount code by email.
-        </p>
       </div>
     </section>
   );

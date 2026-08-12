@@ -66,10 +66,10 @@ function Index() {
         <Hero />
         <StatsStrip />
         <Treatments />
-        <SignupVoucher />
         <About />
         <Testimonials />
         <CTA />
+        <SignupVoucher />
       </main>
       <Footer />
     </div>
