@@ -16,9 +16,10 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Plus, Trash2, Pencil } from "lucide-react";
+import { Plus, Trash2, Pencil, GripVertical } from "lucide-react";
+
 import { uploadSiteImage } from "@/lib/admin/storage";
 import { treatmentCategories } from "@/lib/content/queries";
 import { resolveTreatmentImage } from "@/lib/content/assets";
@@ -103,6 +104,17 @@ async function renumberSortOrders(currentId: string) {
   );
 }
 
+// New treatments go after the last treatment in their category; a brand-new
+// category goes to the very bottom of the list.
+async function computeInsertOrder(category: string) {
+  const { data, error } = await supabase.from("treatments").select("category, sort_order");
+  if (error || !data || data.length === 0) return 10;
+  const globalMax = Math.max(...data.map((r) => r.sort_order ?? 0));
+  const inCat = data.filter((r) => (r.category ?? "").toLowerCase() === category.toLowerCase());
+  if (inCat.length === 0) return globalMax + 10;
+  return Math.max(...inCat.map((r) => r.sort_order ?? 0)) + 1;
+}
+
 function TreatmentsPage() {
   const qc = useQueryClient();
   const { data, isLoading } = useQuery({
@@ -114,6 +126,38 @@ function TreatmentsPage() {
     },
   });
 
+  const [rows, setRows] = useState<Row[]>([]);
+  const [dragId, setDragId] = useState<string | null>(null);
+  useEffect(() => { setRows(data ?? []); }, [data]);
+
+  const reorder = useMutation({
+    mutationFn: async (list: Row[]) => {
+      await Promise.all(
+        list.map((r, i) => {
+          const newOrder = (i + 1) * 10;
+          if (r.sort_order === newOrder) return Promise.resolve();
+          return supabase.from("treatments").update({ sort_order: newOrder }).eq("id", r.id);
+        })
+      );
+    },
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ["admin", "treatments"] }); qc.invalidateQueries({ queryKey: ["treatments"] }); },
+    onError: (e: any) => toast.error(e.message),
+  });
+
+  function onDropRow(targetId: string) {
+    if (!dragId || dragId === targetId) { setDragId(null); return; }
+    const from = rows.findIndex((r) => r.id === dragId);
+    const to = rows.findIndex((r) => r.id === targetId);
+    if (from < 0 || to < 0) { setDragId(null); return; }
+    const next = [...rows];
+    const [moved] = next.splice(from, 1);
+    next.splice(to, 0, moved);
+    const renumbered = next.map((r, i) => ({ ...r, sort_order: (i + 1) * 10 }));
+    setRows(renumbered);
+    setDragId(null);
+    reorder.mutate(renumbered);
+  }
+
   const save = useMutation({
     mutationFn: async (row: Row) => {
       const payload = { ...row };
@@ -123,6 +167,7 @@ function TreatmentsPage() {
       let savedId = payload.id;
       if (!payload.id) {
         const { id, ...insert } = payload;
+        insert.sort_order = await computeInsertOrder(insert.category);
         const { data: ins, error } = await supabase.from("treatments").insert(insert).select("id").single();
         if (error) throw error;
         savedId = ins?.id ?? "";
@@ -136,6 +181,7 @@ function TreatmentsPage() {
     onSuccess: () => { toast.success("Saved"); qc.invalidateQueries({ queryKey: ["admin", "treatments"] }); qc.invalidateQueries({ queryKey: ["treatments"] }); },
     onError: (e: any) => toast.error(e.message),
   });
+
 
   const remove = useMutation({
     mutationFn: async (id: string) => {
@@ -151,7 +197,7 @@ function TreatmentsPage() {
       <div className="flex items-end justify-between gap-4">
         <div>
           <h1 className="text-3xl font-semibold">Treatments</h1>
-          <p className="text-muted-foreground mt-1">Add, edit, or remove treatments shown on the site.</p>
+          <p className="text-muted-foreground mt-1">Add, edit, or remove treatments. Drag the handle to reorder.</p>
         </div>
         <EditorDialog
           trigger={<Button><Plus className="h-4 w-4 mr-1" /> New treatment</Button>}
@@ -164,6 +210,7 @@ function TreatmentsPage() {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead className="w-8"></TableHead>
               <TableHead className="w-16">Image</TableHead>
               <TableHead>Name</TableHead>
               <TableHead>Category</TableHead>
@@ -174,9 +221,20 @@ function TreatmentsPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {isLoading && <TableRow><TableCell colSpan={7} className="text-center py-8 text-muted-foreground">Loading…</TableCell></TableRow>}
-            {(data ?? []).map((r) => (
-              <TableRow key={r.id}>
+            {isLoading && <TableRow><TableCell colSpan={8} className="text-center py-8 text-muted-foreground">Loading…</TableCell></TableRow>}
+            {rows.map((r) => (
+              <TableRow
+                key={r.id}
+                draggable
+                onDragStart={() => setDragId(r.id)}
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={() => onDropRow(r.id)}
+                onDragEnd={() => setDragId(null)}
+                className={dragId === r.id ? "opacity-50" : undefined}
+              >
+                <TableCell className="cursor-grab text-muted-foreground active:cursor-grabbing">
+                  <GripVertical className="h-4 w-4" />
+                </TableCell>
                 <TableCell><img src={resolveTreatmentImage(r.slug, r.image_url)} alt="" className="h-10 w-10 rounded object-cover" /></TableCell>
                 <TableCell className="font-medium">
                   {r.name}
@@ -198,6 +256,7 @@ function TreatmentsPage() {
                 </TableCell>
               </TableRow>
             ))}
+
           </TableBody>
         </Table>
       </div>
