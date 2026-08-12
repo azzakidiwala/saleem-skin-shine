@@ -17,19 +17,19 @@ export function Testimonials() {
   }, []);
   const r = reviews[idx];
   return (
-    <section className="py-24 md:py-32 bg-primary text-primary-foreground">
+    <section className="py-20 md:py-24 bg-card/40 text-primary-foreground">
       <div className="container mx-auto px-6 max-w-4xl text-center">
         <p className="eyebrow mb-4">Patient Reviews</p>
         <h2 className="text-4xl md:text-5xl mb-6 text-primary-foreground">What Our Patients Say</h2>
-        <div className="flex items-center justify-center gap-3 mb-14">
+        <div className="flex items-center justify-center gap-3 mb-10">
           <div className="flex gap-0.5 text-gold">
             {[...Array(5)].map((_, i) => <Star key={i} className="h-4 w-4 fill-current" />)}
           </div>
           <span className="text-sm text-primary-foreground/80">5.0 · 14 reviews</span>
         </div>
-        <div className="relative border border-gold/30 p-10 md:p-16">
+        <div className="relative border border-gold/30 p-8 md:p-12">
           <Quote className="h-10 w-10 text-gold mx-auto mb-6" />
-          <p className="font-display text-2xl md:text-3xl italic text-primary-foreground leading-relaxed mb-8 min-h-[120px]">
+          <p className="font-display text-2xl md:text-3xl italic text-primary-foreground leading-relaxed mb-8 min-h-[110px]">
             "{r.quote}"
           </p>
           <p className="font-semibold">{r.name}</p>

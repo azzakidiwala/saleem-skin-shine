@@ -18,9 +18,9 @@ export function About() {
   const aboutImage = getString(content, "about.image_url", "") || about;
 
   return (
-    <section id="about" className="py-24 md:py-32 bg-background">
+    <section id="about" className="py-20 md:py-24 bg-background">
       <div className="container mx-auto px-6">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="relative">
             <img id="c-about-image" src={aboutImage} alt="Saleem Skin clinic interior" loading="lazy" className="w-full aspect-[4/5] object-cover" />
             <div id="c-about-years" className="absolute -bottom-px right-8 bg-gold text-gold-foreground px-10 py-6 text-center">

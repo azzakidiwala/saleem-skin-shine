@@ -17,22 +17,22 @@ const items = FEATURED.map(({ slug, tags }) => {
 
 export function Treatments() {
   return (
-    <section id="treatments" className="py-24 md:py-32 bg-background">
+    <section id="treatments" className="py-20 md:py-24 bg-background">
       <div className="container mx-auto px-6">
-        <div className="text-center max-w-2xl mx-auto mb-16">
+        <div className="max-w-2xl mb-12">
           <p className="eyebrow mb-4">Our Expertise</p>
           <h2 className="text-4xl md:text-5xl mb-5">Featured Treatments</h2>
           <p className="text-muted-foreground">
             From anti-wrinkle injections to advanced skin rejuvenation, our clinic offers the full spectrum of aesthetic dermatology treatments.
           </p>
         </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {items.map((t) => (
-            <Link to="/treatments/$slug" params={{ slug: t.slug }} key={t.slug} className="bg-card border border-border group block hover:shadow-xl transition-shadow">
+            <Link to="/treatments/$slug" params={{ slug: t.slug }} key={t.slug} className="bg-card border border-border group block overflow-hidden transition-all duration-300 hover:border-gold/50 hover:-translate-y-1">
               <div className="aspect-[4/3] overflow-hidden bg-secondary">
                 <img src={t.img} alt={t.title} loading="lazy" className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-700" />
               </div>
-              <div className="p-7">
+              <div className="p-6">
                 <h3 className="text-xl font-semibold text-foreground mb-3 group-hover:text-gold transition-colors">{t.title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed mb-5">{t.desc}</p>
                 <div className="flex flex-wrap gap-2">
@@ -46,7 +46,7 @@ export function Treatments() {
             </Link>
           ))}
         </div>
-        <div className="text-center mt-14">
+        <div className="mt-12">
           <Link to="/treatments" className="inline-flex items-center justify-center bg-gold text-gold-foreground px-8 py-4 text-xs tracking-[0.25em] font-semibold uppercase hover:bg-gold/90 transition-colors">
             View All Treatments
           </Link>
