@@ -17,7 +17,7 @@ export function Testimonials() {
   }, []);
   const r = reviews[idx];
   return (
-    <section className="py-20 md:py-24 bg-card/40 text-primary-foreground">
+    <section className="py-20 md:py-24 bg-primary text-primary-foreground">
       <div className="container mx-auto px-6 max-w-4xl text-center">
         <p className="eyebrow mb-4">Patient Reviews</p>
         <h2 className="text-4xl md:text-5xl mb-6 text-primary-foreground">What Our Patients Say</h2>
