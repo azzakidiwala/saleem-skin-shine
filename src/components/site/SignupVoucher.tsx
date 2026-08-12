@@ -200,7 +200,7 @@ export function SignupVoucher({ variant = "section" }: { variant?: "section" | "
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="flex-1 max-w-2xl" noValidate>
+          <form onSubmit={handleSubmit} className="w-full max-w-2xl mx-auto" noValidate>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 items-end">
               <div>
                 <Label htmlFor="sv-first" className="text-xs">First name</Label>
