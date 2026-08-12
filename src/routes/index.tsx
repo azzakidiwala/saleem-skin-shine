@@ -63,6 +63,7 @@ function Index() {
       <Header />
       <main>
         <Hero />
+        <StatsStrip />
         <Treatments />
         <SignupVoucher />
         <About />
