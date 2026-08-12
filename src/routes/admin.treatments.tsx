@@ -197,7 +197,7 @@ function TreatmentsPage() {
       <div className="flex items-end justify-between gap-4">
         <div>
           <h1 className="text-3xl font-semibold">Treatments</h1>
-          <p className="text-muted-foreground mt-1">Add, edit, or remove treatments shown on the site.</p>
+          <p className="text-muted-foreground mt-1">Add, edit, or remove treatments. Drag the handle to reorder.</p>
         </div>
         <EditorDialog
           trigger={<Button><Plus className="h-4 w-4 mr-1" /> New treatment</Button>}
@@ -210,6 +210,7 @@ function TreatmentsPage() {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead className="w-8"></TableHead>
               <TableHead className="w-16">Image</TableHead>
               <TableHead>Name</TableHead>
               <TableHead>Category</TableHead>
@@ -220,9 +221,20 @@ function TreatmentsPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {isLoading && <TableRow><TableCell colSpan={7} className="text-center py-8 text-muted-foreground">Loading…</TableCell></TableRow>}
-            {(data ?? []).map((r) => (
-              <TableRow key={r.id}>
+            {isLoading && <TableRow><TableCell colSpan={8} className="text-center py-8 text-muted-foreground">Loading…</TableCell></TableRow>}
+            {rows.map((r) => (
+              <TableRow
+                key={r.id}
+                draggable
+                onDragStart={() => setDragId(r.id)}
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={() => onDropRow(r.id)}
+                onDragEnd={() => setDragId(null)}
+                className={dragId === r.id ? "opacity-50" : undefined}
+              >
+                <TableCell className="cursor-grab text-muted-foreground active:cursor-grabbing">
+                  <GripVertical className="h-4 w-4" />
+                </TableCell>
                 <TableCell><img src={resolveTreatmentImage(r.slug, r.image_url)} alt="" className="h-10 w-10 rounded object-cover" /></TableCell>
                 <TableCell className="font-medium">
                   {r.name}
@@ -244,6 +256,7 @@ function TreatmentsPage() {
                 </TableCell>
               </TableRow>
             ))}
+
           </TableBody>
         </Table>
       </div>
