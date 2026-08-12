@@ -98,9 +98,9 @@ export function Footer() {
       <div className="border-t border-primary-foreground/10">
         <div className="container mx-auto px-6 py-5 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-primary-foreground/60">
           <p>© {new Date().getFullYear()} Saleem Skin. All rights reserved.</p>
-          <a href="#" className="hover:text-gold transition-colors tracking-wider uppercase">
+          <Link to="/login" className="hover:text-gold transition-colors tracking-wider uppercase">
             Staff Login
-          </a>
+          </Link>
         </div>
       </div>
     </footer>
