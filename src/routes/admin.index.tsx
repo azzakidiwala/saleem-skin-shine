@@ -142,14 +142,14 @@ function Dashboard() {
         <div className="w-full h-72">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={monthly} margin={{ top: 10, right: 16, left: 0, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-              <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" fontSize={12} />
-              <YAxis yAxisId="left" stroke="hsl(var(--muted-foreground))" fontSize={12} allowDecimals={false} />
-              <YAxis yAxisId="right" orientation="right" stroke="hsl(var(--muted-foreground))" fontSize={12} />
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+              <XAxis dataKey="month" stroke="var(--muted-foreground)" fontSize={12} />
+              <YAxis yAxisId="left" stroke="var(--muted-foreground)" fontSize={12} allowDecimals={false} />
+              <YAxis yAxisId="right" orientation="right" stroke="var(--muted-foreground)" fontSize={12} />
               <Tooltip
                 contentStyle={{
-                  background: "hsl(var(--background))",
-                  border: "1px solid hsl(var(--border))",
+                  background: "var(--background)",
+                  border: "1px solid var(--border)",
                   borderRadius: 8,
                   fontSize: 12,
                 }}
@@ -158,8 +158,8 @@ function Dashboard() {
                 }
               />
               <Legend wrapperStyle={{ fontSize: 12 }} />
-              <Line yAxisId="left" type="monotone" dataKey="bookings" name="Bookings" stroke="hsl(var(--primary))" strokeWidth={2.5} dot={{ r: 3 }} activeDot={{ r: 5 }} />
-              <Line yAxisId="right" type="monotone" dataKey="revenue" name="Revenue" stroke="hsl(var(--accent-foreground))" strokeWidth={2.5} dot={{ r: 3 }} activeDot={{ r: 5 }} />
+              <Line yAxisId="left" type="monotone" dataKey="bookings" name="Bookings" stroke="var(--primary)" strokeWidth={2.5} dot={{ r: 3 }} activeDot={{ r: 5 }} />
+              <Line yAxisId="right" type="monotone" dataKey="revenue" name="Revenue" stroke="var(--accent-foreground)" strokeWidth={2.5} dot={{ r: 3 }} activeDot={{ r: 5 }} />
             </LineChart>
           </ResponsiveContainer>
         </div>
