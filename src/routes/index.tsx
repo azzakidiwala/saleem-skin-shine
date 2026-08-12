@@ -3,6 +3,7 @@ import { AnnouncementBar } from "@/components/site/AnnouncementBar";
 import { Header } from "@/components/site/Header";
 import { Hero } from "@/components/site/Hero";
 import { Treatments } from "@/components/site/Treatments";
+import { StatsStrip } from "@/components/site/StatsStrip";
 import { About } from "@/components/site/About";
 import { SignupVoucher } from "@/components/site/SignupVoucher";
 import { Testimonials } from "@/components/site/Testimonials";
@@ -63,6 +64,7 @@ function Index() {
       <Header />
       <main>
         <Hero />
+        <StatsStrip />
         <Treatments />
         <SignupVoucher />
         <About />
