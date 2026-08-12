@@ -189,8 +189,8 @@ export function SignupVoucher({ variant = "section" }: { variant?: "section" | "
   return (
     <section className="py-8 bg-card border-y border-border">
       <div className="container mx-auto px-6 max-w-5xl">
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-          <div className="flex items-start gap-4 lg:max-w-sm">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-center gap-6 text-center">
+          <div className="flex flex-col items-center gap-4 lg:max-w-sm">
             <div className="shrink-0 h-10 w-10 rounded-full bg-gold/10 flex items-center justify-center">
               <Gift className="h-5 w-5 text-gold" />
             </div>
