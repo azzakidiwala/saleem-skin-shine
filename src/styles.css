@@ -30,6 +30,7 @@
   --color-ring: var(--ring);
   --color-gold: var(--gold);
   --color-gold-foreground: var(--gold-foreground);
+  --color-gold-soft: var(--gold-soft);
   --color-deep-green: var(--deep-green);
   --font-display: "Urbanist", "Helvetica Neue", sans-serif;
   --font-sans: "Epilogue", system-ui, sans-serif;
