@@ -1,5 +1,6 @@
 import { Phone, Mail } from "lucide-react";
 import bg from "@/assets/cta-bg.jpg";
+import { WhatsAppIcon, whatsappHref } from "@/components/site/WhatsAppButton";
 import { useSiteContent, getString } from "@/lib/content/queries";
 
 export function CTA() {
