@@ -31,7 +31,7 @@ export function CTA() {
           <a id="c-cta-email" href={`mailto:${email}`} className="inline-flex items-center justify-center gap-2 border border-gold text-primary-foreground px-8 py-4 text-xs tracking-[0.25em] font-semibold uppercase hover:bg-gold hover:text-gold-foreground transition-colors">
             <Mail className="h-4 w-4" /> Email the Clinic
           </a>
-          <a id="c-cta-whatsapp" href={whatsappHref()} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 bg-[#25D366] text-white px-8 py-4 text-xs tracking-[0.25em] font-semibold uppercase hover:bg-[#1ebe57] transition-colors">
+          <a id="c-cta-whatsapp" href={whatsappHref()} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 bg-deep-green text-primary-foreground px-8 py-4 text-xs tracking-[0.25em] font-semibold uppercase hover:bg-deep-green/90 transition-colors">
             <WhatsAppIcon className="h-4 w-4" /> WhatsApp
           </a>
         </div>

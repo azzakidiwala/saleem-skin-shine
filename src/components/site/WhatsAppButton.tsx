@@ -31,7 +31,7 @@ export function WhatsAppButton({ message, className, children, iconClassName, la
       rel="noopener noreferrer"
       aria-label={label}
       className={cn(
-        "inline-flex items-center justify-center gap-2 bg-[#25D366] text-white hover:bg-[#1ebe57] transition-colors",
+        "inline-flex items-center justify-center gap-2 bg-deep-green text-primary-foreground hover:bg-deep-green/90 transition-colors",
         className,
       )}
     >
