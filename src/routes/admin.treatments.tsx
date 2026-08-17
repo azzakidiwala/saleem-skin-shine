@@ -202,8 +202,10 @@ function TreatmentsPage() {
         <EditorDialog
           trigger={<Button><Plus className="h-4 w-4 mr-1" /> New treatment</Button>}
           initial={empty}
+          existingCats={rows.map((r) => r.category)}
           onSave={(r) => save.mutateAsync(r)}
         />
+
       </div>
 
       <div className="rounded-lg border bg-card overflow-hidden">
@@ -248,8 +250,10 @@ function TreatmentsPage() {
                   <EditorDialog
                     trigger={<Button variant="ghost" size="icon"><Pencil className="h-4 w-4" /></Button>}
                     initial={r}
+                    existingCats={rows.map((x) => x.category)}
                     onSave={(row) => save.mutateAsync(row)}
                   />
+
                   <Button variant="ghost" size="icon" onClick={() => { if (confirm(`Delete "${r.name}"?`)) remove.mutate(r.id); }}>
                     <Trash2 className="h-4 w-4" />
                   </Button>
@@ -264,17 +268,19 @@ function TreatmentsPage() {
   );
 }
 
-function EditorDialog({ trigger, initial, onSave }: { trigger: React.ReactNode; initial: Row; onSave: (r: Row) => Promise<void> }) {
+function EditorDialog({ trigger, initial, onSave, existingCats = [] }: { trigger: React.ReactNode; initial: Row; onSave: (r: Row) => Promise<void>; existingCats?: string[] }) {
   const [open, setOpen] = useState(false);
   const [row, setRow] = useState<Row>(initial);
   const [uploading, setUploading] = useState(false);
   const [benefitsText, setBenefitsText] = useState<string>(initial.benefits.join("\n"));
+  const baseCats = Array.from(new Set([...CATS, ...existingCats.filter(Boolean)]));
   const [extraCats, setExtraCats] = useState<string[]>(
-    initial.category && !CATS.includes(initial.category) ? [initial.category] : []
+    initial.category && !baseCats.includes(initial.category) ? [initial.category] : []
   );
   const [addingCat, setAddingCat] = useState(false);
   const [newCat, setNewCat] = useState("");
-  const allCats = [...CATS, ...extraCats];
+  const allCats = Array.from(new Set([...baseCats, ...extraCats]));
+
 
   function update<K extends keyof Row>(k: K, v: Row[K]) { setRow((r) => ({ ...r, [k]: v })); }
 
@@ -291,7 +297,7 @@ function EditorDialog({ trigger, initial, onSave }: { trigger: React.ReactNode; 
   }
 
   return (
-    <Dialog open={open} onOpenChange={(o) => { setOpen(o); if (o) { setRow(initial); setBenefitsText(initial.benefits.join("\n")); setExtraCats(initial.category && !CATS.includes(initial.category) ? [initial.category] : []); setAddingCat(false); setNewCat(""); } }}>
+    <Dialog open={open} onOpenChange={(o) => { setOpen(o); if (o) { setRow(initial); setBenefitsText(initial.benefits.join("\n")); setExtraCats(initial.category && !baseCats.includes(initial.category) ? [initial.category] : []); setAddingCat(false); setNewCat(""); } }}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
