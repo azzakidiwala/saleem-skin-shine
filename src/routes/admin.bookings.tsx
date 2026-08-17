@@ -148,7 +148,7 @@ function BookingsPage() {
             </Button>
           ))}
         </div>
-        <Input placeholder="Search name, email, treatment…" value={search} onChange={(e) => setSearch(e.target.value)} className="max-w-xs" />
+        <Input placeholder="Search name, email, treatment…" value={search} onChange={(e) => setSearch(e.target.value)} className="w-full sm:max-w-xs" />
       </div>
 
       <div className="rounded-lg border bg-card overflow-hidden">
