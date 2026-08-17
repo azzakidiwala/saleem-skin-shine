@@ -144,17 +144,18 @@ function DiscountsPage() {
         <SettingsCard settings={settings} onSave={(patch) => updateSettings.mutate(patch)} />
       )}
 
-      <div className="flex gap-1 rounded-lg border bg-card p-1 w-fit">
+      <div className="flex flex-wrap gap-1 rounded-lg border bg-card p-1 w-full sm:w-fit">
         {[
           { v: "all", l: "All" },
           { v: "signup", l: "Signup vouchers" },
           { v: "promo", l: "Promo codes" },
         ].map((o) => (
-          <Button key={o.v} size="sm" variant={tab === o.v ? "default" : "ghost"} onClick={() => setTab(o.v as any)}>
+          <Button key={o.v} size="sm" className="flex-1 sm:flex-none" variant={tab === o.v ? "default" : "ghost"} onClick={() => setTab(o.v as any)}>
             {o.l}
           </Button>
         ))}
       </div>
+
 
       {/* Mobile card list */}
       <div className="space-y-3 md:hidden">
