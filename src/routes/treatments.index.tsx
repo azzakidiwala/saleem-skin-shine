@@ -126,7 +126,7 @@ function TreatmentsPage() {
             {isLoading ? (
               <div className="flex justify-center py-20"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 {filtered.map((t) => (
                   <Link
                     to="/treatments/$slug"

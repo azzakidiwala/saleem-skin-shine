@@ -65,6 +65,10 @@ export function Header() {
               <div className="bg-card border border-border shadow-xl p-6">
                 <div className="text-gold text-[11px] tracking-[0.3em] mb-4">TREATMENTS</div>
                 <div className="grid grid-cols-2 gap-x-6 gap-y-2">
+                  <Link to="/treatments" className="col-span-2 flex items-start gap-2 py-1.5 text-[12px] tracking-[0.05em] normal-case font-semibold text-foreground hover:text-gold transition-colors">
+                    <span className="text-gold mt-1.5">•</span>
+                    <span>All Treatments</span>
+                  </Link>
                   {treatments.map(t => (
                     <Link key={t.slug} to="/treatments/$slug" params={{ slug: t.slug }} className="flex items-start gap-2 py-1.5 text-[12px] tracking-[0.05em] normal-case font-normal text-foreground hover:text-gold transition-colors">
                       <span className="text-gold mt-1.5">•</span>
