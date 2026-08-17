@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { treatments } from "@/data/treatments";
+import { useTreatments } from "@/lib/content/queries";
 
 const FEATURED: { slug: string; tags: string[] }[] = [
   { slug: "deluxe-hydrafacial", tags: ["Cleanse", "Hydrate", "Glow"] },
@@ -10,12 +10,18 @@ const FEATURED: { slug: string; tags: string[] }[] = [
   { slug: "prp-facial-vampire", tags: ["Rejuvenation", "Tone", "Texture"] },
 ];
 
-const items = FEATURED.map(({ slug, tags }) => {
-  const t = treatments.find((x) => x.slug === slug)!;
-  return { slug: t.slug, img: t.image, title: t.name, desc: t.description, tags };
-});
-
 export function Treatments() {
+  const { data: all } = useTreatments();
+  const list = all ?? [];
+  const featured = FEATURED.map(({ slug, tags }) => {
+    const t = list.find((x) => x.slug === slug);
+    return t ? { slug: t.slug, img: t.image, title: t.name, desc: t.description, tags } : null;
+  }).filter(Boolean) as { slug: string; img: string; title: string; desc: string; tags: string[] }[];
+
+  const items = featured.length
+    ? featured
+    : list.slice(0, 6).map((t) => ({ slug: t.slug, img: t.image, title: t.name, desc: t.description, tags: [t.category] }));
+
   return (
     <section id="treatments" className="py-20 md:py-24 bg-background">
       <div className="container mx-auto px-6">
