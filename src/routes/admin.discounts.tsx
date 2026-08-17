@@ -338,7 +338,7 @@ function NewPromoDialog({ treatments, onCreated }: { treatments: TreatmentOption
             <Label className="text-xs">Code</Label>
             <Input value={code} onChange={(e) => setCode(e.target.value.toUpperCase())} placeholder="WELCOME10" />
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <Label className="text-xs">Discount (£)</Label>
               <Input type="number" min={1} step="0.5" value={amount} onChange={(e) => setAmount(e.target.value)} />

@@ -411,7 +411,7 @@ function NewBookingDialog({ onCreated }: { onCreated: () => void }) {
             )}
 
             {mode === "new" && (
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div><Label className="text-xs">First name</Label><Input value={firstName} onChange={(e) => setFirstName(e.target.value)} /></div>
                 <div><Label className="text-xs">Surname</Label><Input value={surname} onChange={(e) => setSurname(e.target.value)} /></div>
                 <div><Label className="text-xs">Email</Label><Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} /></div>
