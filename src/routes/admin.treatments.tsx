@@ -428,7 +428,7 @@ function EditorDialog({ trigger, initial, onSave, existingCats = [] }: { trigger
                 <Input
                   className="flex-1"
                   value={opt.label}
-                  placeholder="Option name (e.g. 1ml)"
+                  placeholder="Option name"
                   onChange={(e) => {
                     const next = [...(row.price_options ?? [])];
                     next[i] = { ...next[i], label: e.target.value };

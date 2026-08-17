@@ -224,8 +224,8 @@ function BookingPage() {
           email: email.trim(),
           mobile: mobile.trim(),
           treatment_slug: t.slug,
-          treatment_name: t.name,
-          treatment_price: t.price,
+          treatment_name: bookingName,
+          treatment_price: displayPrice,
           appointment_date: isoDate,
           appointment_time: time,
         })
@@ -254,8 +254,8 @@ function BookingPage() {
           surname: surname.trim(),
           email: email.trim(),
           mobile: mobile.trim(),
-          treatmentName: t.name,
-          treatmentPrice: t.price,
+          treatmentName: bookingName,
+          treatmentPrice: displayPrice,
           appointmentDate: formatDateLong(date),
           appointmentTime: time,
         },
@@ -270,7 +270,7 @@ function BookingPage() {
         to: "/book-confirmed",
         search: {
           name: firstName,
-          treatment: t.name,
+          treatment: bookingName,
           date: formatDateLong(date),
           time,
         } as never,
@@ -307,7 +307,7 @@ function BookingPage() {
             </div>
             <h1 className="font-serif text-3xl md:text-5xl text-primary">Book {t.name}</h1>
             <div className="flex flex-wrap gap-x-8 gap-y-2 mt-4 text-sm text-muted-foreground">
-              <span><span className="text-foreground font-semibold">Price:</span> {t.price}</span>
+              <span><span className="text-foreground font-semibold">Price:</span> {displayPrice}</span>
               <span><span className="text-foreground font-semibold">Duration:</span> {t.duration}</span>
             </div>
           </div>
@@ -345,7 +345,32 @@ function BookingPage() {
             <div className="max-w-4xl mx-auto">
               {/* STEP 1 */}
               {step === 1 && (
-                <div className="grid md:grid-cols-2 gap-8 bg-card border border-border p-6 md:p-8">
+                <div className="bg-card border border-border p-6 md:p-8 space-y-8">
+                {hasOptions && (
+                  <div>
+                    <h2 className="text-lg font-semibold text-foreground mb-1">Choose an option *</h2>
+                    <p className="text-sm text-muted-foreground mb-4">Please select one option to continue.</p>
+                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                      {priceOptions.map((o, i) => (
+                        <button
+                          key={o.label + o.price + i}
+                          type="button"
+                          onClick={() => setOptionIndex(i)}
+                          className={cn(
+                            "flex items-baseline justify-between gap-3 px-4 py-3 border text-left transition-colors",
+                            optionIndex === i
+                              ? "bg-gold text-gold-foreground border-gold"
+                              : "border-border hover:border-gold",
+                          )}
+                        >
+                          <span className="text-sm">{o.label}</span>
+                          <span className="text-sm font-semibold">{o.price}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                <div className="grid md:grid-cols-2 gap-8">
                   <div>
                     <h2 className="text-lg font-semibold text-foreground mb-4">Choose a date</h2>
                     <Calendar
@@ -401,13 +426,14 @@ function BookingPage() {
                     <div className="mt-8 flex justify-end">
                       <Button
                         onClick={() => setStep(2)}
-                        disabled={!date || !time}
+                        disabled={!date || !time || (hasOptions && optionIndex === null)}
                         className="bg-gold text-gold-foreground hover:bg-gold/90 rounded-none px-8 py-6 text-xs tracking-[0.25em] uppercase"
                       >
                         Continue
                       </Button>
                     </div>
                   </div>
+                </div>
                 </div>
               )}
 
@@ -505,7 +531,7 @@ function BookingPage() {
                       <div className="text-[10px] tracking-[0.25em] uppercase text-gold mb-1">
                         {t.category}
                       </div>
-                      <div className="font-serif text-2xl text-primary">{t.name}</div>
+                      <div className="font-serif text-2xl text-primary">{bookingName}</div>
                       <div className="text-sm text-muted-foreground mt-2">{t.description}</div>
                     </div>
                   </div>
@@ -527,7 +553,7 @@ function BookingPage() {
                     </div>
                     <div className="sm:col-span-2 flex items-center justify-between border-t border-border pt-4">
                       <div className="text-muted-foreground text-xs uppercase tracking-wider">Price</div>
-                      <div className="text-2xl text-gold font-medium">{t.price}</div>
+                      <div className="text-2xl text-gold font-medium">{displayPrice}</div>
                     </div>
                     {appliedVoucher && (
                       <div className="sm:col-span-2 flex items-center justify-between text-sm">
