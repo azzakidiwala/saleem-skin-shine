@@ -233,40 +233,25 @@ function CustomerDetailPanel({ customer }: { customer: Customer }) {
         <NewBookingForCustomer customer={customer} />
       </div>
 
-      <div className="rounded-md border overflow-hidden bg-card">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Date / Time</TableHead>
-              <TableHead>Treatment</TableHead>
-              <TableHead>Status</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {isLoading && (
-              <TableRow><TableCell colSpan={3} className="text-center py-4 text-muted-foreground text-sm">Loading…</TableCell></TableRow>
-            )}
-            {!isLoading && (!bookings || bookings.length === 0) && (
-              <TableRow><TableCell colSpan={3} className="text-center py-6 text-muted-foreground text-sm">No bookings yet.</TableCell></TableRow>
-            )}
-            {(bookings ?? []).map((b) => (
-              <TableRow key={b.id}>
-                <TableCell className="font-medium whitespace-nowrap text-sm">
-                  {b.appointment_date}
-                  <div className="text-xs text-muted-foreground">{b.appointment_time}</div>
-                </TableCell>
-                <TableCell className="text-sm">
-                  {b.treatment_name}
-                  {b.treatment_price && <div className="text-xs text-muted-foreground">{b.treatment_price}</div>}
-                </TableCell>
-                <TableCell>
-                  <Badge variant={statusVariant(b.status)} className="capitalize">{b.status}</Badge>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+      <div className="rounded-md border bg-card divide-y">
+        {isLoading && <div className="text-center py-4 text-muted-foreground text-sm">Loading…</div>}
+        {!isLoading && (!bookings || bookings.length === 0) && (
+          <div className="text-center py-6 text-muted-foreground text-sm">No bookings yet.</div>
+        )}
+        {(bookings ?? []).map((b) => (
+          <div key={b.id} className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 items-start p-3">
+            <div className="min-w-0">
+              <div className="text-sm font-medium truncate">{b.treatment_name}</div>
+              <div className="text-xs text-muted-foreground">
+                {b.appointment_date} · {b.appointment_time}
+                {b.treatment_price ? ` · ${b.treatment_price}` : ""}
+              </div>
+            </div>
+            <Badge variant={statusVariant(b.status)} className="capitalize shrink-0">{b.status}</Badge>
+          </div>
+        ))}
       </div>
+
 
       <div className="text-right">
         <Link to="/admin/bookings" className="text-sm text-primary hover:underline">Manage in bookings →</Link>
