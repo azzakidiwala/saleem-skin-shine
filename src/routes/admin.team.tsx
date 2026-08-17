@@ -114,7 +114,33 @@ function TeamPage() {
         />
       </div>
 
-      <div className="rounded-lg border bg-card overflow-hidden">
+      {/* Mobile card list */}
+      <div className="space-y-3 md:hidden">
+        {isLoading && <div className="text-center py-8 text-muted-foreground">Loading…</div>}
+        {(data ?? []).map((r) => (
+          <div key={r.id} className="rounded-lg border bg-card p-3 grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3">
+            <img src={resolveTeamImage(r.name, r.image_url)} alt={r.name} className="h-12 w-12 shrink-0 rounded-full object-cover" />
+            <div className="min-w-0">
+              <div className="font-medium truncate">{r.name}</div>
+              <div className="text-xs text-muted-foreground truncate">{r.role}</div>
+              <div className="text-xs text-muted-foreground">Order {r.sort_order} · {r.is_active ? "Active" : "Hidden"}</div>
+            </div>
+            <div className="flex shrink-0 gap-1">
+              <EditorDialog
+                trigger={<Button variant="ghost" size="icon"><Pencil className="h-4 w-4" /></Button>}
+                initial={r}
+                onSave={(row) => save.mutateAsync(row)}
+              />
+              <Button variant="ghost" size="icon" onClick={() => { if (confirm(`Delete ${r.name}?`)) remove.mutate(r.id); }}>
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="hidden md:block rounded-lg border bg-card overflow-hidden">
+
         <Table>
           <TableHeader>
             <TableRow>
