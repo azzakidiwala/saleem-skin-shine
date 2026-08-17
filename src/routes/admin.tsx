@@ -1,8 +1,9 @@
 import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useIsAdmin, signOut } from "@/lib/admin/auth";
 import { Button } from "@/components/ui/button";
-import { LayoutDashboard, CalendarDays, Sparkles, Users, UserSquare, FileText, Shield, LogOut, ExternalLink, Tag } from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetHeader } from "@/components/ui/sheet";
+import { LayoutDashboard, CalendarDays, Sparkles, Users, UserSquare, FileText, Shield, LogOut, ExternalLink, Tag, Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/admin")({
