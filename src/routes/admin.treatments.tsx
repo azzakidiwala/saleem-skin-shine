@@ -423,7 +423,6 @@ function EditorDialog({ trigger, initial, onSave, existingCats = [] }: { trigger
                 <Plus className="h-4 w-4 mr-1" /> Add option
               </Button>
             </div>
-            <p className="text-xs text-muted-foreground">e.g. Consultation — 0, 1ml — 100, 2ml — 150</p>
             {(row.price_options ?? []).map((opt, i) => (
               <div key={i} className="flex gap-2">
                 <Input
