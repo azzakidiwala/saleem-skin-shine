@@ -18,7 +18,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Plus, Trash2, Pencil, GripVertical } from "lucide-react";
+import { Plus, Trash2, Pencil, GripVertical, ArrowUp, ArrowDown } from "lucide-react";
 
 import { uploadSiteImage } from "@/lib/admin/storage";
 import { treatmentCategories } from "@/lib/content/queries";
@@ -158,6 +158,17 @@ function TreatmentsPage() {
     reorder.mutate(renumbered);
   }
 
+  function moveRow(from: number, to: number) {
+    if (to < 0 || to >= rows.length) return;
+    const next = [...rows];
+    const [moved] = next.splice(from, 1);
+    next.splice(to, 0, moved);
+    const renumbered = next.map((r, i) => ({ ...r, sort_order: (i + 1) * 10 }));
+    setRows(renumbered);
+    reorder.mutate(renumbered);
+  }
+
+
   const save = useMutation({
     mutationFn: async (row: Row) => {
       const payload = { ...row };
@@ -208,7 +219,50 @@ function TreatmentsPage() {
 
       </div>
 
-      <div className="rounded-lg border bg-card overflow-hidden">
+      {/* Mobile cards */}
+      <div className="space-y-3 md:hidden">
+        {isLoading && <p className="text-center py-8 text-muted-foreground">Loading…</p>}
+        {rows.map((r, i) => (
+          <div key={r.id} className="rounded-lg border bg-card p-3">
+            <div className="grid grid-cols-[auto_minmax(0,1fr)] items-start gap-3">
+              <img src={resolveTreatmentImage(r.slug, r.image_url)} alt="" className="h-14 w-14 shrink-0 rounded object-cover" />
+              <div className="min-w-0">
+                <p className="truncate font-medium">{r.name}</p>
+                <p className="truncate text-xs text-muted-foreground">{r.slug}</p>
+                <div className="mt-2 flex flex-wrap items-center gap-2 text-xs">
+                  <Badge variant="outline">{r.category}</Badge>
+                  <span>{r.price}</span>
+                  <span className="text-muted-foreground">#{r.sort_order}</span>
+                  {!r.is_active && <Badge variant="secondary">Hidden</Badge>}
+                </div>
+              </div>
+            </div>
+            <div className="mt-3 flex items-center justify-between gap-2">
+              <div className="flex gap-1">
+                <Button variant="outline" size="icon" disabled={i === 0} onClick={() => moveRow(i, i - 1)} aria-label="Move up">
+                  <ArrowUp className="h-4 w-4" />
+                </Button>
+                <Button variant="outline" size="icon" disabled={i === rows.length - 1} onClick={() => moveRow(i, i + 1)} aria-label="Move down">
+                  <ArrowDown className="h-4 w-4" />
+                </Button>
+              </div>
+              <div className="flex gap-1">
+                <EditorDialog
+                  trigger={<Button variant="outline" size="sm"><Pencil className="h-4 w-4 mr-1" /> Edit</Button>}
+                  initial={r}
+                  existingCats={rows.map((x) => x.category)}
+                  onSave={(row) => save.mutateAsync(row)}
+                />
+                <Button variant="ghost" size="icon" aria-label="Delete" onClick={() => { if (confirm(`Delete "${r.name}"?`)) remove.mutate(r.id); }}>
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="hidden md:block rounded-lg border bg-card overflow-hidden">
         <Table>
           <TableHeader>
             <TableRow>
@@ -264,6 +318,7 @@ function TreatmentsPage() {
           </TableBody>
         </Table>
       </div>
+
     </div>
   );
 }
