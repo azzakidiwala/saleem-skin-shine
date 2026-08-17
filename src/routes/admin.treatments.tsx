@@ -202,8 +202,10 @@ function TreatmentsPage() {
         <EditorDialog
           trigger={<Button><Plus className="h-4 w-4 mr-1" /> New treatment</Button>}
           initial={empty}
+          existingCats={rows.map((r) => r.category)}
           onSave={(r) => save.mutateAsync(r)}
         />
+
       </div>
 
       <div className="rounded-lg border bg-card overflow-hidden">
