@@ -264,17 +264,19 @@ function TreatmentsPage() {
   );
 }
 
-function EditorDialog({ trigger, initial, onSave }: { trigger: React.ReactNode; initial: Row; onSave: (r: Row) => Promise<void> }) {
+function EditorDialog({ trigger, initial, onSave, existingCats = [] }: { trigger: React.ReactNode; initial: Row; onSave: (r: Row) => Promise<void>; existingCats?: string[] }) {
   const [open, setOpen] = useState(false);
   const [row, setRow] = useState<Row>(initial);
   const [uploading, setUploading] = useState(false);
   const [benefitsText, setBenefitsText] = useState<string>(initial.benefits.join("\n"));
+  const baseCats = Array.from(new Set([...CATS, ...existingCats.filter(Boolean)]));
   const [extraCats, setExtraCats] = useState<string[]>(
-    initial.category && !CATS.includes(initial.category) ? [initial.category] : []
+    initial.category && !baseCats.includes(initial.category) ? [initial.category] : []
   );
   const [addingCat, setAddingCat] = useState(false);
   const [newCat, setNewCat] = useState("");
-  const allCats = [...CATS, ...extraCats];
+  const allCats = Array.from(new Set([...baseCats, ...extraCats]));
+
 
   function update<K extends keyof Row>(k: K, v: Row[K]) { setRow((r) => ({ ...r, [k]: v })); }
 
