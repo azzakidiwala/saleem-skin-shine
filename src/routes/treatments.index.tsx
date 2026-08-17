@@ -21,17 +21,22 @@ export const Route = createFileRoute("/treatments/")({
   component: TreatmentsPage,
 });
 
+function slugifyCat(c: string) {
+  return "cat-" + c.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
 function TreatmentsPage() {
-  const [active, setActive] = useState("All");
   const { data: treatments = [], isLoading } = useTreatments();
-  const filtered = active === "All" ? treatments : treatments.filter((t) => t.category === active);
 
-  // categories from data + base list
+  // Ordered category list: base order first, then any extra categories from data
   const dynamicCats = Array.from(new Set(treatments.map((t) => t.category)));
-  const allCats = ["All", ...Array.from(new Set([...treatmentCategories.slice(1), ...dynamicCats]))];
+  const ordered = Array.from(new Set([...treatmentCategories.slice(1), ...dynamicCats]));
+  const groups = ordered
+    .map((c) => ({ category: c, items: treatments.filter((t) => t.category === c) }))
+    .filter((g) => g.items.length > 0);
 
+  const [active, setActive] = useState<string>("");
   const scrollerRef = useRef<HTMLDivElement>(null);
-  const gridRef = useRef<HTMLDivElement>(null);
   const [canLeft, setCanLeft] = useState(false);
   const [canRight, setCanRight] = useState(false);
 
@@ -52,7 +57,31 @@ function TreatmentsPage() {
       el.removeEventListener("scroll", updateArrows);
       window.removeEventListener("resize", updateArrows);
     };
-  }, []);
+  }, [groups.length]);
+
+  // Scroll spy: highlight the category section currently in view
+  useEffect(() => {
+    if (groups.length === 0) return;
+    const onScroll = () => {
+      let current = groups[0].category;
+      for (const g of groups) {
+        const el = document.getElementById(slugifyCat(g.category));
+        if (!el) continue;
+        if (el.getBoundingClientRect().top - 140 <= 0) current = g.category;
+      }
+      setActive(current);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [groups.map((g) => g.category).join("|")]);
+
+  // Keep the active chip visible inside the pinned bar
+  useEffect(() => {
+    if (!active) return;
+    const el = scrollerRef.current?.querySelector<HTMLElement>(`[data-cat="${active}"]`);
+    el?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+  }, [active]);
 
   const scrollCats = (dir: 1 | -1) => {
     const el = scrollerRef.current;
@@ -62,9 +91,7 @@ function TreatmentsPage() {
 
   const handleSelect = (c: string) => {
     setActive(c);
-    requestAnimationFrame(() => {
-      gridRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
+    document.getElementById(slugifyCat(c))?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   return (
@@ -82,8 +109,8 @@ function TreatmentsPage() {
           </div>
         </section>
 
-        <section className="border-y border-border bg-card sticky top-0 z-30">
-          <div className="container mx-auto px-4 py-5 relative">
+        <section className="border-y border-border bg-card sticky top-0 z-40 shadow-sm">
+          <div className="container mx-auto px-4 py-4 relative">
             <button
               type="button"
               aria-label="Scroll categories left"
@@ -96,17 +123,18 @@ function TreatmentsPage() {
               ref={scrollerRef}
               className="flex gap-3 overflow-x-auto scroll-smooth justify-start md:justify-center md:px-12 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
             >
-              {allCats.map((c) => (
+              {groups.map((g) => (
                 <button
-                  key={c}
-                  onClick={() => handleSelect(c)}
+                  key={g.category}
+                  data-cat={g.category}
+                  onClick={() => handleSelect(g.category)}
                   className={`shrink-0 px-5 py-2.5 text-[11px] tracking-[0.2em] uppercase border transition-colors ${
-                    active === c
+                    active === g.category
                       ? "bg-primary text-primary-foreground border-primary"
                       : "bg-background text-foreground border-border hover:border-gold hover:text-gold"
                   }`}
                 >
-                  {c}
+                  {g.category}
                 </button>
               ))}
             </div>
@@ -121,42 +149,50 @@ function TreatmentsPage() {
           </div>
         </section>
 
-        <section ref={gridRef} className="py-16 md:py-20 bg-background scroll-mt-24">
+        <section className="py-16 md:py-20 bg-background">
           <div className="container mx-auto px-4">
             {isLoading ? (
               <div className="flex justify-center py-20"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                {filtered.map((t) => (
-                  <Link
-                    to="/treatments/$slug"
-                    params={{ slug: t.slug }}
-                    key={t.slug}
-                    className="group bg-card border border-border overflow-hidden flex flex-col hover:shadow-xl transition-shadow"
-                  >
-                    <div className="relative aspect-[4/3] overflow-hidden">
-                      <img src={t.image} alt={t.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                      <span className="absolute top-4 left-4 bg-primary text-primary-foreground text-[10px] tracking-[0.25em] uppercase px-3 py-1.5">
-                        {t.category}
-                      </span>
+              <div className="space-y-20">
+                {groups.map((g) => (
+                  <div key={g.category} id={slugifyCat(g.category)} className="scroll-mt-28">
+                    <div className="flex items-center gap-4 mb-8">
+                      <h2 className="font-serif text-3xl md:text-4xl text-primary whitespace-nowrap">{g.category}</h2>
+                      <span className="h-px flex-1 bg-border" />
+                      <span className="text-xs text-muted-foreground tracking-[0.2em] uppercase">{g.items.length} treatment{g.items.length === 1 ? "" : "s"}</span>
                     </div>
-                    <div className="p-6 flex flex-col flex-1">
-                      <h2 className="font-serif text-2xl text-primary mb-3 group-hover:text-gold transition-colors">{t.name}</h2>
-                      <p className="text-sm text-muted-foreground leading-relaxed flex-1">{t.description}</p>
-                      <div className="mt-6 pt-5 border-t border-border flex items-center justify-between">
-                        <span className="text-gold font-medium">{t.price}</span>
-                        <span className="text-xs text-muted-foreground flex items-center gap-1.5">
-                          <Clock className="h-3.5 w-3.5" />
-                          {t.duration}
-                        </span>
-                      </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                      {g.items.map((t) => (
+                        <Link
+                          to="/treatments/$slug"
+                          params={{ slug: t.slug }}
+                          key={t.slug}
+                          className="group bg-card border border-border overflow-hidden flex flex-col hover:shadow-xl transition-shadow"
+                        >
+                          <div className="relative aspect-[4/3] overflow-hidden">
+                            <img src={t.image} alt={t.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                          </div>
+                          <div className="p-6 flex flex-col flex-1">
+                            <h3 className="font-serif text-2xl text-primary mb-3 group-hover:text-gold transition-colors">{t.name}</h3>
+                            <p className="text-sm text-muted-foreground leading-relaxed flex-1">{t.description}</p>
+                            <div className="mt-6 pt-5 border-t border-border flex items-center justify-between">
+                              <span className="text-gold font-medium">{t.price}</span>
+                              <span className="text-xs text-muted-foreground flex items-center gap-1.5">
+                                <Clock className="h-3.5 w-3.5" />
+                                {t.duration}
+                              </span>
+                            </div>
+                          </div>
+                        </Link>
+                      ))}
                     </div>
-                  </Link>
+                  </div>
                 ))}
               </div>
             )}
-            {!isLoading && filtered.length === 0 && (
-              <p className="text-center text-muted-foreground py-12">No treatments in this category yet.</p>
+            {!isLoading && groups.length === 0 && (
+              <p className="text-center text-muted-foreground py-12">No treatments yet.</p>
             )}
             <div className="text-center mt-16">
               <Link
@@ -175,3 +211,4 @@ function TreatmentsPage() {
     </div>
   );
 }
+
