@@ -23,6 +23,7 @@ const nav: Array<{ to: string; label: string; icon: typeof LayoutDashboard; exac
 
 function AdminLayout() {
   const navigate = useNavigate();
+  const [mobileOpen, setMobileOpen] = useState(false);
   const { session, isAdmin, loading } = useIsAdmin();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
