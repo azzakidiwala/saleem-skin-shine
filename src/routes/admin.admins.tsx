@@ -210,7 +210,23 @@ function NotificationRecipients() {
         </p>
       </div>
 
-      <div className="rounded-lg border bg-card overflow-hidden">
+      {/* Mobile card list */}
+      <div className="space-y-3 md:hidden">
+        {isLoading && <div className="text-center py-8 text-muted-foreground">Loading…</div>}
+        {(data ?? []).map((r) => (
+          <div key={r.id} className="rounded-lg border bg-card p-3 grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3">
+            <Checkbox checked={r.enabled} onCheckedChange={(v) => toggle.mutate({ id: r.id, enabled: !!v })} />
+            <div className="min-w-0 text-sm font-medium truncate">{r.email}</div>
+            <Button variant="ghost" size="icon" className="shrink-0" onClick={() => { if (confirm(`Remove ${r.email}?`)) remove.mutate(r.id); }}>
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          </div>
+        ))}
+        {data && data.length === 0 && <div className="text-center py-8 text-muted-foreground">No recipients yet.</div>}
+      </div>
+
+      <div className="hidden md:block rounded-lg border bg-card overflow-hidden">
+
         <Table>
           <TableHeader>
             <TableRow>
