@@ -30,6 +30,8 @@ export const Route = createFileRoute("/admin/treatments")({
 
 const CATS = treatmentCategories.filter((c) => c !== "All");
 
+type PriceOption = { label: string; price: string };
+
 type Row = {
   id: string;
   slug: string;
@@ -38,6 +40,7 @@ type Row = {
   description: string;
   long_description: string;
   price: string;
+  price_options: PriceOption[];
   duration: string;
   sessions: string;
   benefits: string[];
@@ -55,6 +58,7 @@ const empty: Row = {
   description: "",
   long_description: "",
   price: "",
+  price_options: [],
   duration: "",
   sessions: "",
   benefits: [],
@@ -122,7 +126,10 @@ function TreatmentsPage() {
     queryFn: async () => {
       const { data, error } = await supabase.from("treatments").select("*").order("sort_order");
       if (error) throw error;
-      return data as Row[];
+      return (data ?? []).map((r: any) => ({
+        ...r,
+        price_options: Array.isArray(r.price_options) ? r.price_options : [],
+      })) as Row[];
     },
   });
 
@@ -175,6 +182,9 @@ function TreatmentsPage() {
       if (!payload.slug) payload.slug = slugify(payload.name);
       payload.price = normalizePrice(payload.price);
       payload.duration = normalizeDuration(payload.duration);
+      payload.price_options = (payload.price_options ?? [])
+        .filter((o) => (o.label ?? "").trim() || (o.price ?? "").trim())
+        .map((o) => ({ label: (o.label ?? "").trim(), price: normalizePrice(o.price ?? "") }));
       let savedId = payload.id;
       if (!payload.id) {
         const { id, ...insert } = payload;
@@ -400,6 +410,53 @@ function EditorDialog({ trigger, initial, onSave, existingCats = [] }: { trigger
               )}
             </div>
             <div className="space-y-2"><Label>Price</Label><Input value={row.price} onChange={(e) => update("price", e.target.value)} placeholder="100 (£ added automatically)" /></div>
+          </div>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label>Additional pricing options</Label>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => update("price_options", [...(row.price_options ?? []), { label: "", price: "" }])}
+              >
+                <Plus className="h-4 w-4 mr-1" /> Add option
+              </Button>
+            </div>
+            <p className="text-xs text-muted-foreground">e.g. Consultation — 0, 1ml — 100, 2ml — 150</p>
+            {(row.price_options ?? []).map((opt, i) => (
+              <div key={i} className="flex gap-2">
+                <Input
+                  className="flex-1"
+                  value={opt.label}
+                  placeholder="Option name (e.g. 1ml)"
+                  onChange={(e) => {
+                    const next = [...(row.price_options ?? [])];
+                    next[i] = { ...next[i], label: e.target.value };
+                    update("price_options", next);
+                  }}
+                />
+                <Input
+                  className="w-32"
+                  value={opt.price}
+                  placeholder="100"
+                  onChange={(e) => {
+                    const next = [...(row.price_options ?? [])];
+                    next[i] = { ...next[i], price: e.target.value };
+                    update("price_options", next);
+                  }}
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  aria-label="Remove pricing option"
+                  onClick={() => update("price_options", (row.price_options ?? []).filter((_, x) => x !== i))}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+            ))}
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-2"><Label>Duration</Label><Input value={row.duration} onChange={(e) => update("duration", e.target.value)} placeholder="30 (mins added automatically)" /></div>

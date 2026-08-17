@@ -10,6 +10,7 @@ export type Treatment = {
   description: string;
   longDescription: string;
   price: string;
+  priceOptions: { label: string; price: string }[];
   duration: string;
   sessions: string;
   benefits: string[];
@@ -43,6 +44,7 @@ function mapTreatment(r: any): Treatment {
     description: r.description ?? "",
     longDescription: r.long_description ?? "",
     price: r.price ?? "",
+    priceOptions: Array.isArray(r.price_options) ? r.price_options : [],
     duration: r.duration ?? "",
     sessions: r.sessions ?? "",
     benefits: r.benefits ?? [],

@@ -428,6 +428,7 @@ export type Database = {
           long_description: string
           name: string
           price: string
+          price_options: Json
           sessions: string
           slug: string
           sort_order: number
@@ -446,6 +447,7 @@ export type Database = {
           long_description?: string
           name: string
           price?: string
+          price_options?: Json
           sessions?: string
           slug: string
           sort_order?: number
@@ -464,6 +466,7 @@ export type Database = {
           long_description?: string
           name?: string
           price?: string
+          price_options?: Json
           sessions?: string
           slug?: string
           sort_order?: number
