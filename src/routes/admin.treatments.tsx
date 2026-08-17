@@ -250,8 +250,10 @@ function TreatmentsPage() {
                   <EditorDialog
                     trigger={<Button variant="ghost" size="icon"><Pencil className="h-4 w-4" /></Button>}
                     initial={r}
+                    existingCats={rows.map((x) => x.category)}
                     onSave={(row) => save.mutateAsync(row)}
                   />
+
                   <Button variant="ghost" size="icon" onClick={() => { if (confirm(`Delete "${r.name}"?`)) remove.mutate(r.id); }}>
                     <Trash2 className="h-4 w-4" />
                   </Button>
