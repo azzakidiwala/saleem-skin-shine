@@ -118,6 +118,17 @@ function TreatmentDetailPage() {
             <aside className="lg:col-span-1">
               <div className="bg-card border border-border p-7 lg:sticky lg:top-28">
                 <div className="text-2xl text-gold font-medium mb-6">{t.price}</div>
+                {t.priceOptions?.length > 0 && (
+                  <div className="mb-6 border-t border-border pt-5 space-y-2">
+                    <div className="text-[10px] tracking-[0.25em] uppercase text-muted-foreground mb-3">Pricing options</div>
+                    {t.priceOptions.map((o) => (
+                      <div key={o.label + o.price} className="flex items-baseline justify-between gap-4 text-sm">
+                        <span className="text-muted-foreground">{o.label}</span>
+                        <span className="font-semibold text-foreground">{o.price}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
                 <div className="space-y-4 pb-6 border-b border-border">
                   <div className="flex items-start gap-3 text-sm">
                     <Clock className="h-4 w-4 text-muted-foreground mt-0.5" />
