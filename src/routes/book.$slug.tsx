@@ -93,6 +93,13 @@ function BookingPage() {
   const prefill = Route.useSearch();
   const navigate = useNavigate();
 
+  const priceOptions = (t.priceOptions ?? []).filter((o) => o.label || o.price);
+  const hasOptions = priceOptions.length > 0;
+  const [optionIndex, setOptionIndex] = useState<number | null>(null);
+  const selectedOption = optionIndex !== null ? priceOptions[optionIndex] : undefined;
+  const displayPrice = selectedOption?.price || t.price;
+  const bookingName = selectedOption?.label ? `${t.name} — ${selectedOption.label}` : t.name;
+
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [time, setTime] = useState<string | undefined>(undefined);
