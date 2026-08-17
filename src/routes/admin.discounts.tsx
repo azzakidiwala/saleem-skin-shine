@@ -144,19 +144,71 @@ function DiscountsPage() {
         <SettingsCard settings={settings} onSave={(patch) => updateSettings.mutate(patch)} />
       )}
 
-      <div className="flex gap-1 rounded-lg border bg-card p-1 w-fit">
+      <div className="flex flex-wrap gap-1 rounded-lg border bg-card p-1 w-full sm:w-fit">
         {[
           { v: "all", l: "All" },
           { v: "signup", l: "Signup vouchers" },
           { v: "promo", l: "Promo codes" },
         ].map((o) => (
-          <Button key={o.v} size="sm" variant={tab === o.v ? "default" : "ghost"} onClick={() => setTab(o.v as any)}>
+          <Button key={o.v} size="sm" className="flex-1 sm:flex-none" variant={tab === o.v ? "default" : "ghost"} onClick={() => setTab(o.v as any)}>
             {o.l}
           </Button>
         ))}
       </div>
 
-      <div className="rounded-lg border bg-card overflow-hidden">
+
+      {/* Mobile card list */}
+      <div className="space-y-3 md:hidden">
+        {isLoading && <div className="text-center py-8 text-muted-foreground">Loading…</div>}
+        {!isLoading && filtered.length === 0 && <div className="text-center py-8 text-muted-foreground">No vouchers yet.</div>}
+        {filtered.map((v) => {
+          const expired = v.expires_at ? new Date(v.expires_at) < new Date() : false;
+          const usedUp = v.used_count >= v.max_uses;
+          return (
+            <div key={v.id} className="rounded-lg border bg-card p-3 space-y-2">
+              <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2">
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1 min-w-0">
+                    <span className="font-mono font-medium truncate">{v.code}</span>
+                    <Button variant="ghost" size="icon" className="h-6 w-6 shrink-0" onClick={() => { navigator.clipboard.writeText(v.code); toast.success("Copied"); }}>
+                      <Copy className="h-3 w-3" />
+                    </Button>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-1 mt-1">
+                    <Badge variant="outline" className="capitalize">{v.kind}</Badge>
+                    <Badge variant="secondary">{formatPence(v.discount_pennies)}</Badge>
+                    {v.treatment_slug && (
+                      <Badge variant="secondary" className="max-w-[10rem] truncate">
+                        {treatmentNameBySlug.get(v.treatment_slug) ?? v.treatment_slug}
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+                <div className="flex items-center gap-1 shrink-0">
+                  <Switch checked={v.is_active && !expired && !usedUp} disabled={expired || usedUp} onCheckedChange={(c) => toggleActive.mutate({ id: v.id, active: c })} />
+                  <Button variant="ghost" size="icon" onClick={() => { if (confirm("Delete this voucher?")) remove.mutate(v.id); }}>
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+              <div className="text-xs text-muted-foreground space-y-0.5">
+                {v.kind === "signup" ? (
+                  <div className="truncate">{v.first_name} {v.surname} · {v.email}</div>
+                ) : (
+                  v.notes && <div className="truncate">{v.notes}</div>
+                )}
+                <div>Used {v.used_count} / {v.max_uses}</div>
+                <div className={expired ? "text-destructive" : ""}>
+                  {v.expires_at ? `Expires ${new Date(v.expires_at).toLocaleString("en-GB")}` : "Never expires"}
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="hidden md:block rounded-lg border bg-card overflow-hidden">
+
         <Table>
           <TableHeader>
             <TableRow>

@@ -129,7 +129,60 @@ function CustomersPage() {
         </div>
       </div>
 
-      <div className="rounded-lg border bg-card overflow-hidden">
+      {/* Mobile card list */}
+      <div className="space-y-3 md:hidden">
+        {isLoading && <div className="text-center py-8 text-muted-foreground">Loading…</div>}
+        {!isLoading && filtered.length === 0 && <div className="text-center py-8 text-muted-foreground">No customers yet.</div>}
+        {filtered.map((c) => {
+          const isOpen = expandedId === c.id;
+          return (
+            <div key={c.id} className="rounded-lg border bg-card">
+              <button
+                type="button"
+                className="w-full grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 p-3 text-left"
+                onClick={() => setExpandedId(isOpen ? null : c.id)}
+              >
+                <div className="min-w-0">
+                  <div className="font-medium truncate">{c.first_name} {c.surname}</div>
+                  <div className="text-xs text-muted-foreground truncate">{c.email}</div>
+                  <div className="text-xs text-muted-foreground truncate">{c.mobile}</div>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  <Badge variant="secondary">{bookingCounts?.get(c.id) ?? 0}</Badge>
+                  {isOpen ? <ChevronDown className="h-4 w-4 text-muted-foreground" /> : <ChevronRight className="h-4 w-4 text-muted-foreground" />}
+                </div>
+              </button>
+              <div className="flex items-center justify-between border-t px-3 py-2">
+                <span className="text-xs text-muted-foreground">
+                  Last activity {new Date(c.updated_at).toLocaleDateString("en-GB")}
+                </span>
+                <div className="flex gap-1">
+                  <EditCustomerDialog customer={c} />
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => {
+                      if (confirm(`Delete ${c.first_name} ${c.surname}? Their bookings will be kept but unlinked.`)) {
+                        remove.mutate(c.id);
+                      }
+                    }}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+              {isOpen && (
+                <div className="border-t">
+                  <CustomerDetailPanel customer={c} />
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="hidden md:block rounded-lg border bg-card overflow-hidden">
+
         <Table>
           <TableHeader>
             <TableRow>
@@ -233,40 +286,25 @@ function CustomerDetailPanel({ customer }: { customer: Customer }) {
         <NewBookingForCustomer customer={customer} />
       </div>
 
-      <div className="rounded-md border overflow-hidden bg-card">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Date / Time</TableHead>
-              <TableHead>Treatment</TableHead>
-              <TableHead>Status</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {isLoading && (
-              <TableRow><TableCell colSpan={3} className="text-center py-4 text-muted-foreground text-sm">Loading…</TableCell></TableRow>
-            )}
-            {!isLoading && (!bookings || bookings.length === 0) && (
-              <TableRow><TableCell colSpan={3} className="text-center py-6 text-muted-foreground text-sm">No bookings yet.</TableCell></TableRow>
-            )}
-            {(bookings ?? []).map((b) => (
-              <TableRow key={b.id}>
-                <TableCell className="font-medium whitespace-nowrap text-sm">
-                  {b.appointment_date}
-                  <div className="text-xs text-muted-foreground">{b.appointment_time}</div>
-                </TableCell>
-                <TableCell className="text-sm">
-                  {b.treatment_name}
-                  {b.treatment_price && <div className="text-xs text-muted-foreground">{b.treatment_price}</div>}
-                </TableCell>
-                <TableCell>
-                  <Badge variant={statusVariant(b.status)} className="capitalize">{b.status}</Badge>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+      <div className="rounded-md border bg-card divide-y">
+        {isLoading && <div className="text-center py-4 text-muted-foreground text-sm">Loading…</div>}
+        {!isLoading && (!bookings || bookings.length === 0) && (
+          <div className="text-center py-6 text-muted-foreground text-sm">No bookings yet.</div>
+        )}
+        {(bookings ?? []).map((b) => (
+          <div key={b.id} className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 items-start p-3">
+            <div className="min-w-0">
+              <div className="text-sm font-medium truncate">{b.treatment_name}</div>
+              <div className="text-xs text-muted-foreground">
+                {b.appointment_date} · {b.appointment_time}
+                {b.treatment_price ? ` · ${b.treatment_price}` : ""}
+              </div>
+            </div>
+            <Badge variant={statusVariant(b.status)} className="capitalize shrink-0">{b.status}</Badge>
+          </div>
+        ))}
       </div>
+
 
       <div className="text-right">
         <Link to="/admin/bookings" className="text-sm text-primary hover:underline">Manage in bookings →</Link>
