@@ -194,7 +194,7 @@ function TreatmentsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-end justify-between gap-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h1 className="text-3xl font-semibold">Treatments</h1>
           <p className="text-muted-foreground mt-1">Add, edit, or remove treatments. Drag the handle to reorder.</p>
@@ -305,11 +305,11 @@ function EditorDialog({ trigger, initial, onSave, existingCats = [] }: { trigger
           <DialogDescription>All fields shown on the public site.</DialogDescription>
         </DialogHeader>
         <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-2"><Label>Name</Label><Input value={row.name} onChange={(e) => update("name", e.target.value)} /></div>
             <div className="space-y-2"><Label>Slug (URL)</Label><Input value={row.slug} onChange={(e) => update("slug", slugify(e.target.value))} placeholder="auto from name" /></div>
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-2">
               <Label>Category</Label>
               <div className="flex gap-2">
@@ -346,7 +346,7 @@ function EditorDialog({ trigger, initial, onSave, existingCats = [] }: { trigger
             </div>
             <div className="space-y-2"><Label>Price</Label><Input value={row.price} onChange={(e) => update("price", e.target.value)} placeholder="100 (£ added automatically)" /></div>
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-2"><Label>Duration</Label><Input value={row.duration} onChange={(e) => update("duration", e.target.value)} placeholder="30 (mins added automatically)" /></div>
             <div className="space-y-2"><Label>Sessions</Label><Input value={row.sessions} onChange={(e) => update("sessions", e.target.value)} placeholder="1 session" /></div>
           </div>
@@ -371,7 +371,7 @@ function EditorDialog({ trigger, initial, onSave, existingCats = [] }: { trigger
             <Input type="file" accept="image/*" onChange={(e) => onFile(e.target.files?.[0] ?? null)} disabled={uploading} />
             {row.image_url && <Button type="button" variant="outline" size="sm" onClick={() => update("image_url", null)}>Remove image</Button>}
           </div>
-          <div className="grid grid-cols-2 gap-3 items-end">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-end">
             <div className="space-y-2"><Label>Sort order</Label><Input type="number" value={row.sort_order} onChange={(e) => update("sort_order", parseInt(e.target.value || "0", 10))} /></div>
             <div className="flex items-center gap-2"><Switch checked={row.is_active} onCheckedChange={(v) => update("is_active", v)} /><Label>Active (visible on site)</Label></div>
           </div>

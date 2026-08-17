@@ -79,7 +79,7 @@ function AdminsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-end justify-between gap-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h1 className="text-3xl font-semibold">Admins</h1>
           <p className="text-muted-foreground mt-1">Create or remove people who can manage the site.</p>

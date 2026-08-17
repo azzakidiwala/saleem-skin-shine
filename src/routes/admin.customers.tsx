@@ -361,7 +361,7 @@ function EditCustomerDialog({ customer }: { customer: Customer }) {
       <DialogContent>
         <DialogHeader><DialogTitle>Edit customer</DialogTitle></DialogHeader>
         <div className="space-y-3">
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-2"><Label>First name</Label><Input value={row.first_name} onChange={(e) => setRow({ ...row, first_name: e.target.value })} /></div>
             <div className="space-y-2"><Label>Surname</Label><Input value={row.surname} onChange={(e) => setRow({ ...row, surname: e.target.value })} /></div>
           </div>
