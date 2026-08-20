@@ -107,6 +107,8 @@ function TreatmentDetailPage() {
 
   const fromPrice = t.priceOptions?.length ? t.priceOptions[0].price : t.price || "On consultation";
 
+  const waMessage = `Hi Saleem Skin, I'm interested in the ${t.name} treatment. Could you tell me more?`;
+
   const bookButtons = (
     <div className="space-y-2">
       <Link
@@ -116,6 +118,13 @@ function TreatmentDetailPage() {
       >
         Book Treatment
       </Link>
+      <WhatsAppButton
+        message={waMessage}
+        label={`Ask about ${t.name} on WhatsApp`}
+        className="w-full py-3 text-xs tracking-[0.25em] uppercase font-semibold"
+      >
+        WhatsApp Us
+      </WhatsAppButton>
       <a
         href="tel:07503959285"
         className="w-full inline-flex items-center justify-center gap-2 border border-primary text-primary py-3 text-xs tracking-[0.25em] uppercase font-semibold hover:bg-primary hover:text-primary-foreground transition-colors"
@@ -124,6 +133,7 @@ function TreatmentDetailPage() {
       </a>
     </div>
   );
+
 
   const backLink = (tone: "light" | "dark") => (
     <Link
