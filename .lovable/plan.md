@@ -1,64 +1,29 @@
-## Admin Backend Plan
+# Treatment FAQs (SEO) + staff editing
 
-A non-technical admin area at `/admin` to manage everything currently hardcoded, plus bookings.
+Add a per-treatment FAQ section to each treatment page, placed just above "Other treatments you may like", with proper SEO markup, and let staff manage those FAQs from Admin → Treatments.
 
-### 1. Database (migrations)
+## Public treatment page
 
-**New tables**
-- `treatments` — slug, name, category, short/long description, price, duration, sessions, benefits (text[]), what_to_expect, image_url, sort_order, is_active
-- `team_members` — name, role, bio, credentials, tags (text[]), image_url, icon, sort_order, is_active
-- `site_content` — key/value store (e.g. `home.hero.title`, `home.about.text`, `announcement.text`, `home.about.image`) for editable text & images across the site
-- `user_roles` + `app_role` enum (`admin`) with `has_role()` security definer function (per security best practice)
+- New "Frequently asked questions" section directly above the related treatments block.
+- Accordion layout matching the site theme (deep green / gold), questions as headings so they're crawlable — answers stay in the DOM for search engines even when visually collapsed.
+- Only renders when that treatment has FAQs; nothing changes for treatments without any.
 
-**Existing `bookings`** — add admin RLS policies (select/update/delete) gated on `has_role(auth.uid(), 'admin')`. Status field already exists for cancellations.
+## SEO
 
-**Storage** — public `site-images` bucket for uploads (treatments, team, site content). RLS: public read; admin-only write/update/delete.
+- Add a second JSON-LD block on the treatment page with an `FAQPage` schema (each question/answer as `Question` + `acceptedAnswer`), alongside the existing `Service` schema.
+- Only emitted when the treatment has at least one FAQ, so no empty/invalid structured data.
+- Semantic headings and plain-text answers so Google can surface FAQ rich results.
 
-### 2. Auth
+## Staff editing (Admin → Treatments)
 
-- Email + password only (admins invited manually)
-- No public signup page — admins are added by an existing admin from the admin UI ("Invite admin" creates auth user + assigns admin role via server function using service role)
-- First admin: bootstrap script / instructions to assign role to your account after first signup
-- `/admin/*` routes protected via `_authenticated` layout + role check (redirects non-admins)
+- New "FAQs" block inside the treatment editor dialog, styled like the existing before/after and pricing editors.
+- "+ Add FAQ" button, per-row question input, answer textarea, and a delete (trash) button per row.
+- Drag-free simple ordering: FAQs save in the order listed; empty rows are dropped on save.
+- Saved with the rest of the treatment — changes appear on the public page immediately.
 
-### 3. Frontend changes
+## Technical details
 
-**Site** — replace hardcoded data sources with DB-backed loaders:
-- `src/data/treatments.ts` becomes a thin re-export of a server function fetching from DB (with TanStack Query on consumer pages)
-- `team.tsx` fetches team_members from DB
-- Hero/About/Announcement/CTA components read from `site_content`
-- Existing image imports remain as fallbacks/seed; new images served from storage URLs
-- Seed migration inserts current treatments, team, and site content so nothing visually changes on launch
-
-**Admin UI** at `/admin`:
-- Dashboard (booking counts, quick links)
-- Bookings — table with filters by date/status, view details, change status (pending/confirmed/cancelled/completed), reschedule date/time, delete
-- Treatments — list, create, edit, delete, reorder, toggle active, image upload
-- Team — list, create, edit, delete, reorder, image upload
-- Site Content — form grouped by page/section to edit text and swap images
-- Admins — list admins, invite new admin (email + temp password), remove
-
-All CRUD via `createServerFn` with `requireSupabaseAuth` + admin role check. Image upload via storage SDK from the browser (admin session).
-
-### 4. Technical notes
-
-- Server functions in `src/lib/admin/*.functions.ts` and `src/lib/content/*.functions.ts`
-- Public site reads use anon key (RLS allows public select on active rows)
-- Admin writes verified server-side via `has_role()` in RLS, not client checks
-- Image uploads: generate unique filenames (`{table}/{uuid}.{ext}`), store public URL in DB
-- Booking status transitions trigger no automatic emails in this pass (existing `send-booking-emails` function is unaffected)
-
-### 5. Out of scope for this pass
-
-- Editing Footer/Header structural links (text only via site_content)
-- Multi-language
-- Audit log of admin changes
-- Email notifications when admin cancels/reschedules a booking (can add later)
-
-### Order of work
-
-1. Migration: tables, RLS, roles, storage bucket, seed data
-2. Auth pages (`/admin/login`) + protected layout with role guard
-3. Refactor public site to read from DB
-4. Admin UI: Bookings → Treatments → Team → Site Content → Admins
-5. Bootstrap first admin (you'll sign up via `/admin/login` register-once flow, then I assign the role)
+- Migration: add `faqs jsonb not null default '[]'` to `public.treatments` (shape: `[{ question, answer }]`). No new table, matching how `price_options` and `before_after` already work.
+- `src/lib/content/queries.ts`: map the new column into the `Treatment` type as `faqs`.
+- `src/routes/treatments.$slug.tsx`: render the FAQ accordion above the related section and extend `head().scripts` with the conditional `FAQPage` JSON-LD.
+- `src/routes/admin.treatments.tsx`: add `faqs` to the row type, defaults, load mapping, and save payload sanitisation; add the editor UI block.
