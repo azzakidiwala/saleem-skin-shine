@@ -1,10 +1,12 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { ArrowLeft, Clock, Calendar, Check, Phone } from "lucide-react";
+import { ArrowLeft, Clock, Calendar, Check, Phone, Sparkles, BadgePoundSterling } from "lucide-react";
 import { AnnouncementBar } from "@/components/site/AnnouncementBar";
 import { Header } from "@/components/site/Header";
 import { CTA } from "@/components/site/CTA";
 import { Footer } from "@/components/site/Footer";
+import { BeforeAfterSlider } from "@/components/site/BeforeAfterSlider";
 import { fetchTreatmentBySlug, fetchTreatments, type Treatment } from "@/lib/content/queries";
+
 
 export const Route = createFileRoute("/treatments/$slug")({
   loader: async ({ params }) => {
