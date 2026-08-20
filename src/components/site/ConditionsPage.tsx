@@ -38,6 +38,29 @@ export function ConditionsPage({ area, intro, conditions, contentKey, dbArea }: 
       <AnnouncementBar />
       <Header />
       <main>
+        <div className="border-b border-border bg-background">
+          <div className="container mx-auto px-4">
+            <div className="flex items-center justify-center gap-2 md:gap-4 py-4">
+              {["Face", "Body", "Skin"].map((tab) => {
+                const slug = tab.toLowerCase();
+                const active = area.toLowerCase() === slug;
+                return (
+                  <Link
+                    key={tab}
+                    to={`/conditions/${slug}` as "/conditions/face" | "/conditions/body" | "/conditions/skin"}
+                    className={`px-6 md:px-10 py-2.5 text-[11px] tracking-[0.25em] uppercase font-semibold transition-colors border ${
+                      active
+                        ? "bg-gold text-gold-foreground border-gold"
+                        : "bg-background text-foreground border-border hover:border-gold hover:text-gold"
+                    }`}
+                  >
+                    {tab}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </div>
         <section className="py-20 md:py-28 bg-background text-center">
           <div className="container mx-auto px-4">
             <div className="text-gold text-[11px] tracking-[0.35em] mb-5">{eyebrow}</div>
