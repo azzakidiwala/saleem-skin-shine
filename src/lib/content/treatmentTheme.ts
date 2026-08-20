@@ -24,7 +24,7 @@ export type TreatmentTheme = {
 const DEFAULT_THEME: TreatmentTheme = {
   toneClass: "tone-gold",
   hero: "immersive",
-  order: ["overview", "results", "benefits", "journey", "pricing", "faqs"],
+  order: ["overview", "benefits", "results", "journey", "pricing", "faqs"],
   eyebrow: "Overview",
   overviewHeading: "What this treatment does",
   resultsLabel: "Real results",
@@ -39,7 +39,7 @@ const THEMES: Record<string, Partial<TreatmentTheme>> = {
   Injectables: {
     toneClass: "tone-gold",
     hero: "immersive",
-    order: ["overview", "results", "benefits", "journey", "pricing", "faqs"],
+    order: ["overview", "benefits", "results", "journey", "pricing", "faqs"],
     eyebrow: "The treatment",
     overviewHeading: "Refined, anatomy-led results",
     resultsSpeed: "Softens from day 3, full effect at 2 weeks",
@@ -47,7 +47,7 @@ const THEMES: Record<string, Partial<TreatmentTheme>> = {
   HydraFacial: {
     toneClass: "tone-aqua",
     hero: "split",
-    order: ["overview", "journey", "benefits", "results", "pricing", "faqs"],
+    order: ["overview", "results", "journey", "benefits", "pricing", "faqs"],
     eyebrow: "The facial",
     overviewHeading: "A deep cleanse your skin can feel",
     resultsLabel: "Skin in focus",
@@ -60,7 +60,7 @@ const THEMES: Record<string, Partial<TreatmentTheme>> = {
   "Skin Rejuvenation": {
     toneClass: "tone-rose",
     hero: "editorial",
-    order: ["overview", "benefits", "journey", "results", "pricing", "faqs"],
+    order: ["overview", "benefits", "results", "journey", "pricing", "faqs"],
     eyebrow: "Skin renewal",
     overviewHeading: "Rebuilding skin from within",
     resultsLabel: "The transformation",
@@ -72,7 +72,7 @@ const THEMES: Record<string, Partial<TreatmentTheme>> = {
   "Scalp Health": {
     toneClass: "tone-forest",
     hero: "split",
-    order: ["overview", "journey", "results", "benefits", "pricing", "faqs"],
+    order: ["overview", "results", "journey", "benefits", "pricing", "faqs"],
     eyebrow: "Scalp care",
     overviewHeading: "Healthy hair starts at the scalp",
     resultsLabel: "Scalp results",
@@ -85,7 +85,7 @@ const THEMES: Record<string, Partial<TreatmentTheme>> = {
   PRP: {
     toneClass: "tone-plum",
     hero: "editorial",
-    order: ["overview", "journey", "benefits", "results", "pricing", "faqs"],
+    order: ["overview", "results", "journey", "benefits", "pricing", "faqs"],
     eyebrow: "Regenerative",
     overviewHeading: "Your own biology, put to work",
     resultsLabel: "Regeneration in pictures",
@@ -97,7 +97,7 @@ const THEMES: Record<string, Partial<TreatmentTheme>> = {
   Wellness: {
     toneClass: "tone-amber",
     hero: "split",
-    order: ["overview", "benefits", "journey", "pricing", "results", "faqs"],
+    order: ["overview", "benefits", "results", "journey", "pricing", "faqs"],
     eyebrow: "Wellbeing",
     overviewHeading: "Small appointment, big difference",
     benefitsLabel: "How you may feel",
@@ -109,7 +109,7 @@ const THEMES: Record<string, Partial<TreatmentTheme>> = {
   "Hay Fever Treatment": {
     toneClass: "tone-sky",
     hero: "split",
-    order: ["overview", "benefits", "journey", "faqs", "pricing", "results"],
+    order: ["overview", "benefits", "results", "journey", "faqs", "pricing"],
     eyebrow: "Seasonal relief",
     overviewHeading: "Relief for a full hay fever season",
     benefitsLabel: "What relief looks like",
@@ -121,7 +121,7 @@ const THEMES: Record<string, Partial<TreatmentTheme>> = {
   "Hair Removal": {
     toneClass: "tone-aqua",
     hero: "split",
-    order: ["overview", "benefits", "journey", "results", "pricing", "faqs"],
+    order: ["overview", "benefits", "results", "journey", "pricing", "faqs"],
     eyebrow: "Smooth skin",
     overviewHeading: "Permanent, hair-by-hair removal",
     resultsLabel: "The difference",
@@ -134,7 +134,7 @@ const THEMES: Record<string, Partial<TreatmentTheme>> = {
   Consultation: {
     toneClass: "tone-forest",
     hero: "editorial",
-    order: ["overview", "journey", "benefits", "faqs", "pricing", "results"],
+    order: ["overview", "results", "journey", "benefits", "faqs", "pricing"],
     eyebrow: "Before we begin",
     overviewHeading: "Advice first, treatment second",
     benefitsLabel: "What you'll come away with",
