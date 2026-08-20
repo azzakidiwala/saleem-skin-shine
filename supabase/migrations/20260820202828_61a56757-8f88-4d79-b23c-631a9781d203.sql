@@ -1,0 +1,4 @@
+update public.treatments set before_after = '[
+ {"before":"https://xtcmghlhzoytxogahlzz.supabase.co/storage/v1/object/public/site-images/before-after/dermal-filler-1-before.jpg","after":"https://xtcmghlhzoytxogahlzz.supabase.co/storage/v1/object/public/site-images/before-after/dermal-filler-1-after.jpg","caption":"Cheek and mid-face volume restoration — 2ml hyaluronic acid filler"},
+ {"before":"https://xtcmghlhzoytxogahlzz.supabase.co/storage/v1/object/public/site-images/before-after/dermal-filler-2-before.jpg","after":"https://xtcmghlhzoytxogahlzz.supabase.co/storage/v1/object/public/site-images/before-after/dermal-filler-2-after.jpg","caption":"Chin projection and jawline definition — 3ml hyaluronic acid filler"}
+]'::jsonb where slug = 'dermal-filler';
