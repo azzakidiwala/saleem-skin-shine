@@ -140,30 +140,30 @@ function TreatmentDetailPage() {
                 </div>
               </div>
               <aside className="lg:col-span-5">
-                <div className="bg-card border border-border p-7 lg:sticky lg:top-28">
-                  <div className="text-[10px] tracking-[0.25em] uppercase text-muted-foreground mb-2">Investment</div>
-                  <div className="text-3xl text-gold font-medium mb-6">{t.price}</div>
+                <div className="bg-card border border-border p-5 lg:sticky lg:top-28">
+                  <div className="text-[10px] tracking-[0.25em] uppercase text-muted-foreground mb-1">Investment</div>
+                  <div className="text-2xl text-gold font-medium mb-4">{t.price}</div>
                   {t.priceOptions?.length > 0 && (
-                    <div className="mb-6 border-t border-border pt-5 space-y-2 max-h-64 overflow-y-auto pr-1">
+                    <div className="mb-4 border-t border-border pt-3 space-y-1">
                       {t.priceOptions.map((o) => (
-                        <div key={o.label + o.price} className="flex items-baseline justify-between gap-4 text-sm">
+                        <div key={o.label + o.price} className="flex items-baseline justify-between gap-3 text-sm">
                           <span className="text-muted-foreground">{o.label}</span>
                           <span className="font-semibold text-foreground">{o.price}</span>
                         </div>
                       ))}
                     </div>
                   )}
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     <Link
                       to="/book/$slug"
                       params={{ slug: t.slug }}
-                      className="w-full inline-flex items-center justify-center bg-gold text-gold-foreground py-4 text-xs tracking-[0.25em] uppercase font-semibold hover:bg-gold/90 transition-colors"
+                      className="w-full inline-flex items-center justify-center bg-gold text-gold-foreground py-3 text-xs tracking-[0.25em] uppercase font-semibold hover:bg-gold/90 transition-colors"
                     >
                       Book Treatment
                     </Link>
                     <a
                       href="tel:07503959285"
-                      className="w-full inline-flex items-center justify-center gap-2 border border-primary text-primary py-4 text-xs tracking-[0.25em] uppercase font-semibold hover:bg-primary hover:text-primary-foreground transition-colors"
+                      className="w-full inline-flex items-center justify-center gap-2 border border-primary text-primary py-3 text-xs tracking-[0.25em] uppercase font-semibold hover:bg-primary hover:text-primary-foreground transition-colors"
                     >
                       <Phone className="h-3.5 w-3.5" /> Call to Book
                     </a>
