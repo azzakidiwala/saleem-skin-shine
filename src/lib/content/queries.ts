@@ -18,6 +18,7 @@ export type Treatment = {
   image: string;
   image_url: string | null;
   beforeAfter: { before: string; after: string; caption?: string }[];
+  faqs: { question: string; answer: string }[];
   sort_order: number;
   is_active: boolean;
 };
