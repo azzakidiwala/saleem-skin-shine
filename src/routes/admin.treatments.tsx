@@ -16,9 +16,13 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Plus, Trash2, Pencil, GripVertical, ArrowUp, ArrowDown } from "lucide-react";
+import { Plus, Trash2, Pencil, GripVertical, ArrowUp, ArrowDown, Undo2 } from "lucide-react";
 
 import { uploadSiteImage } from "@/lib/admin/storage";
 import { treatmentCategories } from "@/lib/content/queries";
@@ -204,12 +208,38 @@ function TreatmentsPage() {
   });
 
 
+  const [pendingDelete, setPendingDelete] = useState<Row | null>(null);
+  const [lastDeleted, setLastDeleted] = useState<Row | null>(null);
+  const [undoOpen, setUndoOpen] = useState(false);
+
   const remove = useMutation({
-    mutationFn: async (id: string) => {
-      const { error } = await supabase.from("treatments").delete().eq("id", id);
+    mutationFn: async (row: Row) => {
+      const { error } = await supabase.from("treatments").delete().eq("id", row.id);
+      if (error) throw error;
+      return row;
+    },
+    onSuccess: (row) => {
+      setLastDeleted(row);
+      toast.success(`Deleted "${row.name}"`);
+      qc.invalidateQueries({ queryKey: ["admin", "treatments"] });
+      qc.invalidateQueries({ queryKey: ["treatments"] });
+    },
+    onError: (e: any) => toast.error(e.message),
+  });
+
+  const restore = useMutation({
+    mutationFn: async (row: Row) => {
+      const { id, ...insert } = row;
+      const { error } = await supabase.from("treatments").insert(insert);
       if (error) throw error;
     },
-    onSuccess: () => { toast.success("Deleted"); qc.invalidateQueries({ queryKey: ["admin", "treatments"] }); qc.invalidateQueries({ queryKey: ["treatments"] }); },
+    onSuccess: () => {
+      toast.success("Treatment restored");
+      setLastDeleted(null);
+      setUndoOpen(false);
+      qc.invalidateQueries({ queryKey: ["admin", "treatments"] });
+      qc.invalidateQueries({ queryKey: ["treatments"] });
+    },
     onError: (e: any) => toast.error(e.message),
   });
 
@@ -220,14 +250,58 @@ function TreatmentsPage() {
           <h1 className="text-3xl font-semibold">Treatments</h1>
           <p className="text-muted-foreground mt-1">Add, edit, or remove treatments. Drag the handle to reorder.</p>
         </div>
-        <EditorDialog
-          trigger={<Button><Plus className="h-4 w-4 mr-1" /> New treatment</Button>}
-          initial={empty}
-          existingCats={rows.map((r) => r.category)}
-          onSave={(r) => save.mutateAsync(r)}
-        />
-
+        <div className="flex gap-2">
+          <Button variant="outline" disabled={!lastDeleted} onClick={() => setUndoOpen(true)}>
+            <Undo2 className="h-4 w-4 mr-1" /> Undo
+          </Button>
+          <EditorDialog
+            trigger={<Button><Plus className="h-4 w-4 mr-1" /> New treatment</Button>}
+            initial={empty}
+            existingCats={rows.map((r) => r.category)}
+            onSave={(r) => save.mutateAsync(r)}
+          />
+        </div>
       </div>
+
+      <AlertDialog open={!!pendingDelete} onOpenChange={(o) => !o && setPendingDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will delete “{pendingDelete?.name}”. You can restore it with the Undo button.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => { if (pendingDelete) remove.mutate(pendingDelete); setPendingDelete(null); }}
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={undoOpen} onOpenChange={setUndoOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Restore last deleted treatment?</AlertDialogTitle>
+            <AlertDialogDescription>
+              {lastDeleted ? `“${lastDeleted.name}” will be added back to your treatments.` : "Nothing to restore."}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              disabled={!lastDeleted || restore.isPending}
+              onClick={(e) => { e.preventDefault(); if (lastDeleted) restore.mutate(lastDeleted); }}
+            >
+              Restore
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
 
       {/* Mobile cards */}
       <div className="space-y-3 md:hidden">
@@ -263,7 +337,7 @@ function TreatmentsPage() {
                   existingCats={rows.map((x) => x.category)}
                   onSave={(row) => save.mutateAsync(row)}
                 />
-                <Button variant="ghost" size="icon" aria-label="Delete" onClick={() => { if (confirm(`Delete "${r.name}"?`)) remove.mutate(r.id); }}>
+                <Button variant="ghost" size="icon" aria-label="Delete" onClick={() => { setPendingDelete(r); }}>
                   <Trash2 className="h-4 w-4" />
                 </Button>
               </div>
@@ -318,7 +392,7 @@ function TreatmentsPage() {
                     onSave={(row) => save.mutateAsync(row)}
                   />
 
-                  <Button variant="ghost" size="icon" onClick={() => { if (confirm(`Delete "${r.name}"?`)) remove.mutate(r.id); }}>
+                  <Button variant="ghost" size="icon" onClick={() => { setPendingDelete(r); }}>
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </TableCell>
