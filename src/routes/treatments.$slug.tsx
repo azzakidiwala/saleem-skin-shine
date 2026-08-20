@@ -319,8 +319,25 @@ function TreatmentDetailPage() {
               </details>
             ))}
           </div>
+          <div className="mt-10 flex flex-col sm:flex-row justify-center gap-3">
+            <Link
+              to="/book/$slug"
+              params={{ slug: t.slug }}
+              className="inline-flex items-center justify-center bg-tone text-tone-foreground px-8 py-4 text-xs tracking-[0.25em] uppercase font-semibold hover:opacity-90 transition-opacity"
+            >
+              Book {t.name}
+            </Link>
+            <WhatsAppButton
+              message={waMessage}
+              label={`Ask about ${t.name} on WhatsApp`}
+              className="px-8 py-4 text-xs tracking-[0.25em] uppercase font-semibold"
+            >
+              Ask on WhatsApp
+            </WhatsAppButton>
+          </div>
         </div>
       </section>
+
     ) : null,
   };
 
