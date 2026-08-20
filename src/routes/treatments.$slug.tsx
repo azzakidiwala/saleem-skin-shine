@@ -253,8 +253,14 @@ function TreatmentDetailPage() {
     benefits: t.benefits.length > 0 ? (
       <section key="benefits" className="py-16 md:py-20 bg-card border-y border-border">
         <div className="container mx-auto px-6">
-          <p className="eyebrow mb-4 text-tone">{theme.benefitsLabel}</p>
-          <StackedBenefits benefits={t.benefits} />
+          <StackedBenefits
+            benefits={t.benefits}
+            label={theme.benefitsLabel}
+            treatmentName={t.name}
+            slug={t.slug}
+            intro={t.shortDescription || undefined}
+          />
+
         </div>
       </section>
     ) : null,
