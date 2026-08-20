@@ -16,9 +16,13 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Plus, Trash2, Pencil, GripVertical, ArrowUp, ArrowDown } from "lucide-react";
+import { Plus, Trash2, Pencil, GripVertical, ArrowUp, ArrowDown, Undo2 } from "lucide-react";
 
 import { uploadSiteImage } from "@/lib/admin/storage";
 import { treatmentCategories } from "@/lib/content/queries";
