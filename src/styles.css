@@ -132,11 +132,12 @@
   100% { box-shadow: 0 0 0 14px color-mix(in oklab, var(--gold) 0%, transparent); }
 }
 
-/* Per-category treatment tones — each treatment category gets its own accent */
-.tone-gold   { --tone: var(--gold); --tone-soft: var(--gold-soft); --tone-foreground: oklch(0.18 0.02 150); --tone-surface: oklch(0.97 0.02 88); }
-.tone-aqua   { --tone: oklch(0.68 0.10 205); --tone-soft: oklch(0.80 0.07 205); --tone-foreground: oklch(0.16 0.03 210); --tone-surface: oklch(0.97 0.02 205); }
-.tone-rose   { --tone: oklch(0.68 0.11 25);  --tone-soft: oklch(0.80 0.07 30);  --tone-foreground: oklch(0.18 0.03 25);  --tone-surface: oklch(0.97 0.015 30); }
-.tone-forest { --tone: oklch(0.55 0.09 160); --tone-soft: oklch(0.72 0.07 160); --tone-foreground: oklch(0.15 0.03 160); --tone-surface: oklch(0.97 0.015 160); }
-.tone-plum   { --tone: oklch(0.55 0.12 340); --tone-soft: oklch(0.72 0.08 340); --tone-foreground: oklch(0.98 0.01 340); --tone-surface: oklch(0.97 0.015 340); }
-.tone-amber  { --tone: oklch(0.72 0.13 65);  --tone-soft: oklch(0.83 0.09 70);  --tone-foreground: oklch(0.18 0.03 65);  --tone-surface: oklch(0.97 0.02 70); }
-.tone-sky    { --tone: oklch(0.66 0.11 240); --tone-soft: oklch(0.80 0.07 240); --tone-foreground: oklch(0.98 0.01 240); --tone-surface: oklch(0.97 0.02 240); }
+/* Per-category treatment tones — all text/accents stay in the brand gold + deep
+   green family; only the very subtle surface tint varies by category. */
+.tone-gold   { --tone: var(--gold); --tone-soft: var(--gold-soft); --tone-foreground: var(--gold-foreground); --tone-surface: oklch(0.97 0.02 88); }
+.tone-aqua   { --tone: var(--gold); --tone-soft: var(--gold-soft); --tone-foreground: var(--gold-foreground); --tone-surface: oklch(0.975 0.008 170); }
+.tone-rose   { --tone: var(--gold); --tone-soft: var(--gold-soft); --tone-foreground: var(--gold-foreground); --tone-surface: oklch(0.975 0.012 60); }
+.tone-forest { --tone: var(--deep-green); --tone-soft: oklch(0.45 0.05 150); --tone-foreground: oklch(0.98 0.01 150); --tone-surface: oklch(0.97 0.012 150); }
+.tone-plum   { --tone: var(--deep-green); --tone-soft: oklch(0.45 0.05 150); --tone-foreground: oklch(0.98 0.01 150); --tone-surface: oklch(0.968 0.014 145); }
+.tone-amber  { --tone: var(--gold); --tone-soft: var(--gold-soft); --tone-foreground: var(--gold-foreground); --tone-surface: oklch(0.972 0.022 75); }
+.tone-sky    { --tone: var(--deep-green); --tone-soft: oklch(0.45 0.05 150); --tone-foreground: oklch(0.98 0.01 150); --tone-surface: oklch(0.973 0.01 160); }
