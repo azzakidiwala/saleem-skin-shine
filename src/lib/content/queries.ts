@@ -55,6 +55,7 @@ function mapTreatment(r: any): Treatment {
     image: resolveTreatmentImage(r.slug, r.image_url),
     image_url: r.image_url ?? null,
     beforeAfter: Array.isArray(r.before_after) ? r.before_after : [],
+    faqs: Array.isArray(r.faqs) ? r.faqs : [],
     sort_order: r.sort_order ?? 0,
 
     is_active: r.is_active,
