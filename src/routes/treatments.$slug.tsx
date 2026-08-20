@@ -128,7 +128,7 @@ function TreatmentDetailPage() {
     <Link
       to="/treatments"
       className={`inline-flex items-center gap-2 text-sm mb-5 transition-colors ${
-        tone === "dark" ? "text-white/90 hover:text-tone-soft" : "text-muted-foreground hover:text-tone"
+        tone === "dark" ? "text-white/90 hover:text-gold-soft" : "text-muted-foreground hover:text-tone"
       }`}
     >
       <ArrowLeft className="h-4 w-4" /> Back to Treatments
@@ -168,7 +168,7 @@ function TreatmentDetailPage() {
         <div className="absolute inset-0 bg-black/55" />
         <div className="relative container mx-auto px-6 h-full flex flex-col justify-end pb-16">
           {backLink("dark")}
-          <div className="text-tone-soft text-[11px] tracking-[0.35em] uppercase mb-3">{t.category}</div>
+          <div className="text-gold-soft text-[11px] tracking-[0.35em] uppercase mb-3">{t.category}</div>
           <h1 className="font-serif text-4xl md:text-6xl text-white">{t.name}</h1>
         </div>
       </section>
@@ -251,13 +251,13 @@ function TreatmentDetailPage() {
       <section key="journey" className="py-16 md:py-24 bg-primary text-primary-foreground">
         <div className="container mx-auto px-6">
           <div className="max-w-2xl mb-12">
-            <p className="text-[11px] tracking-[0.35em] uppercase text-tone-soft mb-4">{theme.journeyLabel}</p>
+            <p className="text-[11px] tracking-[0.35em] uppercase text-gold-soft mb-4">{theme.journeyLabel}</p>
             <h2 className="text-3xl md:text-4xl">{theme.journeyHeading}</h2>
           </div>
           <ol className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {steps.map((s, i) => (
               <li key={i} className="border-t border-white/15 pt-5">
-                <div className="text-tone-soft text-sm mb-3">Step {i + 1}</div>
+                <div className="text-gold-soft text-sm mb-3">Step {i + 1}</div>
                 <p className="text-sm text-primary-foreground/80 leading-relaxed">{s}</p>
               </li>
             ))}
