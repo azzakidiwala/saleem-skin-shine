@@ -337,7 +337,7 @@ function TreatmentsPage() {
                   existingCats={rows.map((x) => x.category)}
                   onSave={(row) => save.mutateAsync(row)}
                 />
-                <Button variant="ghost" size="icon" aria-label="Delete" onClick={() => { if (confirm(`Delete "${r.name}"?`)) remove.mutate(r.id); }}>
+                <Button variant="ghost" size="icon" aria-label="Delete" onClick={() => { setPendingDelete(r); }}>
                   <Trash2 className="h-4 w-4" />
                 </Button>
               </div>
@@ -392,7 +392,7 @@ function TreatmentsPage() {
                     onSave={(row) => save.mutateAsync(row)}
                   />
 
-                  <Button variant="ghost" size="icon" onClick={() => { if (confirm(`Delete "${r.name}"?`)) remove.mutate(r.id); }}>
+                  <Button variant="ghost" size="icon" onClick={() => { setPendingDelete(r); }}>
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </TableCell>
