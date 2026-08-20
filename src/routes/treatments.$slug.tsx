@@ -368,6 +368,34 @@ function TreatmentDetailPage() {
 
         {theme.order.map((key) => sections[key])}
 
+        <section className="py-16 md:py-20 bg-primary text-primary-foreground">
+          <div className="container mx-auto px-6 text-center">
+            <p className="text-[11px] tracking-[0.35em] uppercase text-gold-soft mb-4">Ready when you are</p>
+            <h2 className="font-serif text-3xl md:text-4xl mb-4">Book {t.name}</h2>
+            <p className="text-primary-foreground/75 max-w-xl mx-auto mb-8">
+              Reserve your appointment online, or message us on WhatsApp and we'll answer any questions about this treatment.
+            </p>
+            <div className="flex flex-col sm:flex-row justify-center gap-3">
+              <Link
+                to="/book/$slug"
+                params={{ slug: t.slug }}
+                className="inline-flex items-center justify-center bg-gold text-gold-foreground px-10 py-4 text-xs tracking-[0.25em] uppercase font-semibold hover:opacity-90 transition-opacity"
+              >
+                Book Treatment
+              </Link>
+              <WhatsAppButton
+                message={waMessage}
+                label={`Ask about ${t.name} on WhatsApp`}
+                className="px-10 py-4 text-xs tracking-[0.25em] uppercase font-semibold border border-white/20"
+              >
+                WhatsApp About This Treatment
+              </WhatsAppButton>
+            </div>
+          </div>
+        </section>
+
+
+
         <section className="py-16 bg-card border-t border-border">
           <div className="container mx-auto px-6">
             <h2 className="font-serif text-3xl text-primary text-center mb-10">Other Treatments You May Like</h2>
