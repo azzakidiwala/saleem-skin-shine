@@ -32,6 +32,10 @@
   --color-gold-foreground: var(--gold-foreground);
   --color-gold-soft: var(--gold-soft);
   --color-deep-green: var(--deep-green);
+  --color-tone: var(--tone);
+  --color-tone-soft: var(--tone-soft);
+  --color-tone-foreground: var(--tone-foreground);
+  --color-tone-surface: var(--tone-surface);
   --font-display: "Urbanist", "Helvetica Neue", sans-serif;
   --font-sans: "Epilogue", system-ui, sans-serif;
 }
@@ -62,6 +66,10 @@
   --gold-foreground: oklch(0.18 0.02 150);
   --deep-green: oklch(0.28 0.05 150);
   --gold-soft: oklch(0.82 0.08 82);
+  --tone: var(--gold);
+  --tone-soft: var(--gold-soft);
+  --tone-foreground: oklch(0.18 0.02 150);
+  --tone-surface: oklch(0.97 0.02 88);
   --gradient-gold: linear-gradient(100deg, var(--gold-soft), var(--gold));
   --shadow-elegant: 0 24px 60px -24px color-mix(in oklab, var(--gold) 28%, transparent);
 }
@@ -123,3 +131,12 @@
   0%   { box-shadow: 0 0 0 0 color-mix(in oklab, var(--gold) 60%, transparent); }
   100% { box-shadow: 0 0 0 14px color-mix(in oklab, var(--gold) 0%, transparent); }
 }
+
+/* Per-category treatment tones — each treatment category gets its own accent */
+.tone-gold   { --tone: var(--gold); --tone-soft: var(--gold-soft); --tone-foreground: oklch(0.18 0.02 150); --tone-surface: oklch(0.97 0.02 88); }
+.tone-aqua   { --tone: oklch(0.68 0.10 205); --tone-soft: oklch(0.80 0.07 205); --tone-foreground: oklch(0.16 0.03 210); --tone-surface: oklch(0.97 0.02 205); }
+.tone-rose   { --tone: oklch(0.68 0.11 25);  --tone-soft: oklch(0.80 0.07 30);  --tone-foreground: oklch(0.18 0.03 25);  --tone-surface: oklch(0.97 0.015 30); }
+.tone-forest { --tone: oklch(0.55 0.09 160); --tone-soft: oklch(0.72 0.07 160); --tone-foreground: oklch(0.15 0.03 160); --tone-surface: oklch(0.97 0.015 160); }
+.tone-plum   { --tone: oklch(0.55 0.12 340); --tone-soft: oklch(0.72 0.08 340); --tone-foreground: oklch(0.98 0.01 340); --tone-surface: oklch(0.97 0.015 340); }
+.tone-amber  { --tone: oklch(0.72 0.13 65);  --tone-soft: oklch(0.83 0.09 70);  --tone-foreground: oklch(0.18 0.03 65);  --tone-surface: oklch(0.97 0.02 70); }
+.tone-sky    { --tone: oklch(0.66 0.11 240); --tone-soft: oklch(0.80 0.07 240); --tone-foreground: oklch(0.98 0.01 240); --tone-surface: oklch(0.97 0.02 240); }
