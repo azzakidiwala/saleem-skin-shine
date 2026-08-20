@@ -69,7 +69,7 @@ export function Header() {
               Treatments <ChevronDown className="h-3 w-3" />
             </Link>
             <div className="absolute left-1/2 -translate-x-1/2 top-full pt-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 w-[560px]">
-              <div className="bg-card border border-border shadow-xl p-6">
+              <div className="bg-card border border-border shadow-xl p-6 max-h-[78vh] overflow-y-auto">
                 <div className="text-gold text-[11px] tracking-[0.3em] mb-4">TREATMENTS</div>
                 <div className="grid grid-cols-2 gap-x-6 gap-y-1">
                   <Link to="/treatments" className="col-span-2 flex items-start gap-2 py-2 text-[12px] tracking-[0.05em] normal-case font-semibold text-foreground hover:text-gold transition-colors border-b border-border mb-2">
