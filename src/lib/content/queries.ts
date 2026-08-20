@@ -53,7 +53,9 @@ function mapTreatment(r: any): Treatment {
     whatToExpect: r.what_to_expect ?? "",
     image: resolveTreatmentImage(r.slug, r.image_url),
     image_url: r.image_url ?? null,
+    beforeAfter: Array.isArray(r.before_after) ? r.before_after : [],
     sort_order: r.sort_order ?? 0,
+
     is_active: r.is_active,
   };
 }
