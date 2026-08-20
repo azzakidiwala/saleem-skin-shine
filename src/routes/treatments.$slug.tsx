@@ -76,6 +76,19 @@ function TreatmentDetailPage() {
     .concat((all as Treatment[]).filter((x: Treatment) => x.slug !== t.slug && x.category !== t.category))
     .slice(0, 3);
 
+  const paragraphs: string[] = (t.longDescription || "")
+    .split(/\n{2,}|\n/)
+    .map((p: string) => p.trim())
+    .filter(Boolean);
+
+  const steps: string[] = (t.whatToExpect || "")
+    .split(/(?<=\.)\s+/)
+    .map((s: string) => s.trim())
+    .filter(Boolean);
+
+  const fromPrice = t.priceOptions?.length ? t.priceOptions[0].price : t.price || "On consultation";
+
+
   return (
     <div className="min-h-screen bg-background">
       <AnnouncementBar />
