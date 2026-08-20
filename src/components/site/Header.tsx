@@ -3,7 +3,7 @@ import { Phone, ChevronDown, Menu, Search } from "lucide-react";
 import { useState } from "react";
 import logo from "@/assets/logo.png";
 import { WhatsAppButton, WhatsAppIcon, whatsappHref } from "@/components/site/WhatsAppButton";
-import { useTreatments } from "@/lib/content/queries";
+import { useTreatments, treatmentCategories } from "@/lib/content/queries";
 
 export function Header() {
   const [open, setOpen] = useState(false);
