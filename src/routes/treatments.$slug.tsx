@@ -6,6 +6,7 @@ import { CTA } from "@/components/site/CTA";
 import { Footer } from "@/components/site/Footer";
 import { BeforeAfterSlider } from "@/components/site/BeforeAfterSlider";
 import { StackedBenefits } from "@/components/site/StackedBenefits";
+import { WhatsAppButton } from "@/components/site/WhatsAppButton";
 import { fetchTreatmentBySlug, fetchTreatments, type Treatment } from "@/lib/content/queries";
 import { getTreatmentTheme, type SectionKey } from "@/lib/content/treatmentTheme";
 
@@ -106,6 +107,8 @@ function TreatmentDetailPage() {
 
   const fromPrice = t.priceOptions?.length ? t.priceOptions[0].price : t.price || "On consultation";
 
+  const waMessage = `Hi Saleem Skin, I'm interested in the ${t.name} treatment. Could you tell me more?`;
+
   const bookButtons = (
     <div className="space-y-2">
       <Link
@@ -115,6 +118,13 @@ function TreatmentDetailPage() {
       >
         Book Treatment
       </Link>
+      <WhatsAppButton
+        message={waMessage}
+        label={`Ask about ${t.name} on WhatsApp`}
+        className="w-full py-3 text-xs tracking-[0.25em] uppercase font-semibold"
+      >
+        WhatsApp Us
+      </WhatsAppButton>
       <a
         href="tel:07503959285"
         className="w-full inline-flex items-center justify-center gap-2 border border-primary text-primary py-3 text-xs tracking-[0.25em] uppercase font-semibold hover:bg-primary hover:text-primary-foreground transition-colors"
@@ -123,6 +133,7 @@ function TreatmentDetailPage() {
       </a>
     </div>
   );
+
 
   const backLink = (tone: "light" | "dark") => (
     <Link
@@ -308,8 +319,25 @@ function TreatmentDetailPage() {
               </details>
             ))}
           </div>
+          <div className="mt-10 flex flex-col sm:flex-row justify-center gap-3">
+            <Link
+              to="/book/$slug"
+              params={{ slug: t.slug }}
+              className="inline-flex items-center justify-center bg-tone text-tone-foreground px-8 py-4 text-xs tracking-[0.25em] uppercase font-semibold hover:opacity-90 transition-opacity"
+            >
+              Book {t.name}
+            </Link>
+            <WhatsAppButton
+              message={waMessage}
+              label={`Ask about ${t.name} on WhatsApp`}
+              className="px-8 py-4 text-xs tracking-[0.25em] uppercase font-semibold"
+            >
+              Ask on WhatsApp
+            </WhatsAppButton>
+          </div>
         </div>
       </section>
+
     ) : null,
   };
 
@@ -339,6 +367,34 @@ function TreatmentDetailPage() {
         </section>
 
         {theme.order.map((key) => sections[key])}
+
+        <section className="py-16 md:py-20 bg-primary text-primary-foreground">
+          <div className="container mx-auto px-6 text-center">
+            <p className="text-[11px] tracking-[0.35em] uppercase text-gold-soft mb-4">Ready when you are</p>
+            <h2 className="font-serif text-3xl md:text-4xl mb-4">Book {t.name}</h2>
+            <p className="text-primary-foreground/75 max-w-xl mx-auto mb-8">
+              Reserve your appointment online, or message us on WhatsApp and we'll answer any questions about this treatment.
+            </p>
+            <div className="flex flex-col sm:flex-row justify-center gap-3">
+              <Link
+                to="/book/$slug"
+                params={{ slug: t.slug }}
+                className="inline-flex items-center justify-center bg-gold text-gold-foreground px-10 py-4 text-xs tracking-[0.25em] uppercase font-semibold hover:opacity-90 transition-opacity"
+              >
+                Book Treatment
+              </Link>
+              <WhatsAppButton
+                message={waMessage}
+                label={`Ask about ${t.name} on WhatsApp`}
+                className="px-10 py-4 text-xs tracking-[0.25em] uppercase font-semibold border border-white/20"
+              >
+                WhatsApp About This Treatment
+              </WhatsAppButton>
+            </div>
+          </div>
+        </section>
+
+
 
         <section className="py-16 bg-card border-t border-border">
           <div className="container mx-auto px-6">
