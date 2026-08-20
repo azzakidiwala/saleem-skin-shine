@@ -258,7 +258,7 @@ function TreatmentDetailPage() {
             label={theme.benefitsLabel}
             treatmentName={t.name}
             slug={t.slug}
-            intro={t.shortDescription || undefined}
+            intro={t.description || undefined}
           />
 
         </div>
