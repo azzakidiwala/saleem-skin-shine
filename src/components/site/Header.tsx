@@ -126,7 +126,20 @@ export function Header() {
         {open && (
           <div className="md:hidden border-t border-border py-4 space-y-3">
             <Link to="/" className="block text-xs tracking-[0.25em] uppercase">Home</Link>
-            <Link to="/treatments" className="block text-xs tracking-[0.25em] uppercase">Treatments</Link>
+            <div className="text-xs tracking-[0.25em] uppercase text-muted-foreground">Treatments</div>
+            <Link to="/treatments" className="block pl-4 text-xs tracking-[0.15em] normal-case font-semibold">All Treatments</Link>
+            {groups.map((g) => (
+              <div key={g.category} className="pl-4">
+                <div className="text-[10px] tracking-[0.2em] uppercase text-gold font-semibold mb-1">{g.category}</div>
+                <div className="space-y-1">
+                  {g.items.map((t) => (
+                    <Link key={t.slug} to="/treatments/$slug" params={{ slug: t.slug }} className="block pl-4 text-xs tracking-[0.15em] normal-case">
+                      {t.name}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ))}
             <div className="text-xs tracking-[0.25em] uppercase text-muted-foreground">Conditions</div>
             <Link to="/conditions/face" className="block pl-4 text-xs tracking-[0.15em] normal-case">Face</Link>
             <Link to="/conditions/body" className="block pl-4 text-xs tracking-[0.15em] normal-case">Body</Link>
