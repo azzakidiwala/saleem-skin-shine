@@ -35,6 +35,7 @@ export const Route = createFileRoute("/admin/treatments")({
 const CATS = treatmentCategories.filter((c) => c !== "All");
 
 type PriceOption = { label: string; price: string };
+type BeforeAfter = { before: string; after: string; caption?: string };
 
 type Row = {
   id: string;
@@ -45,6 +46,7 @@ type Row = {
   long_description: string;
   price: string;
   price_options: PriceOption[];
+  before_after: BeforeAfter[];
   duration: string;
   sessions: string;
   benefits: string[];
@@ -63,6 +65,7 @@ const empty: Row = {
   long_description: "",
   price: "",
   price_options: [],
+  before_after: [],
   duration: "",
   sessions: "",
   benefits: [],
@@ -133,6 +136,7 @@ function TreatmentsPage() {
       return (data ?? []).map((r: any) => ({
         ...r,
         price_options: Array.isArray(r.price_options) ? r.price_options : [],
+        before_after: Array.isArray(r.before_after) ? r.before_after : [],
       })) as Row[];
     },
   });
@@ -189,6 +193,9 @@ function TreatmentsPage() {
       payload.price_options = (payload.price_options ?? [])
         .filter((o) => (o.label ?? "").trim() || (o.price ?? "").trim())
         .map((o) => ({ label: (o.label ?? "").trim(), price: normalizePrice(o.price ?? "") }));
+      payload.before_after = (payload.before_after ?? [])
+        .filter((b) => (b.before ?? "").trim() && (b.after ?? "").trim())
+        .map((b) => ({ before: b.before, after: b.after, caption: (b.caption ?? "").trim() }));
       let savedId = payload.id;
       if (!payload.id) {
         const { id, ...insert } = payload;
@@ -435,6 +442,20 @@ function EditorDialog({ trigger, initial, onSave, existingCats = [] }: { trigger
     } finally { setUploading(false); }
   }
 
+  async function onPairFile(index: number, side: "before" | "after", file: File | null) {
+    if (!file) return;
+    setUploading(true);
+    try {
+      const url = await uploadSiteImage("before-after", file);
+      const next = [...(row.before_after ?? [])];
+      next[index] = { ...next[index], [side]: url };
+      update("before_after", next);
+      toast.success("Image uploaded");
+    } catch (e: any) {
+      toast.error(e.message);
+    } finally { setUploading(false); }
+  }
+
   return (
     <Dialog open={open} onOpenChange={(o) => { setOpen(o); if (o) { setRow(initial); setBenefitsText(initial.benefits.join("\n")); setExtraCats(initial.category && !baseCats.includes(initial.category) ? [initial.category] : []); setAddingCat(false); setNewCat(""); } }}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
@@ -555,6 +576,59 @@ function EditorDialog({ trigger, initial, onSave, existingCats = [] }: { trigger
             {row.image_url && <img src={row.image_url} alt="" className="h-32 w-full object-cover rounded border" />}
             <Input type="file" accept="image/*" onChange={(e) => onFile(e.target.files?.[0] ?? null)} disabled={uploading} />
             {row.image_url && <Button type="button" variant="outline" size="sm" onClick={() => update("image_url", null)}>Remove image</Button>}
+          </div>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <Label>Before &amp; after images</Label>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => update("before_after", [...(row.before_after ?? []), { before: "", after: "", caption: "" }])}
+              >
+                <Plus className="h-4 w-4 mr-1" /> Add pair
+              </Button>
+            </div>
+            {(row.before_after ?? []).length === 0 && (
+              <p className="text-sm text-muted-foreground">No before/after images yet. Add a pair to show the results slider on this treatment page.</p>
+            )}
+            {(row.before_after ?? []).map((pair, i) => (
+              <div key={i} className="rounded border p-3 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">Result {i + 1}</span>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    aria-label="Remove before/after pair"
+                    onClick={() => update("before_after", (row.before_after ?? []).filter((_, x) => x !== i))}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {(["before", "after"] as const).map((side) => (
+                    <div key={side} className="space-y-2">
+                      <Label className="capitalize">{side}</Label>
+                      {pair[side] && <img src={pair[side]} alt={`${side} result ${i + 1}`} className="h-28 w-full object-cover rounded border" />}
+                      <Input type="file" accept="image/*" disabled={uploading} onChange={(e) => onPairFile(i, side, e.target.files?.[0] ?? null)} />
+                    </div>
+                  ))}
+                </div>
+                <div className="space-y-2">
+                  <Label>Caption (optional)</Label>
+                  <Input
+                    value={pair.caption ?? ""}
+                    placeholder="e.g. 1 session, 4 weeks later"
+                    onChange={(e) => {
+                      const next = [...(row.before_after ?? [])];
+                      next[i] = { ...next[i], caption: e.target.value };
+                      update("before_after", next);
+                    }}
+                  />
+                </div>
+              </div>
+            ))}
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-end">
             <div className="space-y-2"><Label>Sort order</Label><Input type="number" value={row.sort_order} onChange={(e) => update("sort_order", parseInt(e.target.value || "0", 10))} /></div>
