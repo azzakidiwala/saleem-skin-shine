@@ -17,9 +17,11 @@ export type Treatment = {
   whatToExpect: string;
   image: string;
   image_url: string | null;
+  beforeAfter: { before: string; after: string; caption?: string }[];
   sort_order: number;
   is_active: boolean;
 };
+
 
 export type TeamMember = {
   id: string;
