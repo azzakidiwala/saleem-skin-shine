@@ -68,19 +68,31 @@ export function Header() {
             <Link to="/treatments" activeProps={{ className: "text-gold" }} className="flex items-center gap-1 hover:text-gold transition-colors">
               Treatments <ChevronDown className="h-3 w-3" />
             </Link>
-            <div className="absolute left-1/2 -translate-x-1/2 top-full pt-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 w-[520px]">
+            <div className="absolute left-1/2 -translate-x-1/2 top-full pt-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 w-[560px]">
               <div className="bg-card border border-border shadow-xl p-6">
                 <div className="text-gold text-[11px] tracking-[0.3em] mb-4">TREATMENTS</div>
-                <div className="grid grid-cols-2 gap-x-6 gap-y-2">
-                  <Link to="/treatments" className="col-span-2 flex items-start gap-2 py-1.5 text-[12px] tracking-[0.05em] normal-case font-semibold text-foreground hover:text-gold transition-colors">
+                <div className="grid grid-cols-2 gap-x-6 gap-y-1">
+                  <Link to="/treatments" className="col-span-2 flex items-start gap-2 py-2 text-[12px] tracking-[0.05em] normal-case font-semibold text-foreground hover:text-gold transition-colors border-b border-border mb-2">
                     <span className="text-gold mt-1.5">•</span>
                     <span>All Treatments</span>
                   </Link>
-                  {treatments.map(t => (
-                    <Link key={t.slug} to="/treatments/$slug" params={{ slug: t.slug }} className="flex items-start gap-2 py-1.5 text-[12px] tracking-[0.05em] normal-case font-normal text-foreground hover:text-gold transition-colors">
-                      <span className="text-gold mt-1.5">•</span>
-                      <span>{t.name}</span>
-                    </Link>
+                  {groups.map((g) => (
+                    <>
+                      <div key={g.category} className="col-span-2 text-gold text-[10px] tracking-[0.3em] uppercase font-semibold pt-3 pb-1">
+                        {g.category}
+                      </div>
+                      {g.items.map((t) => (
+                        <Link
+                          key={t.slug}
+                          to="/treatments/$slug"
+                          params={{ slug: t.slug }}
+                          className="flex items-start gap-2 py-1.5 text-[12px] tracking-[0.05em] normal-case font-normal text-foreground hover:text-gold transition-colors"
+                        >
+                          <span className="text-gold mt-1.5">•</span>
+                          <span>{t.name}</span>
+                        </Link>
+                      ))}
+                    </>
                   ))}
                 </div>
               </div>
