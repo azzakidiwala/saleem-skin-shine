@@ -637,6 +637,57 @@ function EditorDialog({ trigger, initial, onSave, existingCats = [] }: { trigger
               </div>
             ))}
           </div>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <Label>FAQs (shown on the treatment page &amp; used for Google)</Label>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => update("faqs", [...(row.faqs ?? []), { question: "", answer: "" }])}
+              >
+                <Plus className="h-4 w-4 mr-1" /> Add FAQ
+              </Button>
+            </div>
+            {(row.faqs ?? []).length === 0 && (
+              <p className="text-sm text-muted-foreground">No FAQs yet. Add common questions about this treatment to help customers and improve search rankings.</p>
+            )}
+            {(row.faqs ?? []).map((f, i) => (
+              <div key={i} className="rounded border p-3 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">FAQ {i + 1}</span>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    aria-label="Remove FAQ"
+                    onClick={() => update("faqs", (row.faqs ?? []).filter((_, x) => x !== i))}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+                <Input
+                  value={f.question}
+                  placeholder="Question, e.g. How long do dermal fillers last?"
+                  onChange={(e) => {
+                    const next = [...(row.faqs ?? [])];
+                    next[i] = { ...next[i], question: e.target.value };
+                    update("faqs", next);
+                  }}
+                />
+                <Textarea
+                  rows={3}
+                  value={f.answer}
+                  placeholder="Answer"
+                  onChange={(e) => {
+                    const next = [...(row.faqs ?? [])];
+                    next[i] = { ...next[i], answer: e.target.value };
+                    update("faqs", next);
+                  }}
+                />
+              </div>
+            ))}
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-end">
             <div className="space-y-2"><Label>Sort order</Label><Input type="number" value={row.sort_order} onChange={(e) => update("sort_order", parseInt(e.target.value || "0", 10))} /></div>
             <div className="flex items-center gap-2"><Switch checked={row.is_active} onCheckedChange={(v) => update("is_active", v)} /><Label>Active (visible on site)</Label></div>
