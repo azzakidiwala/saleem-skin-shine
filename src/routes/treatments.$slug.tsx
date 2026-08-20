@@ -270,6 +270,28 @@ function TreatmentDetailPage() {
           </section>
         )}
 
+        {(t.faqs ?? []).length > 0 && (
+          <section className="py-16 border-t border-border" aria-labelledby="treatment-faqs">
+            <div className="container mx-auto px-6 max-w-3xl">
+              <div className="text-[10px] tracking-[0.25em] uppercase text-gold mb-3 text-center">Good to know</div>
+              <h2 id="treatment-faqs" className="font-serif text-3xl text-primary text-center mb-10">
+                {t.name} — Frequently Asked Questions
+              </h2>
+              <div className="divide-y divide-border border-y border-border">
+                {(t.faqs ?? []).map((f, i) => (
+                  <details key={i} className="group py-5" open={i === 0}>
+                    <summary className="flex cursor-pointer items-start justify-between gap-6 list-none">
+                      <h3 className="font-medium text-base text-foreground">{f.question}</h3>
+                      <span className="mt-1 shrink-0 text-gold transition-transform group-open:rotate-45 text-xl leading-none">+</span>
+                    </summary>
+                    <p className="mt-3 text-muted-foreground leading-relaxed whitespace-pre-line">{f.answer}</p>
+                  </details>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
         <section className="py-16 bg-card border-t border-border">
           <div className="container mx-auto px-6">
             <h2 className="font-serif text-3xl text-primary text-center mb-10">Other Treatments You May Like</h2>
