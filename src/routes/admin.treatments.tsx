@@ -36,6 +36,7 @@ const CATS = treatmentCategories.filter((c) => c !== "All");
 
 type PriceOption = { label: string; price: string };
 type BeforeAfter = { before: string; after: string; caption?: string };
+type Faq = { question: string; answer: string };
 
 type Row = {
   id: string;
@@ -47,6 +48,7 @@ type Row = {
   price: string;
   price_options: PriceOption[];
   before_after: BeforeAfter[];
+  faqs: Faq[];
   duration: string;
   sessions: string;
   benefits: string[];
@@ -66,6 +68,7 @@ const empty: Row = {
   price: "",
   price_options: [],
   before_after: [],
+  faqs: [],
   duration: "",
   sessions: "",
   benefits: [],
@@ -137,6 +140,7 @@ function TreatmentsPage() {
         ...r,
         price_options: Array.isArray(r.price_options) ? r.price_options : [],
         before_after: Array.isArray(r.before_after) ? r.before_after : [],
+        faqs: Array.isArray(r.faqs) ? r.faqs : [],
       })) as Row[];
     },
   });
@@ -196,6 +200,9 @@ function TreatmentsPage() {
       payload.before_after = (payload.before_after ?? [])
         .filter((b) => (b.before ?? "").trim() && (b.after ?? "").trim())
         .map((b) => ({ before: b.before, after: b.after, caption: (b.caption ?? "").trim() }));
+      payload.faqs = (payload.faqs ?? [])
+        .filter((f) => (f.question ?? "").trim() && (f.answer ?? "").trim())
+        .map((f) => ({ question: (f.question ?? "").trim(), answer: (f.answer ?? "").trim() }));
       let savedId = payload.id;
       if (!payload.id) {
         const { id, ...insert } = payload;
@@ -627,6 +634,57 @@ function EditorDialog({ trigger, initial, onSave, existingCats = [] }: { trigger
                     }}
                   />
                 </div>
+              </div>
+            ))}
+          </div>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <Label>FAQs (shown on the treatment page &amp; used for Google)</Label>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => update("faqs", [...(row.faqs ?? []), { question: "", answer: "" }])}
+              >
+                <Plus className="h-4 w-4 mr-1" /> Add FAQ
+              </Button>
+            </div>
+            {(row.faqs ?? []).length === 0 && (
+              <p className="text-sm text-muted-foreground">No FAQs yet. Add common questions about this treatment to help customers and improve search rankings.</p>
+            )}
+            {(row.faqs ?? []).map((f, i) => (
+              <div key={i} className="rounded border p-3 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">FAQ {i + 1}</span>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    aria-label="Remove FAQ"
+                    onClick={() => update("faqs", (row.faqs ?? []).filter((_, x) => x !== i))}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+                <Input
+                  value={f.question}
+                  placeholder="Question, e.g. How long do dermal fillers last?"
+                  onChange={(e) => {
+                    const next = [...(row.faqs ?? [])];
+                    next[i] = { ...next[i], question: e.target.value };
+                    update("faqs", next);
+                  }}
+                />
+                <Textarea
+                  rows={3}
+                  value={f.answer}
+                  placeholder="Answer"
+                  onChange={(e) => {
+                    const next = [...(row.faqs ?? [])];
+                    next[i] = { ...next[i], answer: e.target.value };
+                    update("faqs", next);
+                  }}
+                />
               </div>
             ))}
           </div>
