@@ -6,6 +6,7 @@ import { CTA } from "@/components/site/CTA";
 import { Footer } from "@/components/site/Footer";
 import { BeforeAfterSlider } from "@/components/site/BeforeAfterSlider";
 import { StackedBenefits } from "@/components/site/StackedBenefits";
+import { WhatsAppButton } from "@/components/site/WhatsAppButton";
 import { fetchTreatmentBySlug, fetchTreatments, type Treatment } from "@/lib/content/queries";
 import { getTreatmentTheme, type SectionKey } from "@/lib/content/treatmentTheme";
 
