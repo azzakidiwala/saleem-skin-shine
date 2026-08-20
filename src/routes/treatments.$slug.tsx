@@ -32,6 +32,22 @@ export const Route = createFileRoute("/treatments/$slug")({
       ],
       links: [{ rel: "canonical", href: url }],
       scripts: [
+        ...(((loaderData.treatment.faqs ?? []).length > 0)
+          ? [
+              {
+                type: "application/ld+json",
+                children: JSON.stringify({
+                  "@context": "https://schema.org",
+                  "@type": "FAQPage",
+                  mainEntity: (loaderData.treatment.faqs ?? []).map((f) => ({
+                    "@type": "Question",
+                    name: f.question,
+                    acceptedAnswer: { "@type": "Answer", text: f.answer },
+                  })),
+                }),
+              },
+            ]
+          : []),
         {
           type: "application/ld+json",
           children: JSON.stringify({
