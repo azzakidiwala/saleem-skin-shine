@@ -417,6 +417,7 @@ export type Database = {
       }
       treatments: {
         Row: {
+          before_after: Json
           benefits: string[]
           category: string
           created_at: string
@@ -436,6 +437,7 @@ export type Database = {
           what_to_expect: string
         }
         Insert: {
+          before_after?: Json
           benefits?: string[]
           category: string
           created_at?: string
@@ -455,6 +457,7 @@ export type Database = {
           what_to_expect?: string
         }
         Update: {
+          before_after?: Json
           benefits?: string[]
           category?: string
           created_at?: string

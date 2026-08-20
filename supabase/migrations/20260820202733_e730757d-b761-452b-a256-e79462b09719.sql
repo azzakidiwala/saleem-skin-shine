@@ -1,0 +1,1 @@
+alter table public.treatments add column if not exists before_after jsonb not null default '[]'::jsonb;
