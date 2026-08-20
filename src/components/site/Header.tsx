@@ -77,22 +77,24 @@ export function Header() {
                     <span>All Treatments</span>
                   </Link>
                   {groups.map((g) => (
-                    <>
-                      <div key={g.category} className="col-span-2 text-gold text-[10px] tracking-[0.3em] uppercase font-semibold pt-3 pb-1">
+                    <div key={g.category} className="col-span-2">
+                      <div className="text-gold text-[10px] tracking-[0.3em] uppercase font-semibold pt-3 pb-1">
                         {g.category}
                       </div>
-                      {g.items.map((t) => (
-                        <Link
-                          key={t.slug}
-                          to="/treatments/$slug"
-                          params={{ slug: t.slug }}
-                          className="flex items-start gap-2 py-1.5 text-[12px] tracking-[0.05em] normal-case font-normal text-foreground hover:text-gold transition-colors"
-                        >
-                          <span className="text-gold mt-1.5">•</span>
-                          <span>{t.name}</span>
-                        </Link>
-                      ))}
-                    </>
+                      <div className="grid grid-cols-2 gap-x-6 gap-y-1">
+                        {g.items.map((t) => (
+                          <Link
+                            key={t.slug}
+                            to="/treatments/$slug"
+                            params={{ slug: t.slug }}
+                            className="flex items-start gap-2 py-1.5 text-[12px] tracking-[0.05em] normal-case font-normal text-foreground hover:text-gold transition-colors"
+                          >
+                            <span className="text-gold mt-1.5">•</span>
+                            <span>{t.name}</span>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
                   ))}
                 </div>
               </div>
