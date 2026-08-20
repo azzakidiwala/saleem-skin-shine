@@ -5,6 +5,7 @@ import { Header } from "@/components/site/Header";
 import { CTA } from "@/components/site/CTA";
 import { Footer } from "@/components/site/Footer";
 import { BeforeAfterSlider } from "@/components/site/BeforeAfterSlider";
+import { StackedBenefits } from "@/components/site/StackedBenefits";
 import { fetchTreatmentBySlug, fetchTreatments, type Treatment } from "@/lib/content/queries";
 
 
@@ -173,26 +174,6 @@ function TreatmentDetailPage() {
           </div>
         </section>
 
-        {/* Benefits */}
-        {t.benefits.length > 0 && (
-          <section className="py-16 md:py-20 bg-card border-y border-border">
-            <div className="container mx-auto px-6">
-              <div className="max-w-2xl mb-10">
-                <p className="eyebrow mb-4">Why patients choose it</p>
-                <h2 className="text-3xl md:text-4xl">Key benefits</h2>
-              </div>
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                {t.benefits.map((b: string, i: number) => (
-                  <div key={b} className="bg-background border border-border p-6 hover:border-gold/50 transition-colors">
-                    <div className="text-gold text-xs tracking-[0.25em] mb-3">{String(i + 1).padStart(2, "0")}</div>
-                    <p className="text-sm text-foreground/85 leading-relaxed">{b}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
-
         {/* Before & after */}
         {t.beforeAfter.length > 0 && (
           <section className="py-16 md:py-24 bg-background">
@@ -213,6 +194,15 @@ function TreatmentDetailPage() {
                 </ul>
               </div>
               <BeforeAfterSlider pairs={t.beforeAfter} />
+            </div>
+          </section>
+        )}
+
+        {/* Benefits */}
+        {t.benefits.length > 0 && (
+          <section className="py-16 md:py-20 bg-card border-y border-border">
+            <div className="container mx-auto px-6">
+              <StackedBenefits benefits={t.benefits} />
             </div>
           </section>
         )}
