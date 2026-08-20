@@ -8,6 +8,13 @@ import { useTreatments, treatmentCategories } from "@/lib/content/queries";
 export function Header() {
   const [open, setOpen] = useState(false);
   const { data: treatments = [] } = useTreatments();
+
+  const dynamicCats = Array.from(new Set(treatments.map((t) => t.category)));
+  const ordered = Array.from(new Set([...treatmentCategories.slice(1), ...dynamicCats]));
+  const groups = ordered
+    .map((c) => ({ category: c, items: treatments.filter((t) => t.category === c) }))
+    .filter((g) => g.items.length > 0);
+
   return (
     <header className="bg-background border-b border-border">
       <div className="container mx-auto px-4">
