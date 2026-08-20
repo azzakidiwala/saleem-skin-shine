@@ -5,6 +5,7 @@ import { Header } from "@/components/site/Header";
 import { CTA } from "@/components/site/CTA";
 import { Footer } from "@/components/site/Footer";
 import { BeforeAfterSlider } from "@/components/site/BeforeAfterSlider";
+import { StackedBenefits } from "@/components/site/StackedBenefits";
 import { fetchTreatmentBySlug, fetchTreatments, type Treatment } from "@/lib/content/queries";
 
 
